@@ -1457,12 +1457,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return text;
         }
         const children = (node.content || []).map(adminRenderRichText).join('');
+        const align = node.data && node.data.align;
+        const alignStyle = align ? ' style="text-align:' + align + '"' : '';
         switch (node.nodeType) {
             case 'document': return children;
-            case 'paragraph': return '<p>' + children + '</p>';
-            case 'heading-1': return '<h2>' + children + '</h2>';
-            case 'heading-2': return '<h3>' + children + '</h3>';
-            case 'heading-3': return '<h4>' + children + '</h4>';
+            case 'paragraph': return '<p' + alignStyle + '>' + children + '</p>';
+            case 'heading-1': return '<h2' + alignStyle + '>' + children + '</h2>';
+            case 'heading-2': return '<h3' + alignStyle + '>' + children + '</h3>';
+            case 'heading-3': return '<h4' + alignStyle + '>' + children + '</h4>';
             case 'blockquote': return '<blockquote style="border-left:3px solid #ccc;padding-left:12px;color:#555;">' + children + '</blockquote>';
             case 'unordered-list': return '<ul>' + children + '</ul>';
             case 'ordered-list': return '<ol>' + children + '</ol>';
@@ -1769,7 +1771,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (tag === 'h1' || tag === 'h2' || tag === 'h3' || tag === 'h4') {
                 const level = tag.charAt(1);
-                return { nodeType: 'heading-' + level, data: {}, content: parseInline(node).length ? parseInline(node) : [{ nodeType: 'text', value: '', marks: [], data: {} }] };
+                const align = node.style && node.style.textAlign;
+                const data = align && align !== 'left' && align !== 'start' ? { align: align } : {};
+                return { nodeType: 'heading-' + level, data: data, content: parseInline(node).length ? parseInline(node) : [{ nodeType: 'text', value: '', marks: [], data: {} }] };
             }
 
             if (tag === 'blockquote') {
@@ -1800,13 +1804,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (tag === 'p' || tag === 'div') {
                 const inline = parseInline(node);
                 if (inline.length === 0) return null;
-                return { nodeType: 'paragraph', data: {}, content: inline };
+                const align = node.style && node.style.textAlign;
+                const data = align && align !== 'left' && align !== 'start' ? { align: align } : {};
+                return { nodeType: 'paragraph', data: data, content: inline };
             }
 
             // Fallback: treat as paragraph
             const inline = parseInline(node);
             if (inline.length === 0) return null;
-            return { nodeType: 'paragraph', data: {}, content: inline };
+            const align = node.style && node.style.textAlign;
+            const data = align && align !== 'left' && align !== 'start' ? { align: align } : {};
+            return { nodeType: 'paragraph', data: data, content: inline };
         }
 
         temp.childNodes.forEach(node => {
@@ -1845,14 +1853,16 @@ document.addEventListener('DOMContentLoaded', () => {
         function renderNode(node) {
             if (node.nodeType === 'text') return renderMarks(node);
             const children = (node.content || []).map(renderNode).join('');
+            const align = node.data && node.data.align;
+            const alignStyle = align ? ` style="text-align:${align}"` : '';
             switch (node.nodeType) {
-                case 'paragraph': return `<p>${children}</p>`;
-                case 'heading-1': return `<h1>${children}</h1>`;
-                case 'heading-2': return `<h2>${children}</h2>`;
-                case 'heading-3': return `<h3>${children}</h3>`;
-                case 'heading-4': return `<h4>${children}</h4>`;
-                case 'heading-5': return `<h5>${children}</h5>`;
-                case 'heading-6': return `<h6>${children}</h6>`;
+                case 'paragraph': return `<p${alignStyle}>${children}</p>`;
+                case 'heading-1': return `<h1${alignStyle}>${children}</h1>`;
+                case 'heading-2': return `<h2${alignStyle}>${children}</h2>`;
+                case 'heading-3': return `<h3${alignStyle}>${children}</h3>`;
+                case 'heading-4': return `<h4${alignStyle}>${children}</h4>`;
+                case 'heading-5': return `<h5${alignStyle}>${children}</h5>`;
+                case 'heading-6': return `<h6${alignStyle}>${children}</h6>`;
                 case 'blockquote': return `<blockquote>${children}</blockquote>`;
                 case 'unordered-list': return `<ul>${children}</ul>`;
                 case 'ordered-list': return `<ol>${children}</ol>`;
