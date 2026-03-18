@@ -753,15 +753,13 @@ img {
 /* About layout — main content + blog sidebar */
 .about-layout {
     display: grid;
-    grid-template-columns: 1fr 240px;
-    gap: 24px;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 24px;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+    padding: 0 20px;
 }
 
 .about-main {
-    max-width: 1200px;
+    min-width: 0;
 }
 
 /* Blog sidebar — right column */
@@ -791,8 +789,9 @@ img {
 }
 
 .blog-sidebar .blog-post-card img {
-    height: 100px;
+    height: 130px;
     object-fit: cover;
+    width: 100%;
 }
 
 .blog-sidebar .blog-post-card .blog-post-info {
@@ -800,13 +799,13 @@ img {
 }
 
 .blog-sidebar .blog-post-card .blog-post-info h4 {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     line-height: 1.3;
     margin-bottom: 4px;
 }
 
 .blog-sidebar .blog-post-card .blog-post-info .blog-post-date {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
 }
 
 .blog-sidebar .blog-post-card.most-read {
