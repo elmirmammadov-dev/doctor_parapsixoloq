@@ -769,7 +769,9 @@ img {
     align-self: start;
     max-height: calc(100vh - 100px);
     overflow-y: auto;
+    overflow-x: visible;
     scrollbar-width: none;
+    padding-top: 15px;
 }
 
 .blog-sidebar::-webkit-scrollbar {
