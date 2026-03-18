@@ -538,6 +538,67 @@
                         <!-- Russian content (hidden by default) -->
                         <div id="ruContentField" style="display:none;border:1.5px solid #e0e0e0;border-radius:12px;padding:14px;background:#f9f9ff;">
                             <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;">Mətn <span style="font-size:0.75rem;color:#999;font-weight:400;">| Russian</span></label>
+                            <!-- Russian Rich Text Toolbar -->
+                            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;padding:8px;background:#f8f8f8;border-radius:8px;border:1px solid #e0e0e0;">
+                                <div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;">
+                                    <select id="rtFontFamilyRu" style="padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:0.8rem;background:#fff;cursor:pointer;">
+                                        <option value="">Şrift seçin</option>
+                                        <option value="Arial" style="font-family:Arial;">Arial</option>
+                                        <option value="Georgia" style="font-family:Georgia;">Georgia</option>
+                                        <option value="Times New Roman" style="font-family:'Times New Roman';">Times New Roman</option>
+                                        <option value="Courier New" style="font-family:'Courier New';">Courier New</option>
+                                        <option value="Verdana" style="font-family:Verdana;">Verdana</option>
+                                        <option value="Trebuchet MS" style="font-family:'Trebuchet MS';">Trebuchet MS</option>
+                                    </select>
+                                    <select id="rtFontSizeRu" style="padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:0.8rem;background:#fff;cursor:pointer;">
+                                        <option value="">12</option>
+                                        <option value="1">8</option>
+                                        <option value="2">10</option>
+                                        <option value="3" selected>12</option>
+                                        <option value="4">14</option>
+                                        <option value="5">18</option>
+                                        <option value="6">24</option>
+                                        <option value="7">36</option>
+                                    </select>
+                                    <select id="rtHeadingRu" style="padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:0.8rem;background:#fff;cursor:pointer;">
+                                        <option value="">Normal text</option>
+                                        <option value="h1" style="font-size:24px;font-weight:bold;">Heading 1</option>
+                                        <option value="h2" style="font-size:20px;font-weight:bold;">Heading 2</option>
+                                        <option value="h3" style="font-size:17px;font-weight:bold;">Heading 3</option>
+                                        <option value="h4" style="font-size:15px;font-weight:bold;">Heading 4</option>
+                                        <option value="h5" style="font-size:13px;font-weight:bold;">Heading 5</option>
+                                        <option value="h6" style="font-size:11px;font-weight:bold;">Heading 6</option>
+                                    </select>
+                                </div>
+                                <div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;">
+                                    <button type="button" class="rt-btn-ru" data-cmd="bold" title="Жирный" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-bold"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="italic" title="Курсив" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-italic"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="underline" title="Подчеркнутый" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-underline"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="strikethrough" title="Зачеркнутый" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-strikethrough"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" class="rt-btn-ru" data-cmd="justifyLeft" title="По левому краю" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-left"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="justifyCenter" title="По центру" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-center"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="justifyRight" title="По правому краю" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-right"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="justifyFull" title="По ширине" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-justify"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" class="rt-btn-ru" data-cmd="ul" title="Список" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-list-ul"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="ol" title="Нумерованный список" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-list-ol"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="quote" title="Цитата" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-quote-right"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <label title="Цвет текста" style="padding:4px 8px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:0.82rem;">
+                                        <i class="fas fa-font" style="color:#333;"></i>
+                                        <input type="color" id="rtTextColorRu" value="#000000" style="width:20px;height:20px;border:none;padding:0;cursor:pointer;background:transparent;">
+                                    </label>
+                                    <label title="Цвет фона" style="padding:4px 8px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:0.82rem;">
+                                        <i class="fas fa-highlighter" style="color:#f39c12;"></i>
+                                        <input type="color" id="rtBgColorRu" value="#ffff00" style="width:20px;height:20px;border:none;padding:0;cursor:pointer;background:transparent;">
+                                    </label>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" class="rt-btn-ru" data-cmd="undo" title="Отменить" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-undo"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="redo" title="Повторить" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-redo"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="removeFormat" title="Очистить формат" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-eraser"></i></button>
+                                </div>
+                            </div>
                             <div id="articleContentRu" contenteditable="true" style="min-height:150px;padding:14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;line-height:1.7;outline:none;overflow-y:auto;max-height:300px;background:#fff;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'" placeholder="Текст статьи на русском..."></div>
                         </div>
                         <!-- Submit -->

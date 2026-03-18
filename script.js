@@ -1717,6 +1717,81 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Rich text toolbar — RU buttons
+    document.querySelectorAll('.rt-btn-ru').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const cmd = btn.dataset.cmd;
+            const editor = document.getElementById('articleContentRu');
+            editor.focus();
+            if (cmd === 'bold') document.execCommand('bold');
+            else if (cmd === 'italic') document.execCommand('italic');
+            else if (cmd === 'underline') document.execCommand('underline');
+            else if (cmd === 'strikethrough') document.execCommand('strikeThrough');
+            else if (cmd === 'justifyLeft') document.execCommand('justifyLeft');
+            else if (cmd === 'justifyCenter') document.execCommand('justifyCenter');
+            else if (cmd === 'justifyRight') document.execCommand('justifyRight');
+            else if (cmd === 'justifyFull') document.execCommand('justifyFull');
+            else if (cmd === 'ul') document.execCommand('insertUnorderedList');
+            else if (cmd === 'ol') document.execCommand('insertOrderedList');
+            else if (cmd === 'quote') document.execCommand('formatBlock', false, 'blockquote');
+            else if (cmd === 'undo') document.execCommand('undo');
+            else if (cmd === 'redo') document.execCommand('redo');
+            else if (cmd === 'removeFormat') document.execCommand('removeFormat');
+        });
+    });
+
+    // Rich text toolbar RU — font family
+    const rtFontFamilyRu = document.getElementById('rtFontFamilyRu');
+    if (rtFontFamilyRu) {
+        rtFontFamilyRu.addEventListener('change', () => {
+            const editor = document.getElementById('articleContentRu');
+            editor.focus();
+            if (rtFontFamilyRu.value) document.execCommand('fontName', false, rtFontFamilyRu.value);
+        });
+    }
+
+    // Rich text toolbar RU — font size
+    const rtFontSizeRu = document.getElementById('rtFontSizeRu');
+    if (rtFontSizeRu) {
+        rtFontSizeRu.addEventListener('change', () => {
+            const editor = document.getElementById('articleContentRu');
+            editor.focus();
+            if (rtFontSizeRu.value) document.execCommand('fontSize', false, rtFontSizeRu.value);
+        });
+    }
+
+    // Rich text toolbar RU — heading select
+    const rtHeadingRu = document.getElementById('rtHeadingRu');
+    if (rtHeadingRu) {
+        rtHeadingRu.addEventListener('change', () => {
+            const editor = document.getElementById('articleContentRu');
+            editor.focus();
+            if (rtHeadingRu.value) document.execCommand('formatBlock', false, rtHeadingRu.value);
+            else document.execCommand('formatBlock', false, 'p');
+            rtHeadingRu.value = '';
+        });
+    }
+
+    // Rich text toolbar RU — text color
+    const rtTextColorRu = document.getElementById('rtTextColorRu');
+    if (rtTextColorRu) {
+        rtTextColorRu.addEventListener('input', () => {
+            const editor = document.getElementById('articleContentRu');
+            editor.focus();
+            document.execCommand('foreColor', false, rtTextColorRu.value);
+        });
+    }
+
+    // Rich text toolbar RU — background color
+    const rtBgColorRu = document.getElementById('rtBgColorRu');
+    if (rtBgColorRu) {
+        rtBgColorRu.addEventListener('input', () => {
+            const editor = document.getElementById('articleContentRu');
+            editor.focus();
+            document.execCommand('hiliteColor', false, rtBgColorRu.value);
+        });
+    }
+
     // Convert HTML from contenteditable to Contentful rich text document
     function htmlToRichText(html) {
         const temp = document.createElement('div');
