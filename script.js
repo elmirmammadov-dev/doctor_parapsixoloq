@@ -563,7 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
     const LANG_TO_LOCALE = { az: 'az', ru: 'ru', en: 'az', tr: 'az' };
 
-    const BLOG_PER_PAGE = 4;
+    const BLOG_PER_PAGE = 3;
     let allBlogCards = [];
     let blogCurrentPage = 1;
 
@@ -637,23 +637,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const MOST_READ_LABELS = { az: 'Ən Çox Oxunan', ru: 'Самое читаемое', en: 'Most Read', tr: 'En Çok Okunan' };
-    const MOST_LIKED_LABELS = { az: 'Ən Yaxşı', ru: 'Лучшее', en: 'The Best', tr: 'En İyi' };
 
     function highlightCards(viewCounts, likeCounts) {
         // Remove previous highlights
-        document.querySelectorAll('.blog-post-card.most-read, .blog-post-card.week-best').forEach(el => {
-            el.classList.remove('most-read', 'week-best');
-            const badge = el.querySelector('.blog-most-read-badge, .blog-week-best-badge');
+        document.querySelectorAll('.blog-post-card.most-read').forEach(el => {
+            el.classList.remove('most-read');
+            const badge = el.querySelector('.blog-most-read-badge');
             if (badge) badge.remove();
         });
 
         // Find most viewed
         const viewSorted = Object.entries(viewCounts).filter(e => e[1] > 0).sort((a, b) => b[1] - a[1]);
         const mostReadId = viewSorted[0] ? viewSorted[0][0] : null;
-
-        // Find most liked (excluding the most-read card)
-        const likeSorted = Object.entries(likeCounts).filter(e => e[1] > 0 && e[0] !== mostReadId).sort((a, b) => b[1] - a[1]);
-        const mostLikedId = likeSorted[0] ? likeSorted[0][0] : null;
 
         const cards = document.querySelectorAll('.blog-post-card');
         cards.forEach(card => {
@@ -664,20 +659,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 badge.textContent = MOST_READ_LABELS[currentLang] || MOST_READ_LABELS.az;
                 card.prepend(badge);
             }
-            if (card.href && mostLikedId && card.href.includes(mostLikedId)) {
-                card.classList.add('week-best');
-                const badge = document.createElement('span');
-                badge.className = 'blog-week-best-badge';
-                badge.textContent = MOST_LIKED_LABELS[currentLang] || MOST_LIKED_LABELS.az;
-                card.prepend(badge);
-            }
         });
     }
 
     window.blogGoPage = function(page) {
         renderBlogPage(page);
-        const blogSection = document.querySelector('.blog-section-inline');
-        if (blogSection) blogSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const sidebar = document.querySelector('.blog-sidebar');
+        if (sidebar) sidebar.scrollTop = 0;
     };
 
     async function fetchBlogPosts() {
@@ -709,7 +697,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     id: id,
                     html: `
                     <a href="blog-post.html?id=${id}" class="blog-post-card" style="text-decoration:none;color:inherit;cursor:pointer;">
-                        ${imgUrl ? `<img src="${imgUrl}" alt="${f.title}">` : `<div style="height:180px;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:2rem;"></i></div>`}
+                        ${imgUrl ? `<img src="${imgUrl}" alt="${f.title}">` : `<div class="blog-post-placeholder" style="height:130px;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:2rem;"></i></div>`}
                         <div class="blog-post-info">
                             <h4>${f.title}</h4>
                             <div style="display:flex;align-items:center;gap:12px;margin-top:4px;">
