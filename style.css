@@ -765,12 +765,17 @@ img {
 /* Blog sidebar — right column */
 .blog-sidebar {
     position: sticky;
-    top: 100px;
+    top: 90px;
     align-self: start;
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 110px);
     overflow-y: auto;
     scrollbar-width: none;
-    padding-top: 20px;
+    padding: 25px 5px 10px;
+}
+
+.blog-sidebar .blog-post-card.most-read,
+.blog-sidebar .blog-post-card:first-child {
+    margin-top: 15px;
 }
 
 .blog-sidebar::-webkit-scrollbar {
@@ -780,7 +785,8 @@ img {
 .blog-sidebar .blog-grid {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
+    overflow: visible;
 }
 
 .blog-sidebar .blog-post-card {
