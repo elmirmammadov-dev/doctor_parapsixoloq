@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(start \"\" \"e:/Həkim saytı 2/index.html\")",
+      "Bash(start \"\" \"d:/Layihelerim hamisi/hekim-sayti-2026-esas-main/index.html\")",
+      "Bash(start \"\" \"d:\\\\Layihelerim hamisi\\\\hekim-sayti-2026-esas-main\\\\index.html\")",
+      "WebFetch(domain:www.myvivescleaningservices.com)",
+      "Bash(start \"\" \"e:\\\\Həkim saytı 2\\\\index.html\")"
+    ]
+  }
+}

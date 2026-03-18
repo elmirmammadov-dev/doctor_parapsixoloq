@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Şahsəddin İmanlı | Parapsixoloq & Tantra Yoqa Müəllimi</title>
+    <meta name="description" content="Şahsəddin İmanlı - Parapsixoloq, Psixoloq və Tantra Yoqa mütəxəssisi. İnsanın ruhunu müalicə etmədən cismini müalicə etmək olmaz.">
+    <link rel="icon" type="image/png" href="esas-loqo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="container navbar-content">
+            <a href="#hero" class="navbar-logo"></a>
+            <ul class="navbar-menu" id="navMenu">
+                <li><a href="#about" class="nav-link" data-i18n="nav_about">Ana Səhifə</a></li>
+                <li><a href="#services" class="nav-link" data-i18n="nav_services">Xidmətlər</a></li>
+                <li><a href="#problems" class="nav-link" data-i18n="nav_problems">Fəaliyyətlər</a></li>
+                <li><a href="#faq" class="nav-link" data-i18n="nav_faq">Sual-Cavab</a></li>
+                <li><a href="#contact" class="nav-link" data-i18n="nav_contact">Əlaqə</a></li>
+            </ul>
+            <div class="navbar-socials">
+                <a href="https://www.tiktok.com/@shahseddinimanli" target="_blank" data-social="tiktok" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.facebook.com/shahseddin.imanli" target="_blank" data-social="facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/parapsixoloq_yoq/" target="_blank" data-social="instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.link/wcams9" target="_blank" data-social="whatsapp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.youtube.com/@sahseddinimanli" target="_blank" data-social="youtube" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="https://web.telegram.org/k/#@menevi_shefaci" target="_blank" data-social="telegram" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+            </div>
+            <!-- Language Switcher -->
+            <div class="lang-switcher" id="langSwitcher">
+                <div class="lang-option active" data-lang="az">
+                    <img src="https://flagcdn.com/w40/az.png" alt="AZ">
+                    <span>AZ</span>
+                </div>
+                <div class="lang-option" data-lang="ru">
+                    <img src="https://flagcdn.com/w40/ru.png" alt="RU">
+                    <span>RUS</span>
+                </div>
+                <div class="lang-option" data-lang="en">
+                    <img src="https://flagcdn.com/w40/gb.png" alt="EN">
+                    <span>ENG</span>
+                </div>
+                <div class="lang-option" data-lang="tr">
+                    <img src="https://flagcdn.com/w40/tr.png" alt="TR">
+                    <span>TR</span>
+                </div>
+            </div>
+            <!-- Anon Visitor Label -->
+            <span class="nav-anon-label" id="navAnonLabel" style="display:none;"></span>
+            <!-- User Auth -->
+            <div class="nav-auth-wrap">
+                <button id="userAuthBtn" onclick="openAuthModal()"><i class="fas fa-user"></i> <span class="nav-user-name">Giriş</span></button>
+            </div>
+            <a href="https://wa.link/wcams9" target="_blank" class="btn-session" data-i18n="btn_session">Seansa Yazıl</a>
+            <button class="hamburger" id="hamburger" aria-label="Menyu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- About Section -->
+    <section class="section about" id="about">
+        <div class="container">
+            <div class="section-header about-quote-header">
+                <p class="about-hero-quote" data-i18n-html="about_quote">"İnsanın ruhunu müalicə etmədən cismini müalicə etmək olmaz"</p>
+            </div>
+            <!-- Faydalı Məlumatlar - inside about -->
+            <div class="blog-section-inline" id="blogSection">
+                <div class="section-header blog-section-header">
+                    <h2 class="section-title blog-section-title" data-i18n="blog_section_title">MÜTƏXƏSSİSDƏN QEYDLƏR</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="blog-grid" id="blogGrid">
+                    <!-- Blog cards rendered by JS from localStorage -->
+                </div>
+            </div>
+            <div class="about-content">
+                <div class="about-image-col">
+                    <div class="about-image-frame">
+                        <img src="profil sekli 3.png" alt="Şahsəddin İmanlı">
+                        <div class="about-image-decoration"></div>
+                        <div class="about-badge">
+                            <span class="badge-number">35+</span>
+                            <span class="badge-text" data-i18n-html="badge_years">İllik Təcrübə</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-text-col">
+                    <p class="about-lead" data-i18n="about_lead">İmanov Şahsəddin Abbas oğlu 1966-cı ildə Naxçıvan Muxtar Respublikasının Şərur rayonunun Zeyvə-Düdəngə kəndində anadan olmuşdur.</p>
+                    <p data-i18n="about_p1">Hələ 6-7 yaşlarından etibarən insanın əbədi həyatı kimi dərin fəlsəfi sualların axtarışında olmuşdur. Məktəb illərində müəllimlərinin fikirlərini oxumaq bacarığına malik olsa da, bunu gizlətmişdir. 14-15 yaşlarında Himalay və Tibet yoqlarının uzunömürlülüyü haqqında oxuduqları onu bu sahəyə daha da bağlamışdır.</p>
+                    <p data-i18n="about_p2">Əvvəlcə Rusiyanın Sverdlovsk (indiki Yekaterinburq) şəhərində Dağ-mədən institutunda təhsil almış, qısa müddət mühəndis kimi çalışmışdır.</p>
+                    <p data-i18n-html="about_p3">Daha sonra mənəvi elmləri dərindən öyrənmək üçün <strong>Moskvada reiki, kosmoenergetika, aydıngörmə və aydıneşitmə</strong> sahələri üzrə təhsil almışdır.</p>
+                    <p data-i18n-html="about_p4">Nəhayət, <strong>Bakıda Psixologiya və Parapsixologiya İnstitutunu</strong> bitirərək bu sahədə universal mütəxəssisə çevrilmişdir.</p>
+                    <div class="about-highlights">
+                        <div class="highlight-item">
+                            <span class="highlight-icon">Ψ</span>
+                            <span data-i18n="highlight_1">Psixologiya & Parapsixologiya İnstitutu</span>
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-eye"></i>
+                            <span data-i18n="highlight_2">Reiki, Kosmoenergetika, Aydıngörmə</span>
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-seedling"></i>
+                            <span data-i18n="highlight_3">Qeyri-Ənənəvi Tibb Metodologiyası</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Hero Content - same container as about -->
+            <div class="hero-content">
+                <div class="hero-calendar-box animate-fade-up">
+                    <h3 class="hero-form-title" data-i18n="reservation_title">Seans üçün Gün Seçimi</h3>
+                    <p class="hero-form-desc" data-i18n="reservation_desc">Sizə uyğun günü seçin, WhatsApp vasitəsilə əlaqə qurun.</p>
+                    <div class="calendar-wrapper hero-calendar">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" id="heroCalendarPrev"><i class="fas fa-chevron-left"></i></button>
+                            <h3 class="calendar-month" id="heroCalendarMonth"></h3>
+                            <button class="calendar-nav" id="heroCalendarNext"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="calendar-weekdays" id="heroCalendarWeekdays">
+                            <span data-i18n="cal_mon">BE</span><span data-i18n="cal_tue">ÇA</span><span data-i18n="cal_wed">Ç</span><span data-i18n="cal_thu">CA</span><span data-i18n="cal_fri">C</span><span data-i18n="cal_sat">Ş</span><span data-i18n="cal_sun">B</span>
+                        </div>
+                        <div class="calendar-days" id="heroCalendarDays"></div>
+                    </div>
+                </div>
+                <div class="hero-form animate-fade-up">
+                    <h3 class="hero-form-title" data-i18n="hero_form_title">Zəng Sifarişi</h3>
+                    <p class="hero-form-desc" data-i18n="hero_form_desc">Qısa zamanda əlaqə saxlamaq üçün nömrənizi yazın.</p>
+                    <form class="hero-call-form" id="heroCallForm">
+                        <div class="form-group">
+                            <div class="input-icon"><i class="fas fa-user"></i></div>
+                            <input type="text" name="ad" data-i18n-placeholder="placeholder_name" placeholder="AD" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-icon"><i class="fas fa-user"></i></div>
+                            <input type="text" name="soyad" data-i18n-placeholder="placeholder_surname" placeholder="SOYAD" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-icon"><i class="fas fa-phone"></i></div>
+                            <div class="phone-input">
+                                <select class="phone-prefix-select" name="phone_code">
+                                    <option value="+994" selected>🇦🇿 +994</option>
+                                    <option value="+7">🇷🇺 +7</option>
+                                </select>
+                                <input type="tel" name="telefon" data-i18n-placeholder="placeholder_phone" placeholder="TEL NÖMRƏSİ" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-gold btn-full" data-i18n="btn_submit">Müraciət Göndər</button>
+                    </form>
+                    <div class="hero-form-features">
+                        <span><i class="fas fa-check-circle"></i> <span data-i18n="form_feat_1">Ödənişli müayinə/şəfalanma</span></span>
+                        <span><i class="fas fa-check-circle"></i> <span data-i18n="form_feat_2">24 saat ərzində geri zəng</span></span>
+                        <span><i class="fas fa-check-circle"></i> <span data-i18n="form_feat_3">Tam məxfilik</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Disclaimer Modal -->
+    <div class="disclaimer-overlay" id="disclaimerOverlay">
+        <div class="disclaimer-modal">
+            <button class="disclaimer-close" id="disclaimerClose"><i class="fas fa-times"></i></button>
+            <h3 class="disclaimer-title"><i class="fas fa-exclamation-triangle"></i> <span data-i18n="hero_attention">Diqqət !</span></h3>
+            <p class="disclaimer-text" data-i18n-html="hero_text">Şahsəddin İmanlı ənənəvi tibb mütəxəssisi deyil. O, heç bir dərman və ya bitki tərkibli vasitələrlə müalicə aparmır. Onun müalicələri yalnız <strong>parapsixoloji seanslar</strong>, <strong>sevgi enerjisi</strong> və <strong>Tantra yoqa - nəfəs terapiyası</strong> vasitəsilə həyata keçirilir.</p>
+            <button class="btn btn-primary disclaimer-accept" id="disclaimerAccept"><span data-i18n="disclaimer_accept">Anladım</span></button>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <section class="hero" id="hero">
+        <div class="hero-particles" id="particles"></div>
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="container stats-content">
+                <div class="stat-item animate-fade-up">
+                    <div class="stat-icon"><i class="fab fa-tiktok"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number-row"><span class="stat-number" data-target="100000">0</span><span class="stat-suffix">+</span></div>
+                        <span class="stat-label" data-i18n="stat_tiktok">Tiktok İzləyicisi</span>
+                    </div>
+                </div>
+                <div class="stat-item animate-fade-up delay-1">
+                    <div class="stat-icon"><i class="fas fa-star"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number-row"><span class="stat-number" data-target="15000">0</span><span class="stat-suffix">+</span></div>
+                        <span class="stat-label" data-i18n="stat_sessions">Uğurlu Seans</span>
+                    </div>
+                </div>
+                <div class="stat-item animate-fade-up delay-2">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number-row"><span class="stat-number" data-target="35">0</span><span class="stat-suffix">+</span></div>
+                        <span class="stat-label" data-i18n="stat_experience">İllik Təcrübə</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Services Section -->
+    <section class="section services" id="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="services_tag">Xidmətlər</span>
+                <h2 class="section-title" data-i18n="services_title">Müayinə və Müalicə</h2>
+                <div class="section-line"></div>
+                <p class="section-desc" data-i18n="services_desc">Şahsəddin İmanlı insan orqanizminə üç hissədən ibarət sistem kimi yanaşır:</p>
+                <p class="section-desc" data-i18n-html="services_desc2"><strong>Ruh</strong>, <strong>Can</strong> və <strong>Bədən</strong>. Əvvəlcə bəsirət gözü ilə müayinə/diaqnostika aparılır. Ruhun, canın və bədənin problemləri araşdırılır. Daha sonra isə problemləri aradan qaldırmaq üçün şəfa-müalicə seansları təklif olunur. Müalicələr bəsirət gözü ilə aparılır. Ona qəlb gözü də deyirlər.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h3 data-i18n="service_1_title">Tantra Yoqa & Nəfəs Terapiyası</h3>
+                    <p data-i18n="service_1_desc">Ruhu və canı bədənə bağlayan əsas vasitə nəfəsdir. Nəfəsi idarə etməklə insan bütün bədəninə nəzarət edə, qorxu və blokları aça bilər.</p>
+                    <div class="service-glow"></div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <img src="icon 2.png" alt="Çakra" class="service-img-icon">
+                    </div>
+                    <h3 data-i18n="service_2_title">Çakraların Açılması</h3>
+                    <p data-i18n="service_2_desc">Bədəndəki enerji mərkəzləri (çakralar) üzərində işləyirik. Xüsusilə 6-cı çakra — "Bəsirət gözü" və 7-ci çakra — "Tac çakra" (Allahla rabitə) üzərində mənəvi təmizlənmə aparılır.</p>
+                    <div class="service-glow"></div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-yin-yang"></i>
+                    </div>
+                    <h3 data-i18n="service_3_title">Səbəb-Nəticə Qanunu</h3>
+                    <p data-i18n="service_3_desc">Həyatda təsadüf yoxdur. Bütün xəstəliklərin və uğursuzluqların əsasında Allahla rabitənin qırılması, ailədaxili münaqişələr və genetik problemlər dayanır.</p>
+                    <div class="service-glow"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problems Section -->
+    <section class="section problems" id="problems">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="problems_tag">Fəaliyyətlər</span>
+                <h2 class="section-title" data-i18n="problems_title">Hansı Sahələrdə Fəaliyyət Göstəririk ?</h2>
+                <div class="section-line"></div>
+                <p class="section-desc" data-i18n="problems_desc">Xəstəliyin və problemin özü deyil, onları yaradan kök səbəblər müalicə edilir. Beləliklə problem və xəstəlik aradan qalxır.</p>
+            </div>
+
+            <!-- Problem Category Tabs -->
+            <div class="problem-tabs">
+                <button class="problem-tab active" data-tab="psixoloji">
+                    <i class="fas fa-brain"></i>
+                    <span data-i18n="tab_psixoloji">Psixoloji Böhranlar</span>
+                </button>
+                <button class="problem-tab" data-tab="aile">
+                    <i class="fas fa-heart"></i>
+                    <span data-i18n="tab_aile">Ailə Problemləri</span>
+                </button>
+                <button class="problem-tab" data-tab="xestelik">
+                    <i class="fas fa-hand-holding-medical"></i>
+                    <span data-i18n="tab_xestelik">Ruhdan Bədənə Keçən Xəstəliklər</span>
+                </button>
+                <button class="problem-tab" data-tab="asililiq">
+                    <i class="fas fa-shield-alt"></i>
+                    <span data-i18n="tab_asililiq">Asılılıqlar</span>
+                </button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="problem-content active" id="tab-psixoloji">
+                <div class="problem-cards">
+                    <div class="problem-card">
+                        <div class="problem-card-icon"><i class="fas fa-heartbeat"></i></div>
+                        <h4 data-i18n="problem_panik_title">Panik Atak</h4>
+                        <p data-i18n="problem_panik_desc">Cəmiyyət arasına çıxmaqdan qorxma, yemək yeyərkən boğulma hissi və daimi ölüm qorxusu. Panik atak əslində ruhla canın bədən vəhdətinin pozulması nəticəsində yaranır. Nəfəs terapiyası və psixoloji dəstəklə tamamilə aradan qaldırılır.</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-card-icon"><i class="fas fa-compress-alt"></i></div>
+                        <h4 data-i18n="problem_nevroz_title">Nevroz və Stress</h4>
+                        <p data-i18n="problem_nevroz_desc">21-ci əsrin ən böyük bəlası — daxili gərginlik və informasiya bolluğunun nəticəsi. Əsas mənəvi səbəbi insanın "bəsirət (qəlb) gözünün" bağlanması və daxili qaranlığa düşməsidir.</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-card-icon"><i class="fas fa-user-friends"></i></div>
+                        <h4 data-i18n="problem_travma_title">Keçmiş Travmalar və Qorxular</h4>
+                        <p data-i18n="problem_travma_desc">Uşaqlıq dövründə yaşanmış travmalar, məktəb illərindəki psixoloji zədələr, ana bətnində və ya doğuş vaxtı alınmış qorxular gələcəkdə insanın həyat enerjisini bloklayır.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem-content" id="tab-aile">
+                <div class="problem-cards">
+                    <div class="problem-card">
+                        <div class="problem-card-icon"><i class="fas fa-heart-broken"></i></div>
+                        <h4 data-i18n="problem_xeyanet_title">Xəyanət və Evdən Uzaqlaşma</h4>
+                        <p data-i18n="problem_xeyanet_desc">Kişilərin xəyanətinin arxasında evdəki psixoloji təzyiq, dəyər görməmək, cinsi soyuqluq və məsuliyyətdən qaçış dayanır. Bəzən qadın şüuraltı olaraq kişini evdən itələyir. Biz bu energetik boşluqları aradan qaldırırıq.</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-card-icon"><i class="fas fa-users"></i></div>
+                        <h4 data-i18n="problem_qaynana_title">Qaynana-Gəlin Münaqişələri</h4>
+                        <p data-i18n="problem_qaynana_desc">Gəlinin öz anası ilə olan uşaqlıq travmalarının gələcəyə daşınması, qaynananın hegemonluq meyli və sərhədlərin aşılması nəticəsində yaranan enerji konfliktidir.</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-card-icon"><i class="fas fa-eye"></i></div>
+                        <h4 data-i18n="problem_guvensizlik_title">Güvənsizlik və Qısqanclıq</h4>
+                        <p data-i18n="problem_guvensizlik_desc">Həyat yoldaşının telefonunu yoxlamaq kimi hallar əslində itirmək qorxusundan, uşaqlıq travmalarından və daxili özgüvənsizlikdən irəli gəlir.</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-card-icon"><i class="fas fa-baby"></i></div>
+                        <h4 data-i18n="problem_usaq_title">Uşaqların Psixologiyası</h4>
+                        <p data-i18n="problem_usaq_desc">Valideynlərin uşaqların yanında mübahisə etməsi, aqressiv davranması uşaqların gələcək həyatını və daxili dünyasını məhv edir.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem-content" id="tab-xestelik">
+                <div class="problem-cards">
+                    <div class="problem-card">
+                        <div class="problem-card-icon"><i class="fas fa-user-injured"></i></div>
+                        <h4 data-i18n="problem_osteo_title">Osteoxondroz</h4>
+                        <p data-i18n="problem_osteo_desc">Boyun, kürək, bel ağrıları — parapsixologiyaya görə sinirlərin paslanmasıdır. Boyun və çiyin ağrıları insanın həyatın yükünü təkbaşına daşımasından yaranır.</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-card-icon"><i class="fas fa-shoe-prints"></i></div>
+                        <h4 data-i18n="problem_ayaq_title">Ayaq və Oynaq Ağrıları</h4>
+                        <p data-i18n="problem_ayaq_desc">Sol ayaqdakı keyimələr qadın cinsi ilə, sağ ayaq isə kişi cinsi ilə rabitənin pozulmasını göstərir. Ayaq ağrıları insanın qabağa getmək istəməməsi ilə bağlıdır.</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-card-icon"><i class="fas fa-diagnoses"></i></div>
+                        <h4 data-i18n="problem_mede_title">Mədə-Bağırsaq Xəstəlikləri</h4>
+                        <p data-i18n="problem_mede_desc">Mədə ağrıları, xoralar sadəcə yediklərimizdən deyil, "həzm edə bilmədiyimiz" fikirlərdən, stressdən və informasiya bolluğundan yaranır.</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-card-icon"><i class="fas fa-comment-slash"></i></div>
+                        <h4 data-i18n="problem_zob_title">Zob və Boğaz Problemləri</h4>
+                        <p data-i18n="problem_zob_desc">İnsanın öz fikrini, sözünü içində boğması, sözünü vaxtında deyə bilməməsi nəticəsində boğaz çakrasında yaranan düyünlərdir.</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-card-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                        <h4 data-i18n="problem_onko_title">Onkoloji Xəstəliklər və Mastopatiya</h4>
+                        <p data-i18n="problem_onko_desc">İllərlə içəridə yığılıb qalan qorxu, həsəd, paxıllıq, kin, nifrət və bağışlaya bilməmək duyğusu. İlahi enerji və çakraların təmizlənməsi ilə bədəndəki düyünlərin yox olmasına kömək edirik.</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-card-icon"><i class="fas fa-low-vision"></i></div>
+                        <h4 data-i18n="problem_goz_title">Göz Problemləri</h4>
+                        <p data-i18n="problem_goz_desc">Gözlərdə yaranan problemlər əksər hallarda insanın ətrafı görmək istəməməsi və reallıqdan qaçması ilə əlaqədar psixoloji haldır.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem-content" id="tab-asililiq">
+                <div class="problem-cards">
+                    <div class="problem-card full-width">
+                        <div class="problem-card-icon"><i class="fas fa-wine-bottle"></i></div>
+                        <h4 data-i18n="problem_asililiq_title">Zərərli Vərdişlər və Asılılıqlar</h4>
+                        <p data-i18n="problem_asililiq_desc">İçki, qumar, siqaret və digər asılılıqlar əslində insanın zəif iradəsindən, həyatla üzləşmək istəməməsindən və məsuliyyətdən qaçışından qaynaqlanır. Biz mənəvi dəstək və terapiya ilə bu qaçışın səbəblərini aradan qaldırır, insanı öz real gücü və iradəsi ilə tanış edirik.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem-disclaimer">
+                <i class="fas fa-info-circle"></i>
+                <p data-i18n="problem_disclaimer">Şahsəddin İmanlı fərdi olaraq problemin səbəbini araşdırmadan diaqnoz qoymur. Hər bir pasiyent fərdi yoxlanılır, çünki xəstəliyin əsas səbəbi hər bir kəs üçün fərqli ola bilər.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Admin Panel -->
+    <div class="admin-panel-overlay" id="adminPanelOverlay">
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h3><i class="fas fa-shield-alt"></i> Admin Panel</h3>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <div id="adminLangSwitcher" style="display:inline-flex;gap:4px;">
+                        <button type="button" class="admin-lang-btn active" data-admin-lang="az" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid var(--gold);border-radius:8px;background:var(--gold);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.3s;">
+                            <img src="https://flagcdn.com/w20/az.png" alt="AZ" style="width:16px;height:11px;"> AZ
+                        </button>
+                        <button type="button" class="admin-lang-btn" data-admin-lang="ru" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid var(--gold);border-radius:8px;background:#fff;color:var(--gold);font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.3s;">
+                            <img src="https://flagcdn.com/w20/ru.png" alt="RU" style="width:16px;height:11px;"> RU
+                        </button>
+                    </div>
+                    <a href="#blogSection" id="goToSiteBtn" data-admin-i18n="goToSite" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:var(--gold);color:#fff;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;transition:opacity 0.3s;cursor:pointer;" onclick="document.getElementById('adminPanelOverlay').classList.remove('active');document.body.style.overflow='auto';"><i class="fas fa-external-link-alt"></i> <span data-admin-i18n="goToSiteText">Sayta keç</span></a>
+                    <button class="admin-panel-close" id="adminPanelClose">&times;</button>
+                </div>
+            </div>
+            <div class="admin-panel-body">
+                <!-- Tab buttons -->
+                <div style="display:flex;gap:10px;margin-bottom:20px;">
+                    <button class="admin-tab-btn active" data-tab="contentful" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:var(--gold);color:#fff;font-weight:600;cursor:pointer;transition:all 0.3s;">
+                        <i class="fas fa-pen-fancy"></i> <span data-admin-i18n="tabNewArticle">Yeni Məqalə</span>
+                    </button>
+                    <button class="admin-tab-btn" data-tab="articles" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;">
+                        <i class="fas fa-newspaper"></i> <span data-admin-i18n="tabArticles">Məqalələr</span>
+                    </button>
+                    <button class="admin-tab-btn" data-tab="comments" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;">
+                        <i class="fas fa-comments"></i> <span data-admin-i18n="tabComments">Şərhlər</span>
+                    </button>
+                    <button class="admin-tab-btn" data-tab="users" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;">
+                        <i class="fas fa-users"></i> <span data-admin-i18n="tabUsers">İstifadəçilər</span>
+                    </button>
+                    <button class="admin-tab-btn" data-tab="stats" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;">
+                        <i class="fas fa-chart-bar"></i> <span data-admin-i18n="tabStats">Statistika</span>
+                    </button>
+                </div>
+
+                <!-- Contentful tab — New Article Form -->
+                <div class="admin-tab-content" id="tabContentful">
+                    <form id="newArticleForm" style="display:flex;flex-direction:column;gap:14px;">
+                        <!-- Title AZ -->
+                        <div>
+                            <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;"><span data-admin-i18n="labelTitle">Başlıq</span> <span style="font-size:0.75rem;color:#999;font-weight:400;">| Azerbaijani</span></label>
+                            <input type="text" id="articleTitle" required placeholder="Məqalənin başlığı" data-admin-i18n-placeholder="placeholderTitle" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                        </div>
+                        <!-- Date AZ -->
+                        <div>
+                            <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;"><span data-admin-i18n="labelDate">Tarix</span> <span style="font-size:0.75rem;color:#999;font-weight:400;">| Azerbaijani</span></label>
+                            <input type="text" id="articleDate" required placeholder="Məs: 9 mart 2026" data-admin-i18n-placeholder="placeholderDate" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                        </div>
+                        <!-- Russian locale toggle -->
+                        <div>
+                            <button type="button" id="toggleRuLocale" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1.5px dashed #bbb;border-radius:10px;background:#fff;color:#666;font-size:0.82rem;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='#bbb';this.style.color='#666'">
+                                <i class="fas fa-globe"></i> <span data-admin-i18n="toggleRuSupport">Rus dili dəstəyini aç</span>
+                            </button>
+                        </div>
+                        <!-- Russian fields (hidden by default) -->
+                        <div id="ruLocaleFields" style="display:none;border:1.5px solid #e0e0e0;border-radius:12px;padding:14px;background:#f9f9ff;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                                <span style="font-weight:600;font-size:0.82rem;color:#666;"><img src="https://flagcdn.com/w20/ru.png" alt="RU" style="vertical-align:middle;margin-right:4px;"> Russian</span>
+                                <button type="button" id="closeRuLocale" style="background:none;border:none;color:#999;cursor:pointer;font-size:0.9rem;padding:2px 6px;" title="Bağla"><i class="fas fa-times"></i></button>
+                            </div>
+                            <div style="margin-bottom:10px;">
+                                <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;">Başlıq <span style="font-size:0.75rem;color:#999;font-weight:400;">| Russian</span></label>
+                                <input type="text" id="articleTitleRu" placeholder="Заголовок статьи" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                            </div>
+                            <div>
+                                <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;">Tarix <span style="font-size:0.75rem;color:#999;font-weight:400;">| Russian</span></label>
+                                <input type="text" id="articleDateRu" placeholder="Напр: 9 марта 2026" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                            </div>
+                        </div>
+                        <!-- Image -->
+                        <div>
+                            <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;"><span data-admin-i18n="labelImage">Şəkil</span></label>
+                            <input type="file" id="articleImage" accept="image/*" style="width:100%;padding:8px;border:1.5px solid #ddd;border-radius:10px;font-size:0.85rem;box-sizing:border-box;">
+                            <img id="articleImagePreview" style="display:none;max-width:100%;max-height:200px;border-radius:10px;margin-top:8px;object-fit:cover;">
+                        </div>
+                        <!-- Rich Text Toolbar -->
+                        <div>
+                            <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;"><span data-admin-i18n="labelText">Mətn</span> <span style="font-size:0.75rem;color:#999;font-weight:400;">| Azerbaijani</span></label>
+                            <div id="articleToolbar" style="border:1px solid #ddd;border-radius:10px;padding:8px;margin-bottom:6px;background:#fafafa;">
+                                <!-- Row 1: Font family + Font size -->
+                                <div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
+                                    <select id="rtFontFamily" title="Şrift seçin" style="padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:0.82rem;background:#fff;cursor:pointer;min-width:140px;">
+                                        <option value="" style="font-family:inherit;">Şrift seçin</option>
+                                        <option value="Arial" style="font-family:Arial;">Arial</option>
+                                        <option value="Times New Roman" style="font-family:'Times New Roman';">Times New Roman</option>
+                                        <option value="Georgia" style="font-family:Georgia;">Georgia</option>
+                                        <option value="Verdana" style="font-family:Verdana;">Verdana</option>
+                                        <option value="Tahoma" style="font-family:Tahoma;">Tahoma</option>
+                                        <option value="Trebuchet MS" style="font-family:'Trebuchet MS';">Trebuchet MS</option>
+                                        <option value="Calibri" style="font-family:Calibri;">Calibri</option>
+                                        <option value="Segoe UI" style="font-family:'Segoe UI';">Segoe UI</option>
+                                        <option value="Roboto" style="font-family:Roboto;">Roboto</option>
+                                        <option value="Open Sans" style="font-family:'Open Sans';">Open Sans</option>
+                                        <option value="Montserrat" style="font-family:Montserrat;">Montserrat</option>
+                                        <option value="Inter" style="font-family:Inter;">Inter</option>
+                                        <option value="Nunito" style="font-family:Nunito;">Nunito</option>
+                                        <option value="PT Sans" style="font-family:'PT Sans';">PT Sans</option>
+                                        <option value="PT Serif" style="font-family:'PT Serif';">PT Serif</option>
+                                        <option value="Courier New" style="font-family:'Courier New';">Courier New</option>
+                                    </select>
+                                    <select id="rtFontSize" title="Ölçü" style="padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:0.82rem;background:#fff;cursor:pointer;width:65px;">
+                                        <option value="">Ölçü</option>
+                                        <option value="1">8</option>
+                                        <option value="2">10</option>
+                                        <option value="3" selected>12</option>
+                                        <option value="4">14</option>
+                                        <option value="5">18</option>
+                                        <option value="6">24</option>
+                                        <option value="7">36</option>
+                                    </select>
+                                    <select id="rtHeading" title="Başlıq" style="padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:0.82rem;background:#fff;cursor:pointer;min-width:120px;">
+                                        <option value="" style="font-size:14px;">Normal text</option>
+                                        <option value="h1" style="font-size:24px;font-weight:bold;">Heading 1</option>
+                                        <option value="h2" style="font-size:20px;font-weight:bold;">Heading 2</option>
+                                        <option value="h3" style="font-size:17px;font-weight:bold;">Heading 3</option>
+                                        <option value="h4" style="font-size:15px;font-weight:bold;">Heading 4</option>
+                                        <option value="h5" style="font-size:13px;font-weight:bold;">Heading 5</option>
+                                        <option value="h6" style="font-size:11px;font-weight:bold;">Heading 6</option>
+                                    </select>
+                                </div>
+                                <!-- Row 2: Formatting buttons -->
+                                <div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;">
+                                    <button type="button" class="rt-btn" data-cmd="bold" title="Qalın (Ctrl+B)" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-bold"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="italic" title="Kursiv (Ctrl+I)" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-italic"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="underline" title="Altıxətli (Ctrl+U)" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-underline"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="strikethrough" title="Üstüxətli" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-strikethrough"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" class="rt-btn" data-cmd="justifyLeft" title="Sola" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-left"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="justifyCenter" title="Ortaya" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-center"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="justifyRight" title="Sağa" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-right"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="justifyFull" title="Hər iki tərəfə" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-justify"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" class="rt-btn" data-cmd="ul" title="Siyahı" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-list-ul"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="ol" title="Nömrəli siyahı" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-list-ol"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="quote" title="Sitat" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-quote-right"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <label title="Mətn rəngi" style="padding:4px 8px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:0.82rem;">
+                                        <i class="fas fa-font" style="color:#333;"></i>
+                                        <input type="color" id="rtTextColor" value="#000000" style="width:20px;height:20px;border:none;padding:0;cursor:pointer;background:transparent;">
+                                    </label>
+                                    <label title="Fon rəngi" style="padding:4px 8px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:0.82rem;">
+                                        <i class="fas fa-highlighter" style="color:#f39c12;"></i>
+                                        <input type="color" id="rtBgColor" value="#ffff00" style="width:20px;height:20px;border:none;padding:0;cursor:pointer;background:transparent;">
+                                    </label>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" class="rt-btn" data-cmd="undo" title="Geri al" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-undo"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="redo" title="İrəli al" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-redo"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="removeFormat" title="Formatı təmizlə" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-eraser"></i></button>
+                                </div>
+                            </div>
+                            <div id="articleContent" contenteditable="true" style="min-height:200px;padding:14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;line-height:1.7;outline:none;overflow-y:auto;max-height:400px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></div>
+                        </div>
+                        <!-- Russian content (hidden by default) -->
+                        <div id="ruContentField" style="display:none;border:1.5px solid #e0e0e0;border-radius:12px;padding:14px;background:#f9f9ff;">
+                            <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;">Mətn <span style="font-size:0.75rem;color:#999;font-weight:400;">| Russian</span></label>
+                            <div id="articleContentRu" contenteditable="true" style="min-height:150px;padding:14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;line-height:1.7;outline:none;overflow-y:auto;max-height:300px;background:#fff;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'" placeholder="Текст статьи на русском..."></div>
+                        </div>
+                        <!-- Submit -->
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <button type="submit" id="articleSubmitBtn" class="admin-save-btn" style="padding:12px 28px;display:inline-flex;align-items:center;gap:8px;">
+                                <i class="fas fa-paper-plane"></i> <span data-admin-i18n="publishArticle">Məqaləni Dərc Et</span>
+                            </button>
+                            <button type="button" id="cancelEditBtn" style="display:none;padding:12px 28px;background:#e74c3c;color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.3s;align-items:center;gap:8px;" onclick="cancelEditMode()">
+                                <i class="fas fa-times"></i> <span data-admin-i18n="cancelEdit">Ləğv et</span>
+                            </button>
+                            <span id="articleStatus" style="font-size:0.85rem;color:var(--text-secondary);"></span>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Articles tab — Delete articles -->
+                <div class="admin-tab-content" id="tabArticles" style="display:none;">
+                    <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:16px;" data-admin-i18n="articlesDesc">Məqaləni redaktə etmək və ya silmək üçün yanındakı düymələrə basın:</p>
+                    <div id="adminArticlesList" style="overflow-y:auto;max-height:500px;">
+                        <p style="text-align:center;color:#999;padding:20px 0;">Yüklənir...</p>
+                    </div>
+                </div>
+
+                <!-- Comments tab -->
+                <div class="admin-tab-content" id="tabComments" style="display:none;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+                        <p style="color:var(--text-secondary);font-size:0.9rem;margin:0;" data-admin-i18n="commentsDesc">Bütün blog şərhləri:</p>
+                        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+                            <select id="adminCommentSort" style="padding:6px 12px;border:1px solid #ddd;border-radius:8px;font-size:0.8rem;cursor:pointer;">
+                                <option value="newest" data-admin-i18n="sortNewest">Ən yeni əvvəl</option>
+                                <option value="oldest" data-admin-i18n="sortOldest">Ən köhnə əvvəl</option>
+                            </select>
+                            <button id="adminSelectAllComments" style="padding:6px 14px;background:#f0f0f0;color:#333;border:1px solid #ddd;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;">
+                                <i class="fas fa-check-double"></i> <span data-admin-i18n="selectAll">Hamısını seç</span>
+                            </button>
+                            <button id="adminDeleteSelectedComments" style="padding:6px 14px;background:#e74c3c;color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;display:none;">
+                                <i class="fas fa-trash"></i> <span data-admin-i18n="deleteSelected">Seçilənləri sil</span> (<span id="adminSelectedCount">0</span>)
+                            </button>
+                            <button id="adminDeleteAllComments" style="padding:6px 14px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;">
+                                <i class="fas fa-trash-alt"></i> <span data-admin-i18n="deleteAll">Hamısını sil</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="adminCommentsList" style="overflow-y:auto;">
+                        <p style="text-align:center;color:#999;padding:20px 0;">Yüklənir...</p>
+                    </div>
+                </div>
+
+                <!-- Stats tab -->
+                <div class="admin-tab-content" id="tabStats" style="display:none;">
+                    <div id="adminStatsContent">
+                        <p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> Yüklənir...</p>
+                    </div>
+                </div>
+
+                <!-- Users tab -->
+                <div class="admin-tab-content" id="tabUsers" style="display:none;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                        <p style="color:var(--text-secondary);font-size:0.9rem;margin:0;" data-admin-i18n="usersDesc">Qeydiyyatdan keçən istifadəçilər:</p>
+                        <span id="adminUsersCount" style="font-size:0.85rem;color:var(--gold);font-weight:600;"></span>
+                    </div>
+                    <div id="adminUsersList" style="overflow-y:auto;">
+                        <p style="text-align:center;color:#999;padding:20px 0;">Yüklənir...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="section faq" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="faq_tag">Sual-Cavab</span>
+                <h2 class="section-title" data-i18n="faq_title">Tez-tez Verilən Suallar</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span data-i18n="faq_q1">Cadu, əməl, bədnəzər varmı?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p data-i18n-html="faq_a1">Şahsəddin bəy bunları qətiyyətlə rədd edir. O bildirir ki, bunlar illüziyadır, insanın özünü təlqin etməsidir (hipnozdur). Bundan qorunmağın tək yolu <strong>"Lə İlahə İlləllah"</strong> zikridir.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span data-i18n="faq_q2">Xəstəliklərin əsas səbəbi nədir?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p data-i18n-html="faq_a2">Xəstəliyin kökündə nifrət, kin, paxıllıq, bağışlaya bilməmək və ən əsası <strong>"Allahla rabitənin pozulması"</strong> dayanır.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span data-i18n="faq_q3">Bütün xəstələrə eyni yanaşılırmı?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p data-i18n="faq_a3">Hər insanın problemi barmaq izi kimi fərdi və fərqlidir. Tək xəstənin özü yox, onun genetikası və ailə üzvləri də araşdırılır.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span data-i18n="faq_q4">Onlayn seans mümkündürmü?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p data-i18n-html="faq_a4">Bəli, dünyanın istənilən yerindən <strong>WhatsApp</strong> və ya <strong>Imo</strong> vasitəsilə onlayn qəbul mümkündür. Enerji məsafə tanımır.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span data-i18n="faq_q5">Müalicədə dərman istifadə olunurmu?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p data-i18n="faq_a5">Xeyr, heç bir dərman və ya bitki tərkibli vasitə istifadə edilmir. Şəfalanma yalnız parapsixoloji seanslar, sevgi enerjisi və Tantra yoqa (nəfəs terapiyası) vasitəsilə həyata keçirilir.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span data-i18n="faq_q6">İş qrafiki necədir?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p data-i18n-html="faq_a6">Hər gün səhər <strong>08:00</strong>-dən axşam <strong>21:00</strong>-a qədər qəbul aparılır. Həm canlı (əyani), həm də onlayn qəbul mövcuddur.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="contact_tag">Əlaqə</span>
+                <h2 class="section-title" data-i18n="contact_title">Bizimlə Əlaqə</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="fas fa-clock"></i></div>
+                    <h4 data-i18n="contact_schedule_title">İş Qrafiki</h4>
+                    <p data-i18n="contact_schedule">Hər gün: 08:00 — 21:00</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                    <h4 data-i18n="contact_phone_title">Telefon</h4>
+                    <p><a href="tel:+994518499998">+994 51 849 99 98</a></p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <h4 data-i18n="contact_email_title">E-poçt</h4>
+                    <p><a href="mailto:Shahseddinimanli2016@gmail.com">Shahseddinimanli2016@gmail.com</a></p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h4 data-i18n="contact_address_title">Ünvan</h4>
+                    <p data-i18n="contact_address">Bakı şəhəri, 9-cu mikrorayon</p>
+                    <p class="contact-sub" data-i18n="contact_address_sub">Naxçıvan: Şərur, "Əfsanə" özəl klinikası</p>
+                </div>
+            </div>
+            <div class="contact-formats">
+                <div class="format-card">
+                    <i class="fas fa-user-friends"></i>
+                    <h4 data-i18n="contact_live">Canlı Qəbul</h4>
+                    <p data-i18n="contact_live_desc">Bakı və Naxçıvanda əyani görüş</p>
+                </div>
+                <div class="format-card">
+                    <i class="fas fa-video"></i>
+                    <h4 data-i18n="contact_online">Onlayn Qəbul</h4>
+                    <p data-i18n="contact_online_desc">WhatsApp / Imo ilə dünyanın hər yerindən</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Şahsəddin İmanlı</h3>
+                    <p data-i18n="footer_subtitle">Parapsixoloq & Tantra Yoqa Müəllimi</p>
+                </div>
+                <div class="footer-contact">
+                    <h4 data-i18n="footer_contact">Bizimlə Əlaqə</h4>
+                    <p><i class="fas fa-phone-alt"></i> +994 51 849 99 98</p>
+                    <p><i class="fas fa-envelope"></i> Shahseddinimanli2016@gmail.com</p>
+                </div>
+                <div class="footer-social">
+                    <h4 data-i18n="footer_follow">Bizi İzləyin</h4>
+                    <div class="social-links">
+                        <a href="https://www.tiktok.com/@shahseddinimanli" class="social-link" target="_blank" data-social="tiktok" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.facebook.com/shahseddin.imanli" class="social-link" target="_blank" data-social="facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/parapsixoloq_yoq/" class="social-link" target="_blank" data-social="instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.link/wcams9" class="social-link" target="_blank" data-social="whatsapp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.youtube.com/@sahseddinimanli" class="social-link" target="_blank" data-social="youtube" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://web.telegram.org/k/#@menevi_shefaci" class="social-link" target="_blank" data-social="telegram" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p data-i18n-html="footer_rights">&copy; 2026 Şahsəddin İmanlı. Bütün hüquqlar qorunur.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.link/wcams9" target="_blank" class="whatsapp-float" aria-label="WhatsApp ilə əlaqə">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-pulse"></span>
+        <span class="whatsapp-pulse delay"></span>
+    </a>
+
+    <script src="translations.js"></script>
+    <script>
+        // Firebase init for admin panel
+        const firebaseConfig = {
+            apiKey: "AIzaSyBpgpRCBTtg4Tt0XRMUmOH8qs9RBcj04vo",
+            authDomain: "hekim-sayti-comments.firebaseapp.com",
+            databaseURL: "https://hekim-sayti-comments-default-rtdb.firebaseio.com",
+            projectId: "hekim-sayti-comments",
+            storageBucket: "hekim-sayti-comments.firebasestorage.app",
+            messagingSenderId: "158921605576",
+            appId: "1:158921605576:web:1c5d06133260aae200c0fd"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const adminDb = firebase.database();
+    </script>
+    <script src="auth.js"></script>
+    <script src="tracker.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
