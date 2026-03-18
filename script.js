@@ -2057,6 +2057,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     const entryData = await entryRes.json();
                     if (entryData.error) throw new Error(entryData.error);
 
+                    // Save raw HTML to Firebase for accurate rendering
+                    const htmlData = { az: contentHtml };
+                    if (contentRuHtml && contentRuHtml !== '<br>' && contentRuHtml.trim()) {
+                        htmlData.ru = contentRuHtml;
+                    }
+                    await adminDb.ref('articleHtml/' + editingEntryId).set(htmlData);
+
                     statusEl.textContent = 'Məqalə uğurla yeniləndi!';
                     statusEl.style.color = '#27ae60';
                     // Formu sıfırlamadan edit rejimində qal
@@ -2071,6 +2078,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     const entryData = await entryRes.json();
                     if (entryData.error) throw new Error(entryData.error);
+
+                    // Save raw HTML to Firebase for accurate rendering
+                    const newEntryId = entryData.entryId || entryData.id;
+                    if (newEntryId) {
+                        const htmlData = { az: contentHtml };
+                        if (contentRuHtml && contentRuHtml !== '<br>' && contentRuHtml.trim()) {
+                            htmlData.ru = contentRuHtml;
+                        }
+                        await adminDb.ref('articleHtml/' + newEntryId).set(htmlData);
+                    }
 
                     statusEl.textContent = 'Məqalə uğurla dərc edildi!';
                     statusEl.style.color = '#27ae60';

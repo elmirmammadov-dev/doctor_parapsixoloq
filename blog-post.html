@@ -825,7 +825,24 @@
                     }
                 }
 
-                const bodyHtml = f.content ? renderRichText(f.content) : '';
+                // Try Firebase raw HTML first (preserves alignment, colors etc.)
+                let bodyHtml = '';
+                try {
+                    const langKey = currentLang === 'ru' ? 'ru' : 'az';
+                    const htmlSnap = await db.ref('articleHtml/' + postId + '/' + langKey).once('value');
+                    if (htmlSnap.exists()) {
+                        bodyHtml = htmlSnap.val();
+                    } else if (langKey === 'ru') {
+                        // Fallback: try AZ html for RU
+                        const azSnap = await db.ref('articleHtml/' + postId + '/az').once('value');
+                        if (azSnap.exists()) bodyHtml = azSnap.val();
+                        else bodyHtml = f.content ? renderRichText(f.content) : '';
+                    } else {
+                        bodyHtml = f.content ? renderRichText(f.content) : '';
+                    }
+                } catch (e) {
+                    bodyHtml = f.content ? renderRichText(f.content) : '';
+                }
 
                 const postTexts = POST_TEXTS[currentLang] || POST_TEXTS.az;
                 container.innerHTML = `
