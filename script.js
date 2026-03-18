@@ -1635,162 +1635,128 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Rich text toolbar — buttons
+    // === Rich text toolbar helper: save/restore selection ===
+    let savedSelection = null;
+    function saveSelection() {
+        const sel = window.getSelection();
+        if (sel.rangeCount > 0) {
+            savedSelection = sel.getRangeAt(0).cloneRange();
+        }
+    }
+    function restoreSelection() {
+        if (savedSelection) {
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(savedSelection);
+        }
+    }
+
+    // Prevent focus loss on mousedown for all toolbar buttons & selects
+    document.querySelectorAll('.rt-btn, .rt-btn-ru').forEach(btn => {
+        btn.addEventListener('mousedown', e => e.preventDefault());
+    });
+
+    // Save selection when editors lose focus (before toolbar click)
+    ['articleContent', 'articleContentRu'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('keyup', saveSelection);
+            el.addEventListener('mouseup', saveSelection);
+            el.addEventListener('blur', saveSelection);
+        }
+    });
+
+    // Generic execCommand runner
+    function runCmd(cmd) {
+        if (cmd === 'bold') document.execCommand('bold');
+        else if (cmd === 'italic') document.execCommand('italic');
+        else if (cmd === 'underline') document.execCommand('underline');
+        else if (cmd === 'strikethrough') document.execCommand('strikeThrough');
+        else if (cmd === 'justifyLeft') document.execCommand('justifyLeft');
+        else if (cmd === 'justifyCenter') document.execCommand('justifyCenter');
+        else if (cmd === 'justifyRight') document.execCommand('justifyRight');
+        else if (cmd === 'justifyFull') document.execCommand('justifyFull');
+        else if (cmd === 'ul') document.execCommand('insertUnorderedList');
+        else if (cmd === 'ol') document.execCommand('insertOrderedList');
+        else if (cmd === 'quote') document.execCommand('formatBlock', false, 'blockquote');
+        else if (cmd === 'undo') document.execCommand('undo');
+        else if (cmd === 'redo') document.execCommand('redo');
+        else if (cmd === 'removeFormat') document.execCommand('removeFormat');
+    }
+
+    // AZ toolbar buttons
     document.querySelectorAll('.rt-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const cmd = btn.dataset.cmd;
-            const editor = document.getElementById('articleContent');
-            editor.focus();
-            if (cmd === 'bold') document.execCommand('bold');
-            else if (cmd === 'italic') document.execCommand('italic');
-            else if (cmd === 'underline') document.execCommand('underline');
-            else if (cmd === 'strikethrough') document.execCommand('strikeThrough');
-            else if (cmd === 'justifyLeft') document.execCommand('justifyLeft');
-            else if (cmd === 'justifyCenter') document.execCommand('justifyCenter');
-            else if (cmd === 'justifyRight') document.execCommand('justifyRight');
-            else if (cmd === 'justifyFull') document.execCommand('justifyFull');
-            else if (cmd === 'ul') document.execCommand('insertUnorderedList');
-            else if (cmd === 'ol') document.execCommand('insertOrderedList');
-            else if (cmd === 'quote') document.execCommand('formatBlock', false, 'blockquote');
-            else if (cmd === 'undo') document.execCommand('undo');
-            else if (cmd === 'redo') document.execCommand('redo');
-            else if (cmd === 'removeFormat') document.execCommand('removeFormat');
+            restoreSelection();
+            runCmd(btn.dataset.cmd);
+            saveSelection();
         });
     });
 
-    // Rich text toolbar — font family
-    const rtFontFamily = document.getElementById('rtFontFamily');
-    if (rtFontFamily) {
-        rtFontFamily.addEventListener('change', () => {
-            const editor = document.getElementById('articleContent');
-            editor.focus();
-            if (rtFontFamily.value) {
-                document.execCommand('fontName', false, rtFontFamily.value);
-            }
-        });
-    }
-
-    // Rich text toolbar — font size
-    const rtFontSize = document.getElementById('rtFontSize');
-    if (rtFontSize) {
-        rtFontSize.addEventListener('change', () => {
-            const editor = document.getElementById('articleContent');
-            editor.focus();
-            if (rtFontSize.value) {
-                document.execCommand('fontSize', false, rtFontSize.value);
-            }
-        });
-    }
-
-    // Rich text toolbar — heading select
-    const rtHeading = document.getElementById('rtHeading');
-    if (rtHeading) {
-        rtHeading.addEventListener('change', () => {
-            const editor = document.getElementById('articleContent');
-            editor.focus();
-            if (rtHeading.value) {
-                document.execCommand('formatBlock', false, rtHeading.value);
-            } else {
-                document.execCommand('formatBlock', false, 'p');
-            }
-            rtHeading.value = '';
-        });
-    }
-
-    // Rich text toolbar — text color
-    const rtTextColor = document.getElementById('rtTextColor');
-    if (rtTextColor) {
-        rtTextColor.addEventListener('input', () => {
-            const editor = document.getElementById('articleContent');
-            editor.focus();
-            document.execCommand('foreColor', false, rtTextColor.value);
-        });
-    }
-
-    // Rich text toolbar — background/highlight color
-    const rtBgColor = document.getElementById('rtBgColor');
-    if (rtBgColor) {
-        rtBgColor.addEventListener('input', () => {
-            const editor = document.getElementById('articleContent');
-            editor.focus();
-            document.execCommand('hiliteColor', false, rtBgColor.value);
-        });
-    }
-
-    // Rich text toolbar — RU buttons
+    // RU toolbar buttons
     document.querySelectorAll('.rt-btn-ru').forEach(btn => {
         btn.addEventListener('click', () => {
-            const cmd = btn.dataset.cmd;
-            const editor = document.getElementById('articleContentRu');
-            editor.focus();
-            if (cmd === 'bold') document.execCommand('bold');
-            else if (cmd === 'italic') document.execCommand('italic');
-            else if (cmd === 'underline') document.execCommand('underline');
-            else if (cmd === 'strikethrough') document.execCommand('strikeThrough');
-            else if (cmd === 'justifyLeft') document.execCommand('justifyLeft');
-            else if (cmd === 'justifyCenter') document.execCommand('justifyCenter');
-            else if (cmd === 'justifyRight') document.execCommand('justifyRight');
-            else if (cmd === 'justifyFull') document.execCommand('justifyFull');
-            else if (cmd === 'ul') document.execCommand('insertUnorderedList');
-            else if (cmd === 'ol') document.execCommand('insertOrderedList');
-            else if (cmd === 'quote') document.execCommand('formatBlock', false, 'blockquote');
-            else if (cmd === 'undo') document.execCommand('undo');
-            else if (cmd === 'redo') document.execCommand('redo');
-            else if (cmd === 'removeFormat') document.execCommand('removeFormat');
+            restoreSelection();
+            runCmd(btn.dataset.cmd);
+            saveSelection();
         });
     });
 
-    // Rich text toolbar RU — font family
-    const rtFontFamilyRu = document.getElementById('rtFontFamilyRu');
-    if (rtFontFamilyRu) {
-        rtFontFamilyRu.addEventListener('change', () => {
-            const editor = document.getElementById('articleContentRu');
-            editor.focus();
-            if (rtFontFamilyRu.value) document.execCommand('fontName', false, rtFontFamilyRu.value);
-        });
+    // Setup toolbar selects/inputs for a given editor
+    function setupToolbarControls(fontFamilyId, fontSizeId, headingId, textColorId, bgColorId) {
+        const fontFamily = document.getElementById(fontFamilyId);
+        if (fontFamily) {
+            fontFamily.addEventListener('mousedown', e => { e.target.tagName !== 'OPTION' || e.preventDefault(); });
+            fontFamily.addEventListener('change', () => {
+                restoreSelection();
+                if (fontFamily.value) document.execCommand('fontName', false, fontFamily.value);
+                saveSelection();
+            });
+        }
+
+        const fontSize = document.getElementById(fontSizeId);
+        if (fontSize) {
+            fontSize.addEventListener('change', () => {
+                restoreSelection();
+                if (fontSize.value) document.execCommand('fontSize', false, fontSize.value);
+                saveSelection();
+            });
+        }
+
+        const heading = document.getElementById(headingId);
+        if (heading) {
+            heading.addEventListener('change', () => {
+                restoreSelection();
+                if (heading.value) document.execCommand('formatBlock', false, heading.value);
+                else document.execCommand('formatBlock', false, 'p');
+                heading.value = '';
+                saveSelection();
+            });
+        }
+
+        const textColor = document.getElementById(textColorId);
+        if (textColor) {
+            textColor.addEventListener('input', () => {
+                restoreSelection();
+                document.execCommand('foreColor', false, textColor.value);
+                saveSelection();
+            });
+        }
+
+        const bgColor = document.getElementById(bgColorId);
+        if (bgColor) {
+            bgColor.addEventListener('input', () => {
+                restoreSelection();
+                document.execCommand('hiliteColor', false, bgColor.value);
+                saveSelection();
+            });
+        }
     }
 
-    // Rich text toolbar RU — font size
-    const rtFontSizeRu = document.getElementById('rtFontSizeRu');
-    if (rtFontSizeRu) {
-        rtFontSizeRu.addEventListener('change', () => {
-            const editor = document.getElementById('articleContentRu');
-            editor.focus();
-            if (rtFontSizeRu.value) document.execCommand('fontSize', false, rtFontSizeRu.value);
-        });
-    }
-
-    // Rich text toolbar RU — heading select
-    const rtHeadingRu = document.getElementById('rtHeadingRu');
-    if (rtHeadingRu) {
-        rtHeadingRu.addEventListener('change', () => {
-            const editor = document.getElementById('articleContentRu');
-            editor.focus();
-            if (rtHeadingRu.value) document.execCommand('formatBlock', false, rtHeadingRu.value);
-            else document.execCommand('formatBlock', false, 'p');
-            rtHeadingRu.value = '';
-        });
-    }
-
-    // Rich text toolbar RU — text color
-    const rtTextColorRu = document.getElementById('rtTextColorRu');
-    if (rtTextColorRu) {
-        rtTextColorRu.addEventListener('input', () => {
-            const editor = document.getElementById('articleContentRu');
-            editor.focus();
-            document.execCommand('foreColor', false, rtTextColorRu.value);
-        });
-    }
-
-    // Rich text toolbar RU — background color
-    const rtBgColorRu = document.getElementById('rtBgColorRu');
-    if (rtBgColorRu) {
-        rtBgColorRu.addEventListener('input', () => {
-            const editor = document.getElementById('articleContentRu');
-            editor.focus();
-            document.execCommand('hiliteColor', false, rtBgColorRu.value);
-        });
-    }
+    // AZ toolbar controls
+    setupToolbarControls('rtFontFamily', 'rtFontSize', 'rtHeading', 'rtTextColor', 'rtBgColor');
+    // RU toolbar controls
+    setupToolbarControls('rtFontFamilyRu', 'rtFontSizeRu', 'rtHeadingRu', 'rtTextColorRu', 'rtBgColorRu');
 
     // Convert HTML from contenteditable to Contentful rich text document
     function htmlToRichText(html) {
