@@ -7,6 +7,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // === LANGUAGE SWITCHER ===
     let currentLang = localStorage.getItem('lang') || 'az';
 
+    const socialLinks = {
+        az: {
+            tiktok: 'https://www.tiktok.com/@shahseddinimanli',
+            facebook: 'https://www.facebook.com/shahseddin.imanli',
+            instagram: 'https://www.instagram.com/parapsixoloq_yoq/',
+            whatsapp: 'https://wa.link/wcams9',
+            youtube: 'https://www.youtube.com/@sahseddinimanli',
+            telegram: 'https://web.telegram.org/k/#@menevi_shefaci'
+        },
+        ru: {
+            tiktok: 'https://www.tiktok.com/@shahseddinimanli1',
+            facebook: 'https://www.facebook.com/shahseddin.imanli',
+            instagram: 'https://www.instagram.com/shahseddinimanli/',
+            whatsapp: 'https://wa.link/wcams9',
+            youtube: 'https://www.youtube.com/@%D0%A8%D0%B0%D1%85%D1%81%D0%B0%D0%B4%D0%B4%D0%B8%D0%BD%D0%98%D0%BC%D0%B0%D0%BD%D0%BB%D1%8B',
+            telegram: 'https://web.telegram.org/k/#@menevi_shefaci'
+        },
+        en: {
+            tiktok: 'https://www.tiktok.com/@shahseddinimanli',
+            facebook: 'https://www.facebook.com/shahseddin.imanli',
+            instagram: 'https://www.instagram.com/parapsixoloq_yoq/',
+            whatsapp: 'https://wa.link/wcams9',
+            youtube: 'https://www.youtube.com/@sahseddinimanli',
+            telegram: 'https://web.telegram.org/k/#@menevi_shefaci'
+        }
+    };
+
+    function updateSocialLinks(lang) {
+        const links = socialLinks[lang] || socialLinks.az;
+        document.querySelectorAll('[data-social]').forEach(el => {
+            const platform = el.getAttribute('data-social');
+            if (links[platform]) {
+                el.href = links[platform];
+            }
+        });
+    }
+
     function applyTranslations(lang) {
         const t = translations[lang];
         if (!t) return;
@@ -53,43 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update social links based on language
         updateSocialLinks(lang);
-    }
-
-    const socialLinks = {
-        az: {
-            tiktok: 'https://www.tiktok.com/@shahseddinimanli',
-            facebook: 'https://www.facebook.com/shahseddin.imanli',
-            instagram: 'https://www.instagram.com/parapsixoloq_yoq/',
-            whatsapp: 'https://wa.link/wcams9',
-            youtube: 'https://www.youtube.com/@sahseddinimanli',
-            telegram: 'https://web.telegram.org/k/#@menevi_shefaci'
-        },
-        ru: {
-            tiktok: 'https://www.tiktok.com/@shahseddinimanli1',
-            facebook: 'https://www.facebook.com/shahseddin.imanli',
-            instagram: 'https://www.instagram.com/shahseddinimanli/',
-            whatsapp: 'https://wa.link/wcams9',
-            youtube: 'https://www.youtube.com/@%D0%A8%D0%B0%D1%85%D1%81%D0%B0%D0%B4%D0%B4%D0%B8%D0%BD%D0%98%D0%BC%D0%B0%D0%BD%D0%BB%D1%8B',
-            telegram: 'https://web.telegram.org/k/#@menevi_shefaci'
-        },
-        en: {
-            tiktok: 'https://www.tiktok.com/@shahseddinimanli',
-            facebook: 'https://www.facebook.com/shahseddin.imanli',
-            instagram: 'https://www.instagram.com/parapsixoloq_yoq/',
-            whatsapp: 'https://wa.link/wcams9',
-            youtube: 'https://www.youtube.com/@sahseddinimanli',
-            telegram: 'https://web.telegram.org/k/#@menevi_shefaci'
-        }
-    };
-
-    function updateSocialLinks(lang) {
-        const links = socialLinks[lang] || socialLinks.az;
-        document.querySelectorAll('[data-social]').forEach(el => {
-            const platform = el.getAttribute('data-social');
-            if (links[platform]) {
-                el.href = links[platform];
-            }
-        });
     }
 
     // Lang switcher click
