@@ -790,7 +790,7 @@ img {
 .blog-sidebar .blog-grid {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     overflow: visible;
 }
 
@@ -798,21 +798,21 @@ img {
     width: 100%;
     border-width: 1.5px;
     border-radius: 10px;
-    height: 200px;
+    height: 110px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
 .blog-sidebar .blog-post-card img {
-    height: 120px;
+    height: 60px;
     object-fit: cover;
     width: 100%;
     flex-shrink: 0;
 }
 
 .blog-sidebar .blog-post-card .blog-post-placeholder {
-    height: 120px;
+    height: 60px;
     flex-shrink: 0;
 }
 
