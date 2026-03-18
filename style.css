@@ -765,13 +765,12 @@ img {
 /* Blog sidebar — right column */
 .blog-sidebar {
     position: sticky;
-    top: 80px;
+    top: 100px;
     align-self: start;
-    max-height: calc(100vh - 100px);
+    max-height: calc(100vh - 120px);
     overflow-y: auto;
-    overflow-x: visible;
     scrollbar-width: none;
-    padding-top: 15px;
+    padding-top: 20px;
 }
 
 .blog-sidebar::-webkit-scrollbar {
