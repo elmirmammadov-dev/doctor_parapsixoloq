@@ -563,7 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
     const LANG_TO_LOCALE = { az: 'az', ru: 'ru', en: 'az', tr: 'az' };
 
-    const BLOG_PER_PAGE = 4;
+    const BLOG_PER_PAGE = 9;
     let allBlogCards = [];
     let blogCurrentPage = 1;
 
