@@ -697,7 +697,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     id: id,
                     html: `
                     <a href="blog-post.html?id=${id}" class="blog-post-card" style="text-decoration:none;color:inherit;cursor:pointer;">
-                        ${imgUrl ? `<img src="${imgUrl}" alt="${f.title}">` : `<div class="blog-post-placeholder" style="height:130px;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:2rem;"></i></div>`}
+                        ${imgUrl ? `<img src="${imgUrl}" alt="${f.title}">` : `<div class="blog-post-placeholder" style="height:80px;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`}
                         <div class="blog-post-info">
                             <h4>${f.title}</h4>
                             <div style="display:flex;align-items:center;gap:12px;margin-top:4px;">
