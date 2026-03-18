@@ -2083,9 +2083,20 @@ img {
 .about-text-col.animate-fade-up { transition-delay: 0.2s; }
 
 /* === RESPONSIVE === */
-@media (max-width: 1440px) {
+@media (max-width: 1279px) {
     .blog-sidebar {
         display: none;
+    }
+}
+@media (min-width: 1280px) and (max-width: 1439px) {
+    .blog-sidebar {
+        width: 170px;
+    }
+    .blog-sidebar .blog-post-card img {
+        height: 75px;
+    }
+    .blog-sidebar .blog-post-card .blog-post-info h4 {
+        font-size: 0.72rem;
     }
 }
 
