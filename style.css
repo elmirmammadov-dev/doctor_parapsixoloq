@@ -770,7 +770,7 @@ img {
     position: sticky;
     top: 90px;
     align-self: flex-start;
-    width: 115px;
+    width: 300px;
     flex-shrink: 0;
     max-height: calc(100vh - 90px);
     overflow: visible;
@@ -787,9 +787,9 @@ img {
 }
 
 .blog-sidebar .blog-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
     overflow: visible;
 }
 
