@@ -752,24 +752,30 @@ img {
 
 /* About layout — main content + blog sidebar */
 .about-layout {
-    position: relative;
+    display: flex;
+    max-width: 1520px;
+    margin: 0 auto;
+    padding: 0 20px;
+    gap: 20px;
 }
 
 .about-main {
-    /* same as .container */
+    flex: 1;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-/* Blog sidebar — absolute right, outside main flow */
+/* Blog sidebar — sticky right column, not affecting main width */
 .blog-sidebar {
-    position: fixed;
+    position: sticky;
     top: 90px;
-    right: 20px;
+    align-self: flex-start;
     width: 280px;
+    flex-shrink: 0;
     max-height: calc(100vh - 110px);
     overflow-y: auto;
     scrollbar-width: none;
     padding: 20px 5px 10px;
-    z-index: 50;
 }
 
 .blog-sidebar .blog-post-card.most-read,
