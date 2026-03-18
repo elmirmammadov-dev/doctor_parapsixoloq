@@ -70,15 +70,22 @@
         </div>
     </nav>
 
-    <!-- Blog Sidebar — right edge of page -->
-    <div class="blog-sidebar" id="blogSection">
-        <div class="blog-grid" id="blogGrid">
-            <!-- Blog cards rendered by JS -->
-        </div>
-    </div>
-
     <!-- About Section -->
     <section class="section about" id="about">
+        <!-- Side panels (outside container) -->
+        <div class="side-panel side-panel-left">
+            <h4 class="side-panel-title" data-i18n="announcements_title">Elanlar</h4>
+            <div class="side-panel-content" id="announcementsPanel">
+                <!-- Announcements will go here -->
+                <p class="side-panel-empty" data-i18n="no_announcements">Hazırda elan yoxdur</p>
+            </div>
+        </div>
+        <div class="side-panel side-panel-right" id="blogSection">
+            <h4 class="side-panel-title" data-i18n="blog_sidebar_title">Bloq</h4>
+            <div class="blog-grid" id="blogGrid">
+                <!-- Blog cards rendered by JS -->
+            </div>
+        </div>
         <div class="container">
             <div class="section-header about-quote-header">
                 <p class="about-hero-quote" data-i18n-html="about_quote">"İnsanın ruhunu müalicə etmədən cismini müalicə etmək olmaz"</p>

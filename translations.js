@@ -158,7 +158,12 @@ const translations = {
         form_sending: "Göndərilir...",
         form_sent: "Göndərildi!",
         form_error: "Xəta baş verdi, zəhmət olmasa yenidən cəhd edin.",
-        form_required: "Zəhmət olmasa bu xananı doldurun"
+        form_required: "Zəhmət olmasa bu xananı doldurun",
+
+        // Side panels
+        announcements_title: "Elanlar",
+        no_announcements: "Hazırda elan yoxdur",
+        blog_sidebar_title: "Bloq"
     },
 
     ru: {
@@ -308,7 +313,11 @@ const translations = {
         form_sending: "Отправляется...",
         form_sent: "Отправлено!",
         form_error: "Произошла ошибка, пожалуйста, попробуйте снова.",
-        form_required: "Пожалуйста, заполните это поле"
+        form_required: "Пожалуйста, заполните это поле",
+
+        announcements_title: "Объявления",
+        no_announcements: "Нет объявлений",
+        blog_sidebar_title: "Блог"
     },
 
     en: {
@@ -458,7 +467,11 @@ const translations = {
         form_sending: "Sending...",
         form_sent: "Sent!",
         form_error: "An error occurred, please try again.",
-        form_required: "Please fill in this field"
+        form_required: "Please fill in this field",
+
+        announcements_title: "Announcements",
+        no_announcements: "No announcements",
+        blog_sidebar_title: "Blog"
     },
 
     tr: {
