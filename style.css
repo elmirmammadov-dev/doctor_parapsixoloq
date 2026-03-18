@@ -770,12 +770,12 @@ img {
     position: sticky;
     top: 90px;
     align-self: flex-start;
-    width: 280px;
+    width: 120px;
     flex-shrink: 0;
-    max-height: calc(100vh - 110px);
+    max-height: calc(100vh - 100px);
     overflow-y: auto;
     scrollbar-width: none;
-    padding: 20px 5px 10px;
+    padding: 10px 3px 5px;
 }
 
 .blog-sidebar .blog-post-card.most-read,
@@ -790,47 +790,46 @@ img {
 .blog-sidebar .blog-grid {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     overflow: visible;
 }
 
 .blog-sidebar .blog-post-card {
     width: 100%;
+    aspect-ratio: 1 / 1;
     border-width: 1.5px;
-    border-radius: 10px;
-    height: 110px;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
 .blog-sidebar .blog-post-card img {
-    height: 60px;
+    flex: 1;
     object-fit: cover;
     width: 100%;
-    flex-shrink: 0;
+    min-height: 0;
 }
 
 .blog-sidebar .blog-post-card .blog-post-placeholder {
-    height: 60px;
-    flex-shrink: 0;
+    flex: 1;
 }
 
 .blog-sidebar .blog-post-card .blog-post-info {
-    padding: 6px 8px;
+    padding: 4px 6px;
 }
 
 .blog-sidebar .blog-post-card .blog-post-info h4 {
-    font-size: 0.75rem;
+    font-size: 0.6rem;
     line-height: 1.2;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .blog-sidebar .blog-post-card .blog-post-info .blog-post-date {
-    font-size: 0.65rem;
+    font-size: 0.55rem;
 }
 
 .blog-sidebar .blog-post-card.most-read {
@@ -844,8 +843,8 @@ img {
 
 .blog-sidebar .blog-most-read-badge,
 .blog-sidebar .blog-best-badge {
-    font-size: 0.6rem;
-    padding: 3px 9px;
+    font-size: 0.5rem;
+    padding: 2px 6px;
 }
 
 .about-image-col {

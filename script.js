@@ -612,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!pagEl) {
             pagEl = document.createElement('div');
             pagEl.id = 'blogPagination';
-            pagEl.style.cssText = 'display:flex;justify-content:center;align-items:center;gap:8px;margin-top:20px;';
+            pagEl.style.cssText = 'display:flex;justify-content:center;align-items:center;gap:4px;margin-top:6px;';
             grid.parentNode.appendChild(pagEl);
         }
 
@@ -623,14 +623,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let pagHtml = '';
         if (page > 1) {
-            pagHtml += `<button onclick="window.blogGoPage(${page - 1})" style="padding:8px 12px;border:none;background:var(--gold);color:#fff;border-radius:8px;cursor:pointer;font-size:0.85rem;"><i class="fas fa-chevron-left"></i></button>`;
+            pagHtml += `<button onclick="window.blogGoPage(${page - 1})" style="padding:4px 8px;border:none;background:var(--gold);color:#fff;border-radius:6px;cursor:pointer;font-size:0.65rem;"><i class="fas fa-chevron-left"></i></button>`;
         }
         for (let i = 1; i <= totalPages; i++) {
             const isActive = i === page;
-            pagHtml += `<button onclick="window.blogGoPage(${i})" style="padding:8px 14px;border:${isActive ? 'none' : '1px solid #ddd'};background:${isActive ? 'var(--gold)' : '#fff'};color:${isActive ? '#fff' : 'var(--text-secondary)'};border-radius:8px;cursor:pointer;font-weight:${isActive ? '700' : '500'};font-size:0.9rem;">${i}</button>`;
+            pagHtml += `<button onclick="window.blogGoPage(${i})" style="padding:4px 8px;border:${isActive ? 'none' : '1px solid #ddd'};background:${isActive ? 'var(--gold)' : '#fff'};color:${isActive ? '#fff' : 'var(--text-secondary)'};border-radius:6px;cursor:pointer;font-weight:${isActive ? '700' : '500'};font-size:0.65rem;">${i}</button>`;
         }
         if (page < totalPages) {
-            pagHtml += `<button onclick="window.blogGoPage(${page + 1})" style="padding:8px 12px;border:none;background:var(--gold);color:#fff;border-radius:8px;cursor:pointer;font-size:0.85rem;"><i class="fas fa-chevron-right"></i></button>`;
+            pagHtml += `<button onclick="window.blogGoPage(${page + 1})" style="padding:4px 8px;border:none;background:var(--gold);color:#fff;border-radius:6px;cursor:pointer;font-size:0.65rem;"><i class="fas fa-chevron-right"></i></button>`;
         }
         pagEl.innerHTML = pagHtml;
         pagEl.style.display = 'flex';
