@@ -191,13 +191,6 @@ img {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 24px;
-    padding-right: 250px;
-}
-
-@media (max-width: 767px) {
-    .container {
-        padding-right: 24px;
-    }
 }
 
 .section {
@@ -757,21 +750,28 @@ img {
     align-items: stretch;
 }
 
-/* Blog sidebar — right side of page */
+/* About layout — main content + blog sidebar */
+.about-layout {
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    gap: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.about-main {
+    max-width: 1200px;
+}
+
+/* Blog sidebar — right column */
 .blog-sidebar {
-    position: fixed;
+    position: sticky;
     top: 80px;
-    right: 10px;
-    width: 220px;
+    align-self: start;
     max-height: calc(100vh - 100px);
     overflow-y: auto;
-    z-index: 90;
     scrollbar-width: none;
-    padding: 10px;
-    background: var(--bg-secondary);
-    border-radius: 14px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
 .blog-sidebar::-webkit-scrollbar {
@@ -791,7 +791,7 @@ img {
 }
 
 .blog-sidebar .blog-post-card img {
-    height: 95px;
+    height: 100px;
     object-fit: cover;
 }
 
@@ -800,13 +800,13 @@ img {
 }
 
 .blog-sidebar .blog-post-card .blog-post-info h4 {
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     line-height: 1.3;
     margin-bottom: 4px;
 }
 
 .blog-sidebar .blog-post-card .blog-post-info .blog-post-date {
-    font-size: 0.68rem;
+    font-size: 0.7rem;
 }
 
 .blog-sidebar .blog-post-card.most-read {
@@ -820,7 +820,7 @@ img {
 
 .blog-sidebar .blog-most-read-badge,
 .blog-sidebar .blog-best-badge {
-    font-size: 0.58rem;
+    font-size: 0.6rem;
     padding: 3px 9px;
 }
 
@@ -2095,9 +2095,23 @@ img {
 .about-text-col.animate-fade-up { transition-delay: 0.2s; }
 
 /* === RESPONSIVE === */
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
+    .about-layout {
+        grid-template-columns: 1fr;
+    }
     .blog-sidebar {
-        display: none;
+        position: static;
+        max-height: none;
+        overflow: visible;
+    }
+    .blog-sidebar .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 480px) {
+    .blog-sidebar .blog-grid {
+        grid-template-columns: 1fr;
     }
 }
 
