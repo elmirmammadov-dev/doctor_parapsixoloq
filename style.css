@@ -770,12 +770,11 @@ img {
     position: sticky;
     top: 90px;
     align-self: flex-start;
-    width: 125px;
+    width: 115px;
     flex-shrink: 0;
-    max-height: calc(100vh - 100px);
-    overflow-y: auto;
-    scrollbar-width: none;
-    padding: 10px 3px 5px;
+    max-height: calc(100vh - 90px);
+    overflow: visible;
+    padding: 5px 3px 0;
 }
 
 .blog-sidebar .blog-post-card.most-read,
@@ -790,7 +789,7 @@ img {
 .blog-sidebar .blog-grid {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     overflow: visible;
 }
 
