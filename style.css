@@ -770,7 +770,7 @@ img {
     position: sticky;
     top: 90px;
     align-self: flex-start;
-    width: 120px;
+    width: 125px;
     flex-shrink: 0;
     max-height: calc(100vh - 100px);
     overflow-y: auto;
