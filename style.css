@@ -800,10 +800,17 @@ img {
     border-radius: 10px;
 }
 
+.blog-sidebar .blog-post-card {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .blog-sidebar .blog-post-card img {
-    height: 80px;
+    flex: 1;
     object-fit: cover;
     width: 100%;
+    min-height: 0;
 }
 
 .blog-sidebar .blog-post-card .blog-post-info {
