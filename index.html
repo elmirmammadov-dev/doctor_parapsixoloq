@@ -17,10 +17,34 @@
 </head>
 <body>
 
+    <!-- Top Bar -->
+    <div class="topbar">
+        <div class="container topbar-inner">
+            <div class="topbar-left">
+                <span><i class="fas fa-map-marker-alt"></i> Bakı & Naxçıvan</span>
+                <span class="topbar-divider">|</span>
+                <span><i class="fas fa-envelope"></i> Shahseddinimanli2016@gmail.com</span>
+            </div>
+            <div class="topbar-right">
+                <span data-i18n="footer_follow">Bizi İzləyin:</span>
+                <div class="topbar-socials">
+                    <a href="https://www.tiktok.com/@shahseddinimanli" target="_blank" data-social="tiktok" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/shahseddin.imanli" target="_blank" data-social="facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/parapsixoloq_yoq/" target="_blank" data-social="instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.link/wcams9" target="_blank" data-social="whatsapp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.youtube.com/@sahseddinimanli" target="_blank" data-social="youtube" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://web.telegram.org/k/#@menevi_shefaci" target="_blank" data-social="telegram" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Navbar -->
     <nav class="navbar" id="navbar">
         <div class="container navbar-content">
-            <a href="#hero" class="navbar-logo"></a>
+            <a href="#about" class="navbar-logo">
+                <img src="esas-loqo.png" alt="Logo">
+            </a>
             <ul class="navbar-menu" id="navMenu">
                 <li><a href="#about" class="nav-link" data-i18n="nav_about">Ana Səhifə</a></li>
                 <li><a href="#services" class="nav-link" data-i18n="nav_services">Xidmətlər</a></li>
@@ -28,6 +52,34 @@
                 <li><a href="#faq" class="nav-link" data-i18n="nav_faq">Sual-Cavab</a></li>
                 <li><a href="#contact" class="nav-link" data-i18n="nav_contact">Əlaqə</a></li>
             </ul>
+            <div class="navbar-right">
+                <!-- Language Switcher -->
+                <div class="lang-switcher" id="langSwitcher">
+                    <div class="lang-option active" data-lang="az">
+                        <img src="https://flagcdn.com/w40/az.png" alt="AZ">
+                        <span>AZ</span>
+                    </div>
+                    <div class="lang-option" data-lang="ru">
+                        <img src="https://flagcdn.com/w40/ru.png" alt="RU">
+                        <span>RUS</span>
+                    </div>
+                    <div class="lang-option" data-lang="en">
+                        <img src="https://flagcdn.com/w40/gb.png" alt="EN">
+                        <span>ENG</span>
+                    </div>
+                    <div class="lang-option" data-lang="tr">
+                        <img src="https://flagcdn.com/w40/tr.png" alt="TR">
+                        <span>TR</span>
+                    </div>
+                </div>
+                <div class="navbar-phone">
+                    <div class="navbar-phone-icon"><i class="fas fa-phone-alt"></i></div>
+                    <div class="navbar-phone-info">
+                        <span data-i18n="contact_phone_title">Zəng edin</span>
+                        <a href="tel:+994518499998">+994 51 849 99 98</a>
+                    </div>
+                </div>
+            </div>
             <div class="navbar-socials">
                 <a href="https://www.tiktok.com/@shahseddinimanli" target="_blank" data-social="tiktok" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
                 <a href="https://www.facebook.com/shahseddin.imanli" target="_blank" data-social="facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
@@ -35,25 +87,6 @@
                 <a href="https://wa.link/wcams9" target="_blank" data-social="whatsapp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                 <a href="https://www.youtube.com/@sahseddinimanli" target="_blank" data-social="youtube" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                 <a href="https://web.telegram.org/k/#@menevi_shefaci" target="_blank" data-social="telegram" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
-            </div>
-            <!-- Language Switcher -->
-            <div class="lang-switcher" id="langSwitcher">
-                <div class="lang-option active" data-lang="az">
-                    <img src="https://flagcdn.com/w40/az.png" alt="AZ">
-                    <span>AZ</span>
-                </div>
-                <div class="lang-option" data-lang="ru">
-                    <img src="https://flagcdn.com/w40/ru.png" alt="RU">
-                    <span>RUS</span>
-                </div>
-                <div class="lang-option" data-lang="en">
-                    <img src="https://flagcdn.com/w40/gb.png" alt="EN">
-                    <span>ENG</span>
-                </div>
-                <div class="lang-option" data-lang="tr">
-                    <img src="https://flagcdn.com/w40/tr.png" alt="TR">
-                    <span>TR</span>
-                </div>
             </div>
             <!-- Anon Visitor Label -->
             <span class="nav-anon-label" id="navAnonLabel" style="display:none;"></span>
@@ -70,14 +103,76 @@
         </div>
     </nav>
 
-    <!-- About Section -->
-    <section class="section about" id="about">
-        <div class="about-layout">
-            <div class="about-main container">
-                <div class="section-header about-quote-header">
-                    <p class="about-hero-quote" data-i18n-html="about_quote">"İnsanın ruhunu müalicə etmədən cismini müalicə etmək olmaz"</p>
+    <!-- Hero Banner -->
+    <section class="hero-banner" id="about">
+        <div class="container hero-banner-text">
+            <span class="hero-banner-tag" data-i18n="footer_subtitle">Parapsixoloq & Tantra Yoqa Müəllimi</span>
+            <h1 class="hero-banner-title" data-i18n-html="about_quote">"İnsanın ruhunu müalicə etmədən cismini müalicə etmək olmaz"</h1>
+        </div>
+        <div class="container">
+            <div class="hero-banner-img-wrap">
+                <img src="ilk sekil.png" alt="Şahsəddin İmanlı">
+                <div class="hero-img-badge hero-img-badge-left" id="zengBadge" style="cursor:pointer;">
+                    <div class="hero-bar-label" data-i18n="hero_form_title">Zəng Sifarişi</div>
+                    <div class="badge-tooltip" id="zengTooltip" data-i18n="zeng_tooltip">Bu seçim üçün mütləq nömrənizi yazmalısınız. Ad, Soyad yazmaya da bilərsiniz.</div>
                 </div>
-                <div class="about-content">
+                <button type="button" class="hero-img-badge hero-img-badge-right hero-bar-calendar-btn" id="openCalendarBtn">
+                    <span data-i18n="reservation_title">Seans üçün Gün Seçimi</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        <div class="hero-form-bar">
+            <div class="container hero-bar-inner">
+                <form class="hero-bar-form" id="heroCallForm">
+                    <div class="hero-bar-field">
+                        <span data-i18n-placeholder="placeholder_name">Ad</span>
+                        <input type="text" name="ad" placeholder="Adınızı yazın">
+                    </div>
+                    <div class="hero-bar-field">
+                        <span data-i18n-placeholder="placeholder_surname">Soyad</span>
+                        <input type="text" name="soyad" placeholder="Soyadınızı yazın">
+                    </div>
+                    <div class="hero-bar-field">
+                        <span data-i18n-placeholder="placeholder_phone">Telefon*</span>
+                        <div class="hero-bar-phone">
+                            <select class="phone-prefix-select" name="phone_code">
+                                <option value="+994" selected>🇦🇿 +994</option>
+                                <option value="+7">🇷🇺 +7</option>
+                            </select>
+                            <input type="tel" name="telefon" placeholder="Nömrə" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="hero-bar-submit btn btn-gold" data-i18n="btn_submit">Müraciət Göndər</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar Modal -->
+    <div class="calendar-modal-overlay" id="calendarModal">
+        <div class="calendar-modal">
+            <button class="calendar-modal-close" id="calendarModalClose"><i class="fas fa-times"></i></button>
+            <h3 class="hero-form-title" data-i18n="reservation_title">Seans üçün Gün Seçimi</h3>
+            <p class="hero-form-desc" data-i18n="reservation_desc">Sizə uyğun günü seçin, WhatsApp vasitəsilə əlaqə qurun.</p>
+            <div class="calendar-wrapper hero-calendar">
+                <div class="calendar-header">
+                    <button class="calendar-nav" id="heroCalendarPrev"><i class="fas fa-chevron-left"></i></button>
+                    <h3 class="calendar-month" id="heroCalendarMonth"></h3>
+                    <button class="calendar-nav" id="heroCalendarNext"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="calendar-weekdays" id="heroCalendarWeekdays">
+                    <span data-i18n="cal_mon">BE</span><span data-i18n="cal_tue">ÇA</span><span data-i18n="cal_wed">Ç</span><span data-i18n="cal_thu">CA</span><span data-i18n="cal_fri">C</span><span data-i18n="cal_sat">Ş</span><span data-i18n="cal_sun">B</span>
+                </div>
+                <div class="calendar-days" id="heroCalendarDays"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section class="section about-bio" id="aboutBio">
+        <div class="container">
+            <div class="about-content">
                 <div class="about-image-col">
                     <div class="about-image-frame">
                         <img src="profil sekli 3.png" alt="Şahsəddin İmanlı">
@@ -108,61 +203,6 @@
                             <span data-i18n="highlight_3">Qeyri-Ənənəvi Tibb Metodologiyası</span>
                         </div>
                     </div>
-                </div>
-            </div>
-            <!-- Hero Content - same container as about -->
-            <div class="hero-content">
-                <div class="hero-calendar-box animate-fade-up">
-                    <h3 class="hero-form-title" data-i18n="reservation_title">Seans üçün Gün Seçimi</h3>
-                    <p class="hero-form-desc" data-i18n="reservation_desc">Sizə uyğun günü seçin, WhatsApp vasitəsilə əlaqə qurun.</p>
-                    <div class="calendar-wrapper hero-calendar">
-                        <div class="calendar-header">
-                            <button class="calendar-nav" id="heroCalendarPrev"><i class="fas fa-chevron-left"></i></button>
-                            <h3 class="calendar-month" id="heroCalendarMonth"></h3>
-                            <button class="calendar-nav" id="heroCalendarNext"><i class="fas fa-chevron-right"></i></button>
-                        </div>
-                        <div class="calendar-weekdays" id="heroCalendarWeekdays">
-                            <span data-i18n="cal_mon">BE</span><span data-i18n="cal_tue">ÇA</span><span data-i18n="cal_wed">Ç</span><span data-i18n="cal_thu">CA</span><span data-i18n="cal_fri">C</span><span data-i18n="cal_sat">Ş</span><span data-i18n="cal_sun">B</span>
-                        </div>
-                        <div class="calendar-days" id="heroCalendarDays"></div>
-                    </div>
-                </div>
-                <div class="hero-form animate-fade-up">
-                    <h3 class="hero-form-title" data-i18n="hero_form_title">Zəng Sifarişi</h3>
-                    <p class="hero-form-desc" data-i18n="hero_form_desc">Qısa zamanda əlaqə saxlamaq üçün nömrənizi yazın.</p>
-                    <form class="hero-call-form" id="heroCallForm">
-                        <div class="form-group">
-                            <div class="input-icon"><i class="fas fa-user"></i></div>
-                            <input type="text" name="ad" data-i18n-placeholder="placeholder_name" placeholder="AD" required>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-icon"><i class="fas fa-user"></i></div>
-                            <input type="text" name="soyad" data-i18n-placeholder="placeholder_surname" placeholder="SOYAD" required>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-icon"><i class="fas fa-phone"></i></div>
-                            <div class="phone-input">
-                                <select class="phone-prefix-select" name="phone_code">
-                                    <option value="+994" selected>🇦🇿 +994</option>
-                                    <option value="+7">🇷🇺 +7</option>
-                                </select>
-                                <input type="tel" name="telefon" data-i18n-placeholder="placeholder_phone" placeholder="TEL NÖMRƏSİ" required>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-gold btn-full" data-i18n="btn_submit">Müraciət Göndər</button>
-                    </form>
-                    <div class="hero-form-features">
-                        <span><i class="fas fa-check-circle"></i> <span data-i18n="form_feat_1">Ödənişli müayinə/şəfalanma</span></span>
-                        <span><i class="fas fa-check-circle"></i> <span data-i18n="form_feat_2">24 saat ərzində geri zəng</span></span>
-                        <span><i class="fas fa-check-circle"></i> <span data-i18n="form_feat_3">Tam məxfilik</span></span>
-                    </div>
-                </div>
-            </div>
-            </div>
-            <!-- Blog sidebar — right column -->
-            <div class="blog-sidebar" id="blogSection">
-                <div class="blog-grid" id="blogGrid">
-                    <!-- Blog cards rendered by JS -->
                 </div>
             </div>
         </div>
@@ -729,6 +769,20 @@
                         <p data-i18n-html="faq_a6">Hər gün səhər <strong>08:00</strong>-dən axşam <strong>21:00</strong>-a qədər qəbul aparılır. Həm canlı (əyani), həm də onlayn qəbul mövcuddur.</p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="section blog-section" id="blogSection">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="nav_blog">Blog</span>
+                <h2 class="section-title" data-i18n="blog_title">Faydalı Məlumatlar</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="blog-grid blog-section-grid" id="blogGrid">
+                <!-- Blog cards rendered by JS -->
             </div>
         </div>
     </section>

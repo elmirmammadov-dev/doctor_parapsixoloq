@@ -4,6 +4,40 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // === ZENG BADGE TOOLTIP ===
+    const zengBadge = document.getElementById('zengBadge');
+    const zengTooltip = document.getElementById('zengTooltip');
+    if (zengBadge && zengTooltip) {
+        zengBadge.addEventListener('click', (e) => {
+            e.stopPropagation();
+            zengTooltip.classList.toggle('active');
+        });
+        document.addEventListener('click', () => {
+            zengTooltip.classList.remove('active');
+        });
+    }
+
+    // === CALENDAR MODAL ===
+    const openCalBtn = document.getElementById('openCalendarBtn');
+    const calModal = document.getElementById('calendarModal');
+    const calModalClose = document.getElementById('calendarModalClose');
+
+    if (openCalBtn && calModal) {
+        openCalBtn.addEventListener('click', () => {
+            calModal.classList.add('active');
+        });
+    }
+    if (calModalClose && calModal) {
+        calModalClose.addEventListener('click', () => {
+            calModal.classList.remove('active');
+        });
+    }
+    if (calModal) {
+        calModal.addEventListener('click', (e) => {
+            if (e.target === calModal) calModal.classList.remove('active');
+        });
+    }
+
     // === LANGUAGE SWITCHER ===
     let currentLang = localStorage.getItem('lang') || 'az';
 
@@ -453,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const tarixInput = form.querySelector('input[name="tarix"]');
             const tarix = tarixInput ? tarixInput.value : '';
 
-            if (ad && soyad && telefon) {
+            if (telefon) {
                 const t = translations[currentLang];
                 const btn = form.querySelector('button[type="submit"]');
                 const originalText = btn.textContent;

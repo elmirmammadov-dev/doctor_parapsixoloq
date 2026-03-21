@@ -5,7 +5,10 @@
       "Bash(start \"\" \"d:/Layihelerim hamisi/hekim-sayti-2026-esas-main/index.html\")",
       "Bash(start \"\" \"d:\\\\Layihelerim hamisi\\\\hekim-sayti-2026-esas-main\\\\index.html\")",
       "WebFetch(domain:www.myvivescleaningservices.com)",
-      "Bash(start \"\" \"e:\\\\Həkim saytı 2\\\\index.html\")"
+      "Bash(start \"\" \"e:\\\\Həkim saytı 2\\\\index.html\")",
+      "Bash(start \"\" \"e:\\\\Həkim saytı son\\\\index.html\")",
+      "Bash(start \"\" \"e:/Həkim saytı son/index.html\")",
+      "Bash(ls \"e:/Həkim saytı son/\"*.png \"e:/Həkim saytı son/\"*.jpg \"e:/Həkim saytı son/\"*.jpeg \"e:/Həkim saytı son/\"*.webp)"
     ]
   }
 }
