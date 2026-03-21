@@ -11,7 +11,8 @@ const translations = {
 
         // About
         about_quote: "\"İnsanın ruhunu müalicə etmədən cismini müalicə etmək olmaz\"",
-        badge_years: "İllik Təcrübə",
+        trust_label: "Xəstələr tərəfindən etibar edilir",
+        badge_years: "İLLİK TƏCRÜBƏ",
         about_lead: "İmanov Şahsəddin Abbas oğlu 1966-cı ildə Naxçıvan Muxtar Respublikasının Şərur rayonunun Zeyvə-Düdəngə kəndində anadan olmuşdur.",
         about_p1: "Hələ 6-7 yaşlarından etibarən insanın əbədi həyatı kimi dərin fəlsəfi sualların axtarışında olmuşdur. Məktəb illərində müəllimlərinin fikirlərini oxumaq bacarığına malik olsa da, bunu gizlətmişdir. 14-15 yaşlarında Himalay və Tibet yoqlarının uzunömürlülüyü haqqında oxuduqları onu bu sahəyə daha da bağlamışdır.",
         about_p2: "Əvvəlcə Rusiyanın Sverdlovsk (indiki Yekaterinburq) şəhərində Dağ-mədən institutunda təhsil almış, qısa müddət mühəndis kimi çalışmışdır.",
@@ -177,7 +178,8 @@ const translations = {
         btn_session: "Записаться на сеанс",
 
         about_quote: "\"Невозможно лечить тело человека, не исцелив его душу\"",
-        badge_years: "Лет опыта",
+        trust_label: "Доверие пациентов",
+        badge_years: "ЛЕТ ОПЫТА",
         about_lead: "Иманов Шахсаддин Аббас оглу родился в 1966 году в селе Зейве-Дюденге Шарурского района Нахчыванской Автономной Республики.",
         about_p1: "С 6-7 лет он искал ответы на глубокие философские вопросы, такие как вечная жизнь человека. В школьные годы он обладал способностью читать мысли учителей, но скрывал это. В 14-15 лет чтение о долголетии гималайских и тибетских йогов ещё больше привлекло его к этой области.",
         about_p2: "Сначала он получил образование в Горном институте в Свердловске (ныне Екатеринбург), Россия, и некоторое время работал инженером.",
@@ -332,7 +334,8 @@ const translations = {
         btn_session: "Book a Session",
 
         about_quote: "\"You cannot heal the body without healing the soul first\"",
-        badge_years: "Years of<br>Experience",
+        trust_label: "Trusted by Patients",
+        badge_years: "YEARS OF EXPERIENCE",
         about_lead: "Imanov Shahsaddin Abbas oglu was born in 1966 in the village of Zeyve-Dudenge, Sharur district of the Nakhchivan Autonomous Republic.",
         about_p1: "From the age of 6-7, he has been searching for answers to deep philosophical questions such as eternal life. During school years, he had the ability to read teachers' thoughts but kept it hidden. At 14-15, reading about the longevity of Himalayan and Tibetan yogis drew him even more into this field.",
         about_p2: "He first studied at the Mining Institute in Sverdlovsk (now Yekaterinburg), Russia, and briefly worked as an engineer.",
@@ -487,7 +490,8 @@ const translations = {
         btn_session: "Seansa Yazıl",
 
         about_quote: "\"İnsanın ruhunu tedavi etmeden bedenini tedavi etmek mümkün değildir\"",
-        badge_years: "Yıllık Deneyim",
+        trust_label: "Hastalar tarafından güvenilir",
+        badge_years: "YILLIK DENEYİM",
         about_lead: "İmanov Şahseddin Abbas oğlu 1966 yılında Nahçıvan Özerk Cumhuriyeti'nin Şerur ilçesinin Zeyve-Düdenye köyünde doğmuştur.",
         about_p1: "6-7 yaşlarından itibaren insanın ebedi hayatı gibi derin felsefi soruların arayışında olmuştur. Okul yıllarında öğretmenlerinin düşüncelerini okuma yeteneğine sahip olmasına rağmen bunu gizlemiştir. 14-15 yaşlarında Himalaya ve Tibet yogilerinin uzun ömürlülüğü hakkında okuduğu kitaplar onu bu alana daha da bağlamıştır.",
         about_p2: "Önce Rusya'nın Sverdlovsk (şimdiki Yekaterinburg) şehrinde Maden Enstitüsünde eğitim almış, kısa süre mühendis olarak çalışmıştır.",

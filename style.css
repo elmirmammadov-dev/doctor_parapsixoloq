@@ -241,16 +241,62 @@ img {
     margin-bottom: 16px;
 }
 
-.hero-banner-title {
+.animated-text-wrap {
+    position: relative;
+    display: inline-block;
+    max-width: 800px;
+    margin: 0 auto;
+    cursor: default;
+}
+
+.hero-banner-title.animated-title {
     font-family: var(--font-display);
     font-size: clamp(2rem, 5vw, 3.2rem);
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1.3;
-    margin-bottom: 20px;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-bottom: 8px;
+    animation: titleSlideIn 0.6s ease-out both;
+    transition: transform 0.3s ease;
+}
+
+.animated-text-wrap:hover .hero-banner-title.animated-title {
+    transform: scale(1.02);
+}
+
+@keyframes titleSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animated-underline {
+    display: block;
+    color: var(--text-primary);
+    margin-top: 4px;
+    overflow: visible;
+}
+
+.underline-path {
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    animation: drawUnderline 1.5s ease-in-out 0.4s forwards;
+    transition: d 0.8s ease;
+}
+
+.animated-text-wrap:hover .underline-path {
+    d: path("M 0,10 Q 75,20 150,10 Q 225,0 300,10");
+}
+
+@keyframes drawUnderline {
+    to {
+        stroke-dashoffset: 0;
+    }
 }
 
 .hero-banner-desc {
@@ -343,10 +389,20 @@ img {
 
 /* Hero Form Bar */
 .hero-form-bar {
-    background: linear-gradient(135deg, #1a5c38 0%, #2d8157 50%, #1a5c38 100%);
-    padding: 20px 0;
+    background: transparent;
+    padding: 0 0;
     position: relative;
     z-index: 5;
+    margin-top: 16px;
+}
+
+.hero-form-bar .hero-bar-inner {
+    background: linear-gradient(135deg, #1a5c38 0%, #2d8157 50%, #1a5c38 100%);
+    padding: 20px 24px;
+    border-radius: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .hero-bar-inner {
@@ -684,7 +740,7 @@ img {
 
 /* === TOPBAR === */
 .topbar {
-    background: var(--gold);
+    background: #c5e84d;
     padding: 8px 0;
     position: relative;
     z-index: 1001;
@@ -700,7 +756,7 @@ img {
     display: flex;
     align-items: center;
     gap: 6px;
-    color: rgba(255,255,255,0.9);
+    color: #1a3c2a;
     font-size: 0.8rem;
 }
 
@@ -710,7 +766,7 @@ img {
 }
 
 .topbar-divider {
-    color: rgba(255,255,255,0.4);
+    color: rgba(26,60,42,0.3);
     margin: 0 6px;
 }
 
@@ -718,7 +774,7 @@ img {
     display: flex;
     align-items: center;
     gap: 12px;
-    color: rgba(255,255,255,0.8);
+    color: #1a3c2a;
     font-size: 0.8rem;
 }
 
@@ -728,11 +784,11 @@ img {
 }
 
 .topbar-socials a {
-    color: #ffffff;
+    color: #1a3c2a;
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.15);
+    background: rgba(26,60,42,0.12);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -741,7 +797,7 @@ img {
 }
 
 .topbar-socials a:hover {
-    background: rgba(255,255,255,0.3);
+    background: rgba(26,60,42,0.25);
     transform: scale(1.1);
 }
 
@@ -1534,7 +1590,7 @@ img {
     top: auto;
     background: var(--gradient-gold);
     color: #ffffff;
-    padding: 18px 20px;
+    padding: 16px 28px;
     border-radius: 16px;
     text-align: center;
     box-shadow: 0 8px 30px rgba(45, 129, 87, 0.3);
@@ -1543,16 +1599,23 @@ img {
 
 .badge-number {
     display: block;
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 700;
     line-height: 1;
+    margin-bottom: 4px;
 }
 
 .badge-text {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    line-height: 1.3;
+}
+
+/* Trusted badge — hidden in original style */
+.about-trust-badge {
+    display: none;
 }
 
 .about-text-col p {
@@ -2432,42 +2495,16 @@ img {
 }
 
 .faq > .container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 50px;
-    align-items: start;
-}
-
-.faq .section-header {
-    text-align: left;
-    margin-bottom: 0;
-    background: var(--gold);
-    border-radius: 24px;
-    padding: 50px 40px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    min-height: 400px;
-}
-
-.faq .section-header .section-tag {
-    background: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-}
-
-.faq .section-header .section-title {
-    color: #ffffff;
-    font-size: 2.2rem;
-}
-
-.faq .section-header .section-line {
-    margin: 0 0 20px;
-    background: rgba(255, 255, 255, 0.4);
+    align-items: center;
+    gap: 40px;
 }
 
 .faq-grid {
-    max-width: 100%;
-    margin: 0;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr;
     gap: 12px;
@@ -2843,7 +2880,6 @@ img {
         gap: 40px;
     }
 
-
     .about-image-col {
         max-width: 350px;
         margin: 0 auto;
@@ -3010,20 +3046,6 @@ img {
         grid-template-columns: 1fr;
     }
 
-    .faq > .container {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-
-    .faq .section-header {
-        min-height: auto;
-        padding: 30px 24px;
-        border-radius: 16px;
-    }
-
-    .faq .section-header .section-title {
-        font-size: 1.6rem;
-    }
 
     .footer-content {
         grid-template-columns: 1fr;
