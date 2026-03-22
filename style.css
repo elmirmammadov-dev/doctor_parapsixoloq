@@ -4913,22 +4913,16 @@ img {
     .about-image-frame {
         overflow: visible;
     }
-    .about-badge {
-        position: absolute;
-        bottom: 56px;
-        right: auto;
-        left: 8px;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 16px;
-        border-radius: 10px;
-        width: fit-content;
-    }
     .about-badges-left {
         bottom: 12px !important;
         left: 8px !important;
+    }
+    .about-badge {
+        bottom: 52px !important;
+        right: auto !important;
+        left: 8px !important;
+        padding: 8px 16px;
+        border-radius: 10px;
     }
     .badge-number {
         font-size: 1.2rem;
