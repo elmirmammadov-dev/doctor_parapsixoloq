@@ -242,21 +242,21 @@
             <div class="container hero-bar-inner">
                 <form class="hero-bar-form" id="heroCallForm">
                     <div class="hero-bar-field">
-                        <span data-i18n-placeholder="placeholder_name">Ad</span>
-                        <input type="text" name="ad" placeholder="Adınızı yazın">
+                        <span data-i18n="herobar_name_label">Ad</span>
+                        <input type="text" name="ad" data-i18n-placeholder="herobar_name" placeholder="Adınızı yazın">
                     </div>
                     <div class="hero-bar-field">
-                        <span data-i18n-placeholder="placeholder_surname">Soyad</span>
-                        <input type="text" name="soyad" placeholder="Soyadınızı yazın">
+                        <span data-i18n="herobar_surname_label">Soyad</span>
+                        <input type="text" name="soyad" data-i18n-placeholder="herobar_surname" placeholder="Soyadınızı yazın">
                     </div>
                     <div class="hero-bar-field">
-                        <span data-i18n-placeholder="placeholder_phone">Telefon*</span>
+                        <span data-i18n="herobar_phone_label">Telefon*</span>
                         <div class="hero-bar-phone">
                             <select class="phone-prefix-select" name="phone_code">
                                 <option value="+994" selected>🇦🇿 +994</option>
                                 <option value="+7">🇷🇺 +7</option>
                             </select>
-                            <input type="tel" name="telefon" placeholder="Nömrə" required>
+                            <input type="tel" name="telefon" data-i18n-placeholder="herobar_phone" placeholder="Nömrə" required>
                         </div>
                     </div>
                     <button type="submit" class="hero-bar-submit btn btn-gold" data-i18n="btn_submit">Müraciət Göndər</button>
