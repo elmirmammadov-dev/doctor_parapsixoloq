@@ -365,9 +365,7 @@
             messagingSenderId: "158921605576",
             appId: "1:158921605576:web:1c5d06133260aae200c0fd"
         };
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        firebase.initializeApp(firebaseConfig);
         const adminDb = firebase.database();
         window.FIREBASE_REST = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
     </script>
