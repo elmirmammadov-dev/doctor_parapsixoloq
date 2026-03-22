@@ -3481,10 +3481,16 @@ img {
     }
 
     .stat-item {
-        gap: 6px;
+        gap: 4px;
         flex: 1;
         flex-direction: column;
         text-align: center;
+        align-items: center;
+    }
+
+    .stat-number-row {
+        display: flex;
+        justify-content: center;
     }
 
     .stat-number {
