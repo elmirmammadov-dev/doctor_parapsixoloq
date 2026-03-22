@@ -817,8 +817,7 @@
         async function loadPost() {
             const container = document.getElementById('blogDetail');
             const ui = UI_TEXTS[currentLang] || UI_TEXTS.az;
-            const params = new URLSearchParams(window.location.search);
-            const postId = params.get('id');
+            const postId = getPostId();
             if (!postId) {
                 container.innerHTML = `<p style="text-align:center;color:#999;padding:80px 0;">${ui.notFound}</p>`;
                 return;
@@ -1112,7 +1111,7 @@
 
         // ===== VIEW COUNT & REACTIONS =====
         function trackView() {
-            const postId = new URLSearchParams(window.location.search).get('id');
+            const postId = getPostId();
             if (!postId) return;
             const viewKey = 'viewed_' + postId;
             const ref = db.ref('postStats/' + postId + '/views');
@@ -1130,7 +1129,7 @@
         }
 
         function loadReactions() {
-            const postId = new URLSearchParams(window.location.search).get('id');
+            const postId = getPostId();
             if (!postId) return;
             const ref = db.ref('postStats/' + postId);
             ref.on('value', snap => {
@@ -1156,7 +1155,7 @@
         }
 
         window.toggleReaction = function(type) {
-            const postId = new URLSearchParams(window.location.search).get('id');
+            const postId = getPostId();
             if (!postId) return;
             const storageKey = 'reaction_' + postId;
             const current = localStorage.getItem(storageKey);
