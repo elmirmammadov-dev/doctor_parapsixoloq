@@ -392,6 +392,14 @@
             .then(function(r) { log('7. Fetch status: ' + r.status); return r.json(); })
             .then(function(data) { log('8. Users data keys: ' + (data ? Object.keys(data).length : 'null')); })
             .catch(function(err) { log('ERROR: ' + err.message); });
+
+        // Catch ALL JS errors
+        window.onerror = function(msg, src, line, col, err) {
+            log('JS ERROR: ' + msg + ' at ' + (src||'').split('/').pop() + ':' + line);
+        };
+        window.addEventListener('unhandledrejection', function(e) {
+            log('PROMISE ERROR: ' + (e.reason ? (e.reason.message || e.reason) : 'unknown'));
+        });
     });
     </script>
     <script src="admin.js"></script>
