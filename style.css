@@ -1981,10 +1981,10 @@ img {
 }
 
 .badge-divider {
-    width: 1px;
-    height: 20px;
-    background: rgba(255, 255, 255, 0.3);
-    margin: 0 4px;
+    width: 1.5px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.35);
+    margin: 0 6px;
 }
 
 .rating-stars-tooltip {
@@ -2083,12 +2083,12 @@ img {
 
 .rating-stars-inner i {
     color: #ffc940;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
 }
 
 .rating-score {
     font-weight: 800;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     color: #fff;
 }
 
@@ -2097,10 +2097,10 @@ img {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
     background: var(--gradient-gold);
     color: #fff;
-    padding: 12px 20px;
+    padding: 14px 24px;
     border-radius: 16px;
     box-shadow: 0 8px 30px rgba(45, 129, 87, 0.3);
     cursor: pointer;
@@ -2112,22 +2112,21 @@ img {
     box-shadow: 0 12px 40px rgba(45, 129, 87, 0.4);
 }
 
-.about-review-badge i {
-    font-size: 1.1rem;
+.about-review-badge i.fa-comments {
+    font-size: 1.2rem;
 }
 
 .review-badge-count {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 800;
     line-height: 1;
 }
 
 .review-badge-label {
-    font-size: 0.65rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    opacity: 0.9;
 }
 
 /* Tooltip */
