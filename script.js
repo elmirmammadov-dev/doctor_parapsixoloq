@@ -973,12 +973,31 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Update bars
+        // Update bars (both tooltips)
         for (let i = 1; i <= 5; i++) {
-            const bar = document.getElementById('bar' + i);
-            const countSpan = document.getElementById('count' + i);
-            if (bar) bar.style.width = (total > 0 ? (counts[i] / total) * 100 : 0) + '%';
-            if (countSpan) countSpan.textContent = counts[i];
+            const pct = total > 0 ? (counts[i] / total) * 100 : 0;
+            ['', 'b'].forEach(suffix => {
+                const bar = document.getElementById('bar' + i + suffix);
+                const countSpan = document.getElementById('count' + i + suffix);
+                if (bar) bar.style.width = pct + '%';
+                if (countSpan) countSpan.textContent = counts[i];
+            });
+        }
+
+        // Update second tooltip (rating stars tooltip)
+        const tooltipScore2 = document.getElementById('tooltipScore2');
+        if (tooltipScore2) tooltipScore2.textContent = avg;
+
+        const tooltipTotal2 = document.getElementById('tooltipTotal2');
+        if (tooltipTotal2) tooltipTotal2.textContent = total;
+
+        const tooltipStars2 = document.getElementById('tooltipStars2');
+        if (tooltipStars2) {
+            const stars = tooltipStars2.querySelectorAll('i');
+            const fullStars2 = Math.floor(avg);
+            stars.forEach((star, i) => {
+                star.style.color = i < fullStars2 ? '#ffa534' : '#ddd';
+            });
         }
     }
 
