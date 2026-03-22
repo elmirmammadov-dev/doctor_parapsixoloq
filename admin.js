@@ -424,7 +424,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (descEl) descEl.textContent = t.desc;
         list.innerHTML = `<p style="text-align:center;color:#999;padding:20px 0;">${t.loading}</p>`;
 
-        fetch(FIREBASE_REST + '/reviews.json?orderBy="timestamp"').then(r => r.json()).then(data => {
+        fetch(FIREBASE_REST + '/reviews.json').then(r => r.json()).then(data => {
             const snapshot = { forEach: function(cb) { if(data) Object.keys(data).forEach(k => cb({ val: () => data[k], key: k })); } };
             const reviews = [];
             snapshot.forEach(child => {
@@ -1724,6 +1724,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
                 `;
             }).join('');
+        }).catch(function(err) {
+            listEl.innerHTML = '<p style="text-align:center;color:#e74c3c;padding:20px 0;">Xəta: ' + err.message + '</p>';
         });
     }
 
