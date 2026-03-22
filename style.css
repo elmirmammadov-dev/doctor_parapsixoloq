@@ -1934,7 +1934,7 @@ img {
 
 .about-badge {
     position: absolute;
-    bottom: 50px;
+    bottom: 36px;
     right: 20px;
     top: auto;
     background: var(--gradient-gold);
@@ -1974,7 +1974,7 @@ img {
 /* === BADGES LEFT WRAPPER === */
 .about-badges-left {
     position: absolute;
-    bottom: 50px;
+    bottom: 36px;
     left: 20px;
     z-index: 3;
     display: flex;
