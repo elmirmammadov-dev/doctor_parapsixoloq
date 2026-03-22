@@ -3474,13 +3474,29 @@ img {
     }
 
     .stats-content {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
     }
 
     .stat-item {
-        gap: 12px;
+        gap: 8px;
+        flex: 0 0 auto;
+    }
+
+    .stat-number {
+        font-size: 1.4rem !important;
+    }
+
+    .stat-label {
+        font-size: 0.7rem !important;
+    }
+
+    .stat-icon {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 0.9rem !important;
     }
 
     .services-grid {
@@ -4568,6 +4584,33 @@ img {
     }
     .footer-legal span {
         display: none;
+    }
+}
+
+/* === MOBILE: About section badge + stats layout === */
+@media (max-width: 768px) {
+    /* Badge under image instead of overlapping */
+    .about-image-frame {
+        overflow: visible;
+    }
+    .about-badge {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        margin: -20px auto 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 24px;
+        border-radius: 12px;
+        width: fit-content;
+    }
+    .badge-number {
+        font-size: 1.6rem;
+        margin-bottom: 0;
+    }
+    .badge-text {
+        font-size: 0.65rem;
     }
 }
 
