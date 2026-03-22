@@ -377,6 +377,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function switchAdminTab(tab) {
+        console.log('[ADMIN] switchAdminTab:', tab);
         document.querySelectorAll('.admin-tab-btn').forEach(b => {
             const isActive = b.dataset.tab === tab;
             b.classList.toggle('active', isActive);
@@ -418,7 +419,8 @@ document.addEventListener("DOMContentLoaded", function() {
         if (descEl) descEl.textContent = t.desc;
         list.innerHTML = `<p style="text-align:center;color:#999;padding:20px 0;">${t.loading}</p>`;
 
-        fetch(FIREBASE_REST + '/reviews.json').then(r => r.json()).then(data => {
+        fetch(FIREBASE_REST + '/reviews.json').then(function(r) { console.log('[REVIEWS] fetch status:', r.status); return r.json(); }).then(function(data) {
+            console.log('[REVIEWS] data received:', data ? Object.keys(data).length + ' reviews' : 'null');
             const snapshot = { forEach: function(cb) { if(data) Object.keys(data).forEach(k => cb({ val: () => data[k], key: k })); } };
             const reviews = [];
             snapshot.forEach(child => {
@@ -775,19 +777,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
         adminPostDataCache = postData;
 
-        fetch(FIREBASE_REST + '/comments.json').then(r => r.json()).then(data => {
-            const snapshot = { forEach: function(cb) { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k], forEach: function(innerCb) { const inner = data[k]; if(inner) Object.keys(inner).forEach(ik => innerCb({ key: ik, val: () => inner[ik] })); } })); } };
-            const allComments = [];
-            snapshot.forEach(postSnap => {
-                const postId = postSnap.key;
-                postSnap.forEach(commentSnap => {
-                    allComments.push({
-                        postId: postId,
-                        commentId: commentSnap.key,
-                        ...commentSnap.val()
+        fetch(FIREBASE_REST + '/comments.json').then(function(r) { console.log('[COMMENTS] fetch status:', r.status); return r.json(); }).then(function(data) {
+            console.log('[COMMENTS] data received, keys:', data ? Object.keys(data).length : 'null');
+            const allPosts = data || {};
+            // Convert REST data to flat comments array directly
+            const allCommentsRaw = [];
+            Object.keys(allPosts).forEach(function(postId) {
+                const postComments = allPosts[postId];
+                if (postComments && typeof postComments === 'object') {
+                    Object.keys(postComments).forEach(function(commentId) {
+                        allCommentsRaw.push({
+                            postId: postId,
+                            commentId: commentId,
+                            ...postComments[commentId]
+                        });
                     });
-                });
+                }
             });
+            console.log('[COMMENTS] parsed comments:', allCommentsRaw.length);
+            // Replace old snapshot-based code
+            const allComments = allCommentsRaw;
 
             if (adminCommentSortOrder === 'oldest') {
                 allComments.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
@@ -1615,7 +1624,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> ' + adminT('loading') + '</p>';
 
-        fetch(FIREBASE_REST + '/users.json').then(r => r.json()).then(data => {
+        fetch(FIREBASE_REST + '/users.json').then(function(r) { console.log('[USERS] fetch status:', r.status); return r.json(); }).then(function(data) {
+            console.log('[USERS] data received:', data ? Object.keys(data).length + ' users' : 'null');
             const snapshot = { forEach: function(cb) { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } };
             const users = [];
             snapshot.forEach(userSnap => {
