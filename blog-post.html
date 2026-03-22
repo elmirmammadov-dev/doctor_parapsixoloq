@@ -176,6 +176,12 @@
             padding: 28px;
             box-shadow: 0 2px 16px rgba(0,0,0,0.07);
         }
+        .blog-sidebar .calendar-wrapper {
+            padding: 20px 12px !important;
+        }
+        .blog-sidebar .calendar-day {
+            font-size: 0.85rem;
+        }
         .blog-sidebar-sticky {
             position: sticky;
             top: 100px;
@@ -632,11 +638,11 @@
                 <form class="hero-call-form" id="blogCallForm">
                     <div class="form-group">
                         <div class="input-icon"><i class="fas fa-user"></i></div>
-                        <input type="text" name="ad" id="blogInputName" placeholder="AD" required>
+                        <input type="text" name="ad" id="blogInputName" placeholder="Ad" required>
                     </div>
                     <div class="form-group">
                         <div class="input-icon"><i class="fas fa-user"></i></div>
-                        <input type="text" name="soyad" id="blogInputSurname" placeholder="SOYAD" required>
+                        <input type="text" name="soyad" id="blogInputSurname" placeholder="Soyad" required>
                     </div>
                     <div class="form-group">
                         <div class="input-icon"><i class="fas fa-phone"></i></div>
@@ -645,7 +651,7 @@
                                 <option value="+994" selected>🇦🇿 +994</option>
                                 <option value="+7">🇷🇺 +7</option>
                             </select>
-                            <input type="tel" name="telefon" id="blogInputPhone" placeholder="TEL NÖMRƏSİ" required>
+                            <input type="tel" name="telefon" id="blogInputPhone" placeholder="Tel" required>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-gold btn-full" id="blogSubmitBtn">Müraciət Göndər</button>
@@ -882,7 +888,7 @@
             az: {
                 calTitle: 'Seans üçün Gün Seçimi', calDesc: 'Sizə uyğun günü seçin, WhatsApp vasitəsilə əlaqə qurun.',
                 formTitle: 'Zəng Sifarişi', formDesc: 'Qısa zamanda əlaqə saxlamaq üçün nömrənizi yazın.',
-                name: 'AD', surname: 'SOYAD', phone: 'TEL NÖMRƏSİ', submit: 'Müraciət Göndər',
+                name: 'Ad', surname: 'Soyad', phone: 'Tel', submit: 'Müraciət Göndər',
                 feat1: 'Ödənişli müayinə/şəfalanma', feat2: '24 saat ərzində geri zəng', feat3: 'Tam məxfilik',
                 sending: 'Göndərilir...', sent: 'Göndərildi!', error: 'Xəta baş verdi, yenidən cəhd edin.',
                 weekdays: ['BE','ÇA','Ç','CA','C','Ş','B'],
@@ -892,7 +898,7 @@
             ru: {
                 calTitle: 'Выбор дня для сеанса', calDesc: 'Выберите удобный день и свяжитесь через WhatsApp.',
                 formTitle: 'Заказать звонок', formDesc: 'Напишите ваш номер для быстрой связи.',
-                name: 'ИМЯ', surname: 'ФАМИЛИЯ', phone: 'ТЕЛ НОМЕР', submit: 'Отправить заявку',
+                name: 'Имя', surname: 'Фамилия', phone: 'Тел', submit: 'Отправить заявку',
                 feat1: 'Платный осмотр/исцеление', feat2: 'Обратный звонок в течение 24 часов', feat3: 'Полная конфиденциальность',
                 sending: 'Отправляется...', sent: 'Отправлено!', error: 'Произошла ошибка, попробуйте снова.',
                 weekdays: ['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'],
