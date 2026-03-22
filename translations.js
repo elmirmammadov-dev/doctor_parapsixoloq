@@ -173,6 +173,7 @@ const translations = {
         reviews_nav: "Rəylər",
 
         // Footer
+        footer_name: "Şahsəddin İmanlı",
         footer_subtitle: "Parapsixoloq & Tantra Yoqa Müəllimi",
         footer_contact: "Bizimlə Əlaqə",
         footer_follow: "Bizi İzləyin",
@@ -354,6 +355,7 @@ const translations = {
         reviews_load_more: "Показать ещё",
         reviews_nav: "Отзывы",
 
+        footer_name: "Шахсаддин Иманлы",
         footer_subtitle: "Парапсихолог и Преподаватель Тантра-Йоги",
         footer_contact: "Свяжитесь с нами",
         footer_follow: "Следите за нами",
@@ -533,6 +535,7 @@ const translations = {
         reviews_load_more: "Show more",
         reviews_nav: "Reviews",
 
+        footer_name: "Shahsaddin Imanli",
         footer_subtitle: "Parapsychologist & Tantra Yoga Instructor",
         footer_contact: "Contact Us",
         footer_follow: "Follow Us",
@@ -712,6 +715,7 @@ const translations = {
         reviews_load_more: "Daha fazla göster",
         reviews_nav: "Yorumlar",
 
+        footer_name: "Şahseddin İmanlı",
         footer_subtitle: "Parapsikolojist ve Tantra Yoga Eğitmeni",
         footer_contact: "Bizimle İletişime Geçin",
         footer_follow: "Bizi Takip Edin",
