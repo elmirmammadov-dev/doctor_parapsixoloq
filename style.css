@@ -1966,8 +1966,8 @@ img {
 .about-rating-stars {
     position: absolute;
     top: -22px;
-    left: 50%;
-    transform: translateX(-50%);
+    right: 16px;
+    left: auto;
     z-index: 3;
     display: flex;
     align-items: center;
@@ -5019,6 +5019,7 @@ img {
 @media (max-width: 768px) {
     .about-rating-stars {
         top: -18px;
+        right: 8px;
         padding: 6px 12px;
     }
     .rating-stars-inner i {
