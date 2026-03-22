@@ -4914,23 +4914,28 @@ img {
         overflow: visible;
     }
     .about-badge {
-        position: relative;
-        bottom: auto;
+        position: absolute;
+        bottom: 56px;
         right: auto;
-        margin: -20px auto 0;
+        left: 8px;
+        margin: 0;
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 12px 24px;
-        border-radius: 12px;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 10px;
         width: fit-content;
     }
+    .about-badges-left {
+        bottom: 12px !important;
+        left: 8px !important;
+    }
     .badge-number {
-        font-size: 1.6rem;
+        font-size: 1.2rem;
         margin-bottom: 0;
     }
     .badge-text {
-        font-size: 0.65rem;
+        font-size: 0.55rem;
     }
 }
 
