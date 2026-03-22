@@ -437,11 +437,17 @@ document.addEventListener("DOMContentLoaded", function() {
         const countEl = document.getElementById('adminReviewsCount');
         const descEl = document.querySelector('#tabReviews p');
         if (!list) return;
+        if (typeof adminDb === 'undefined' || !adminDb) {
+            setTimeout(window.loadAdminReviews, 500);
+            return;
+        }
         const t = getAdminReviewT();
         if (descEl) descEl.textContent = t.desc;
         list.innerHTML = `<p style="text-align:center;color:#999;padding:20px 0;">${t.loading}</p>`;
 
-        adminDb.ref('reviews').orderByChild('timestamp').once('value', snapshot => {
+        const ref = adminDb.ref('reviews').orderByChild('timestamp');
+        const handler = ref.on('value', snapshot => {
+            ref.off('value', handler);
             const reviews = [];
             snapshot.forEach(child => {
                 const r = child.val();
@@ -760,7 +766,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function loadAdminComments() {
         const listEl = document.getElementById('adminCommentsList');
-        if (!listEl || typeof adminDb === 'undefined') return;
+        if (!listEl) return;
+        if (typeof adminDb === 'undefined' || !adminDb) {
+            setTimeout(loadAdminComments, 500);
+            return;
+        }
 
         listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> ' + adminT('loading') + '</p>';
 
@@ -1629,11 +1639,17 @@ document.addEventListener("DOMContentLoaded", function() {
     function loadAdminUsers() {
         const listEl = document.getElementById('adminUsersList');
         const countEl = document.getElementById('adminUsersCount');
-        if (!listEl || typeof adminDb === 'undefined') return;
+        if (!listEl) return;
+        if (typeof adminDb === 'undefined' || !adminDb) {
+            setTimeout(loadAdminUsers, 500);
+            return;
+        }
 
         listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> ' + adminT('loading') + '</p>';
 
-        adminDb.ref('users').once('value', snapshot => {
+        const ref = adminDb.ref('users');
+        const handler = ref.on('value', snapshot => {
+            ref.off('value', handler);
             const users = [];
             snapshot.forEach(userSnap => {
                 users.push({
@@ -1793,7 +1809,11 @@ document.addEventListener("DOMContentLoaded", function() {
     // ===== STATISTICS =====
     function loadAdminStats() {
         const container = document.getElementById('adminStatsContent');
-        if (!container || typeof adminDb === 'undefined') return;
+        if (!container) return;
+        if (typeof adminDb === 'undefined' || !adminDb) {
+            setTimeout(loadAdminStats, 500);
+            return;
+        }
 
         container.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> ' + adminT('loading') + '</p>';
 
