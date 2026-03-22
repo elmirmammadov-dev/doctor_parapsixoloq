@@ -28,21 +28,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Check Firebase storage usage and warn if close to limit
     function checkFirebaseStorage() {
-        const db = firebase.database();
-        const WARN_THRESHOLD_MB = 800; // Warn at 800 MB (limit is 1 GB)
-        let totalBytes = 0;
+        const WARN_THRESHOLD_MB = 800;
 
         function estimateSize(val) {
             if (val === null || val === undefined) return 0;
             return new Blob([JSON.stringify(val)]).size;
         }
 
+        // Use REST API instead of SDK to avoid WebSocket hang
         Promise.all([
-            db.ref('comments').once('value').then(s => estimateSize(s.val())),
-            db.ref('siteTraffic').once('value').then(s => estimateSize(s.val())),
-            db.ref('users').once('value').then(s => estimateSize(s.val()))
+            fetch(FIREBASE_REST + '/comments.json').then(r => r.json()).then(d => estimateSize(d)),
+            fetch(FIREBASE_REST + '/siteTraffic.json').then(r => r.json()).then(d => estimateSize(d)),
+            fetch(FIREBASE_REST + '/users.json').then(r => r.json()).then(d => estimateSize(d))
         ]).then(sizes => {
-            totalBytes = sizes[0] + sizes[1] + sizes[2];
+            const totalBytes = sizes[0] + sizes[1] + sizes[2];
             const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
             const pct = ((totalBytes / (1024 * 1024 * 1024)) * 100).toFixed(1);
 
@@ -50,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 showStorageWarning(totalMB, pct);
             }
 
-            // Remove old warning if under threshold
             const oldWarn = document.getElementById('adminStorageWarning');
             if (oldWarn && totalBytes < WARN_THRESHOLD_MB * 1024 * 1024) {
                 oldWarn.remove();
@@ -1814,12 +1812,12 @@ document.addEventListener("DOMContentLoaded", function() {
         const monthDisplay = formatDate(monthStartDate) + ' — ' + formatDate(monthEndDate);
 
         Promise.all([
-            adminDb.ref('siteTraffic/dailyCounts').once('value'),
-            adminDb.ref('siteTraffic/visits/' + todayKey).once('value'),
-            adminDb.ref('siteTraffic/activities').orderByChild('timestamp').limitToLast(30).once('value'),
-            adminDb.ref('siteTraffic/clickStats').once('value')
-        ]).then(([countsSnap, todayVisitsSnap, activitiesSnap, clickStatsSnap]) => {
-            const dailyCounts = countsSnap.val() || {};
+            fetch(FIREBASE_REST + '/siteTraffic/dailyCounts.json').then(r => r.json()),
+            fetch(FIREBASE_REST + '/siteTraffic/visits/' + todayKey + '.json').then(r => r.json()),
+            fetch(FIREBASE_REST + '/siteTraffic/activities.json?orderBy="timestamp"&limitToLast=30').then(r => r.json()).catch(() => null),
+            fetch(FIREBASE_REST + '/siteTraffic/clickStats.json').then(r => r.json())
+        ]).then(([dailyCounts_raw, todayVisits_raw, activities_raw, clickStats_raw]) => {
+            const dailyCounts = dailyCounts_raw || {};
 
             // Calculate visitor counts
             let todayCount = dailyCounts[todayKey] || 0;
@@ -1832,7 +1830,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
 
             // Calculate average session duration from today's visits
-            const todayVisits = todayVisitsSnap.val() || {};
+            const todayVisits = todayVisits_raw || {};
             let totalDuration = 0, durationCount = 0;
             Object.values(todayVisits).forEach(v => {
                 if (v.duration && v.duration > 0) {
@@ -1868,10 +1866,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Activities
             const activities = [];
-            activitiesSnap.forEach(snap => {
-                activities.push(snap.val());
-            });
-            activities.reverse();
+            if (activities_raw) {
+                Object.keys(activities_raw).forEach(k => {
+                    activities.push(activities_raw[k]);
+                });
+            }
+            activities.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            activities.splice(30);
 
             // Build HTML
             let html = '';
@@ -1912,7 +1913,7 @@ document.addEventListener("DOMContentLoaded", function() {
             </div>`;
 
             // ===== Potensial Müştərilər (Unique IP Click Stats) =====
-            const clickStats = clickStatsSnap.val() || {};
+            const clickStats = clickStats_raw || {};
             const mainClicks = clickStats.main || {};
             const blogClicks = clickStats.blog || {};
 
