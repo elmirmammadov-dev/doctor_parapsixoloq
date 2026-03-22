@@ -3306,20 +3306,18 @@ img {
         display: flex !important;
         order: 2;
         margin-left: 0;
-        gap: 2px;
+        gap: 3px;
         flex-shrink: 0;
     }
 
     .lang-option {
-        padding: 2px 3px !important;
-        border-radius: 4px !important;
-        min-width: 28px;
-        justify-content: center;
+        padding: 4px 5px !important;
+        border-radius: 6px !important;
     }
 
     .lang-option img {
-        width: 22px !important;
-        height: 15px !important;
+        width: 24px !important;
+        height: 16px !important;
         display: block !important;
     }
 
@@ -3371,7 +3369,7 @@ img {
 
     /* H1 - two lines: name centered, profession below */
     .hero-banner-h1 {
-        margin-top: -80px;
+        margin-top: -100px;
         font-size: 0.9rem;
         line-height: 1.6;
         text-align: center;
