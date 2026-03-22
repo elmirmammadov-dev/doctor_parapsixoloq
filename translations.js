@@ -11,7 +11,7 @@ const translations = {
 
         // About
         topbar_location: "Bakı & Naxçıvan",
-        hero_h1: "Şahsəddin İmanlı - Parapsixoloq & Psixoloq & Yoq",
+        hero_h1: "<span class='h1-name'>Şahsəddin İmanlı</span> <span class='h1-sep'>-</span> <span class='h1-title'>Parapsixoloq & Psixoloq & Yoq</span>",
         about_quote: "\"İnsanın ruhunu müalicə etmədən cismini müalicə etmək olmaz\"",
         trust_label: "Xəstələr tərəfindən etibar edilir",
         badge_years: "İLLİK TƏCRÜBƏ",
@@ -196,7 +196,7 @@ const translations = {
         btn_session: "Записаться на сеанс",
 
         topbar_location: "Баку & Нахчыван",
-        hero_h1: "Шахсаддин Иманлы — Парапсихолог & Психолог & Йог",
+        hero_h1: "<span class='h1-name'>Шахсаддин Иманлы</span> <span class='h1-sep'>—</span> <span class='h1-title'>Парапсихолог & Психолог & Йог</span>",
         about_quote: "\"Невозможно лечить тело человека, не исцелив его душу\"",
         trust_label: "Доверие пациентов",
         badge_years: "ЛЕТ ОПЫТА",
@@ -369,7 +369,7 @@ const translations = {
         btn_session: "Book a Session",
 
         topbar_location: "Baku & Nakhchivan",
-        hero_h1: "Shahsaddin Imanli — Parapsychologist & Psychologist & Yogi",
+        hero_h1: "<span class='h1-name'>Shahsaddin Imanli</span> <span class='h1-sep'>—</span> <span class='h1-title'>Parapsychologist & Psychologist & Yogi</span>",
         about_quote: "\"You cannot heal the body without healing the soul first\"",
         trust_label: "Trusted by Patients",
         badge_years: "YEARS OF EXPERIENCE",
@@ -542,7 +542,7 @@ const translations = {
         btn_session: "Seansa Yazıl",
 
         topbar_location: "Bakü & Nahçıvan",
-        hero_h1: "Şahseddin İmanlı — Parapsikolojist & Psikolog & Yogi",
+        hero_h1: "<span class='h1-name'>Şahseddin İmanlı</span> <span class='h1-sep'>—</span> <span class='h1-title'>Parapsikolojist & Psikolog & Yogi</span>",
         about_quote: "\"İnsanın ruhunu tedavi etmeden bedenini tedavi etmek mümkün değildir\"",
         trust_label: "Hastalar tarafından güvenilir",
         badge_years: "YILLIK DENEYİM",
