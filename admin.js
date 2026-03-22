@@ -411,7 +411,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return ADMIN_REVIEW_TEXTS[adminLang] || ADMIN_REVIEW_TEXTS.az;
     }
 
-    function loadAdminReviews() {
+    window.loadAdminReviews = function() {
         const list = document.getElementById('adminReviewsList');
         const countEl = document.getElementById('adminReviewsCount');
         const descEl = document.querySelector('#tabReviews p');
@@ -485,7 +485,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 `;
             }).join('');
         });
-    }
+    };
 
     window.toggleAllReviews = function(checked) {
         document.querySelectorAll('.review-checkbox').forEach(cb => cb.checked = checked);
