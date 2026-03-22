@@ -753,6 +753,174 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchBlogPosts();
 
+    // === REVIEWS SECTION ===
+    const REVIEWS_PER_PAGE = 6;
+    let reviewsLoaded = REVIEWS_PER_PAGE;
+    let allReviews = [];
+    let selectedRating = 5;
+
+    // Star rating input
+    const starsInput = document.querySelectorAll('.review-stars-input i');
+    starsInput.forEach(star => {
+        star.addEventListener('mouseenter', function() {
+            const val = parseInt(this.dataset.star);
+            starsInput.forEach((s, i) => {
+                s.style.color = i < val ? '#ffa534' : '#ddd';
+                s.style.transform = i < val ? 'scale(1.15)' : 'scale(1)';
+            });
+        });
+        star.addEventListener('click', function() {
+            selectedRating = parseInt(this.dataset.star);
+            starsInput.forEach((s, i) => {
+                s.classList.toggle('active', i < selectedRating);
+            });
+        });
+    });
+    const starsContainer = document.querySelector('.review-stars-input');
+    if (starsContainer) {
+        starsContainer.addEventListener('mouseleave', function() {
+            starsInput.forEach((s, i) => {
+                s.style.color = i < selectedRating ? '#ffa534' : '#ddd';
+                s.style.transform = i < selectedRating ? 'scale(1.15)' : 'scale(1)';
+            });
+        });
+        // Init stars
+        starsInput.forEach((s, i) => {
+            s.style.color = i < selectedRating ? '#ffa534' : '#ddd';
+            s.style.transform = i < selectedRating ? 'scale(1.15)' : 'scale(1)';
+        });
+    }
+
+    // Submit review
+    const reviewForm = document.getElementById('reviewForm');
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('reviewName').value.trim();
+            const city = document.getElementById('reviewCity').value.trim();
+            const text = document.getElementById('reviewText').value.trim();
+            if (!name || !text) return;
+
+            const btn = document.getElementById('reviewSubmitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Göndərilir...';
+
+            const reviewData = {
+                name: name,
+                city: city || '',
+                rating: selectedRating,
+                text: text,
+                timestamp: Date.now()
+            };
+
+            adminDb.ref('reviews').push(reviewData).then(() => {
+                btn.disabled = false;
+                btn.textContent = 'Rəy Göndər';
+                reviewForm.reset();
+                selectedRating = 5;
+                starsInput.forEach((s, i) => {
+                    s.style.color = i < 5 ? '#ffa534' : '#ddd';
+                    s.style.transform = i < 5 ? 'scale(1.15)' : 'scale(1)';
+                    s.classList.toggle('active', i < 5);
+                });
+                const successEl = document.getElementById('reviewSuccess');
+                successEl.style.display = 'block';
+                setTimeout(() => { successEl.style.display = 'none'; }, 4000);
+            }).catch(() => {
+                btn.disabled = false;
+                btn.textContent = 'Rəy Göndər';
+            });
+        });
+    }
+
+    // Render reviews
+    function renderReviews() {
+        const grid = document.getElementById('reviewsGrid');
+        if (!grid) return;
+
+        const visible = allReviews.slice(0, reviewsLoaded);
+        const months = ['Yan','Fev','Mar','Apr','May','İyn','İyl','Avq','Sen','Okt','Noy','Dek'];
+
+        grid.innerHTML = visible.map(r => {
+            const initial = r.name.charAt(0).toUpperCase();
+            const date = new Date(r.timestamp);
+            const dateStr = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+            let starsHtml = '';
+            for (let i = 0; i < 5; i++) {
+                starsHtml += `<i class="fas fa-star ${i < r.rating ? '' : 'empty'}"></i>`;
+            }
+            return `
+                <div class="review-card">
+                    <div class="review-card-header">
+                        <div class="review-card-avatar">${initial}</div>
+                        <div class="review-card-info">
+                            <div class="review-card-name">${r.name}</div>
+                            ${r.city ? `<div class="review-card-city"><i class="fas fa-map-marker-alt"></i> ${r.city}</div>` : ''}
+                        </div>
+                        <div class="review-card-stars">${starsHtml}</div>
+                    </div>
+                    <div class="review-card-text" id="reviewCardText_${r._key}" data-full-text="${r.text.replace(/"/g, '&quot;')}" data-shown="150">${r.text.length > 150 ? r.text.substring(0, 150) + '...' : r.text}</div>
+                    ${r.text.length > 150 ? `<button class="review-read-more" id="reviewReadMore_${r._key}" onclick="toggleReviewText('${r._key}')">Ardını oxu</button>` : ''}
+                    <div class="review-card-date">${dateStr}</div>
+                </div>
+            `;
+        }).join('');
+
+        const loadMoreEl = document.getElementById('reviewsLoadMore');
+        if (loadMoreEl) {
+            loadMoreEl.style.display = allReviews.length > reviewsLoaded ? 'block' : 'none';
+        }
+
+    }
+
+    // Load more
+    const loadMoreBtn = document.getElementById('loadMoreReviewsBtn');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function() {
+            reviewsLoaded += REVIEWS_PER_PAGE;
+            renderReviews();
+        });
+    }
+
+    window.toggleReviewText = function(key) {
+        const el = document.getElementById('reviewCardText_' + key);
+        const btn = document.getElementById('reviewReadMore_' + key);
+        if (!el || !btn) return;
+        const fullText = el.getAttribute('data-full-text');
+        const pageSize = 150;
+        const currentPage = parseInt(el.getAttribute('data-page') || '0');
+        const totalPages = Math.ceil(fullText.length / pageSize);
+        const nextPage = currentPage + 1;
+
+        if (nextPage >= totalPages) {
+            // Son səhifə - əvvələ qaytar
+            el.textContent = fullText.substring(0, pageSize) + (fullText.length > pageSize ? '...' : '');
+            el.setAttribute('data-page', '0');
+            btn.textContent = 'Ardını oxu';
+        } else {
+            const start = nextPage * pageSize;
+            const end = Math.min(start + pageSize, fullText.length);
+            const chunk = fullText.substring(start, end);
+            el.textContent = chunk + (end < fullText.length ? '...' : '');
+            el.setAttribute('data-page', nextPage);
+            btn.textContent = nextPage >= totalPages - 1 ? 'Əvvələ qayıt' : 'Ardını oxu';
+        }
+    };
+
+    // Listen for reviews from Firebase
+    if (typeof adminDb !== 'undefined') {
+        adminDb.ref('reviews').orderByChild('timestamp').on('value', snapshot => {
+            allReviews = [];
+            snapshot.forEach(child => {
+                const r = child.val();
+                r._key = child.key;
+                allReviews.push(r);
+            });
+            allReviews.reverse();
+            renderReviews();
+        });
+    }
+
     // === ADMIN PANEL ===
     const adminPanelOverlay = document.getElementById('adminPanelOverlay');
     const adminPanelClose = document.getElementById('adminPanelClose');
@@ -849,6 +1017,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tabComments: 'Şərhlər',
             tabUsers: 'İstifadəçilər',
             tabStats: 'Statistika',
+            tabReviews: 'Rəylər',
             labelTitle: 'Başlıq',
             labelDate: 'Tarix',
             labelImage: 'Şəkil',
@@ -958,6 +1127,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tabComments: 'Комментарии',
             tabUsers: 'Пользователи',
             tabStats: 'Статистика',
+            tabReviews: 'Отзывы',
             labelTitle: 'Заголовок',
             labelDate: 'Дата',
             labelImage: 'Изображение',
@@ -1101,6 +1271,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof loadAdminUsers === 'function') loadAdminUsers();
         if (typeof loadAdminArticles === 'function') loadAdminArticles();
         if (typeof loadAdminComments === 'function') loadAdminComments();
+        if (typeof loadAdminReviews === 'function') loadAdminReviews();
     }
 
     // Init admin lang buttons
@@ -1127,12 +1298,177 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('tabComments').style.display = tab === 'comments' ? 'block' : 'none';
         document.getElementById('tabUsers').style.display = tab === 'users' ? 'block' : 'none';
         document.getElementById('tabStats').style.display = tab === 'stats' ? 'block' : 'none';
+        document.getElementById('tabReviews').style.display = tab === 'reviews' ? 'block' : 'none';
 
         if (tab === 'articles') loadAdminArticles();
         if (tab === 'comments') loadAdminComments();
         if (tab === 'users') loadAdminUsers();
         if (tab === 'stats') loadAdminStats();
+        if (tab === 'reviews') loadAdminReviews();
     }
+
+    // === ADMIN REVIEWS ===
+    const ADMIN_REVIEW_TEXTS = {
+        az: { desc: 'Pasiyent rəyləri:', count: 'rəy', loading: 'Yüklənir...', empty: 'Hələ rəy yoxdur.', selectAll: 'Hamısını seç', deleteSelected: 'Seçilənləri sil', deleteAll: 'Hamısını sil', edit: 'Redaktə', del: 'Sil', save: 'Yadda saxla', cancel: 'Ləğv et', selected: 'seçilib', confirmOne: 'adlı rəyi silmək istədiyinizdən əminsiniz?', confirmSelected: 'rəyi silmək istədiyinizdən əminsiniz?', confirmAll1: 'BÜTÜN rəyləri silmək istədiyinizdən əminsiniz? Bu əməliyyat geri qaytarıla bilməz!', confirmAll2: 'Son dəfə təsdiq edin - bütün rəylər Firebase-dən silinəcək!', noSelection: 'Heç bir rəy seçilməyib.', months: ['Yan','Fev','Mar','Apr','May','İyn','İyl','Avq','Sen','Okt','Noy','Dek'] },
+        ru: { desc: 'Отзывы пациентов:', count: 'отз.', loading: 'Загрузка...', empty: 'Отзывов пока нет.', selectAll: 'Выбрать все', deleteSelected: 'Удалить выбранные', deleteAll: 'Удалить все', edit: 'Редакт.', del: 'Удалить', save: 'Сохранить', cancel: 'Отмена', selected: 'выбрано', confirmOne: '— удалить этот отзыв?', confirmSelected: 'отзыв(ов) удалить?', confirmAll1: 'Удалить ВСЕ отзывы? Это действие необратимо!', confirmAll2: 'Подтвердите — все отзывы будут удалены из Firebase!', noSelection: 'Ничего не выбрано.', months: ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'] },
+        en: { desc: 'Patient reviews:', count: 'reviews', loading: 'Loading...', empty: 'No reviews yet.', selectAll: 'Select all', deleteSelected: 'Delete selected', deleteAll: 'Delete all', edit: 'Edit', del: 'Delete', save: 'Save', cancel: 'Cancel', selected: 'selected', confirmOne: '— delete this review?', confirmSelected: 'review(s) to delete?', confirmAll1: 'Delete ALL reviews? This cannot be undone!', confirmAll2: 'Confirm — all reviews will be deleted from Firebase!', noSelection: 'Nothing selected.', months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] },
+        tr: { desc: 'Hasta yorumları:', count: 'yorum', loading: 'Yükleniyor...', empty: 'Henüz yorum yok.', selectAll: 'Tümünü seç', deleteSelected: 'Seçilenleri sil', deleteAll: 'Tümünü sil', edit: 'Düzenle', del: 'Sil', save: 'Kaydet', cancel: 'İptal', selected: 'seçildi', confirmOne: '— bu yorumu silmek istiyor musunuz?', confirmSelected: 'yorum silinsin mi?', confirmAll1: 'TÜM yorumları silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!', confirmAll2: 'Son onay — tüm yorumlar Firebase\'den silinecek!', noSelection: 'Hiçbir şey seçilmedi.', months: ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'] }
+    };
+
+    function getAdminReviewT() {
+        return ADMIN_REVIEW_TEXTS[adminLang] || ADMIN_REVIEW_TEXTS.az;
+    }
+
+    function loadAdminReviews() {
+        const list = document.getElementById('adminReviewsList');
+        const countEl = document.getElementById('adminReviewsCount');
+        const descEl = document.querySelector('#tabReviews p');
+        if (!list) return;
+        const t = getAdminReviewT();
+        if (descEl) descEl.textContent = t.desc;
+        list.innerHTML = `<p style="text-align:center;color:#999;padding:20px 0;">${t.loading}</p>`;
+
+        adminDb.ref('reviews').orderByChild('timestamp').once('value', snapshot => {
+            const reviews = [];
+            snapshot.forEach(child => {
+                const r = child.val();
+                r._key = child.key;
+                reviews.push(r);
+            });
+            reviews.reverse();
+
+            if (countEl) countEl.textContent = reviews.length + ' ' + t.count;
+
+            if (reviews.length === 0) {
+                list.innerHTML = `<p style="text-align:center;color:#999;padding:20px 0;">${t.empty}</p>`;
+                return;
+            }
+
+            let topBar = `
+                <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap;">
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.85rem;font-weight:600;color:var(--text-secondary);">
+                        <input type="checkbox" id="reviewSelectAll" onchange="toggleAllReviews(this.checked)" style="width:16px;height:16px;cursor:pointer;">
+                        ${t.selectAll}
+                    </label>
+                    <button onclick="deleteSelectedReviews()" style="padding:6px 14px;border:1px solid #e74c3c;background:#fff;color:#e74c3c;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;transition:all 0.3s;">
+                        <i class="fas fa-trash"></i> ${t.deleteSelected}
+                    </button>
+                    <button onclick="deleteAllReviews()" style="padding:6px 14px;border:none;background:#e74c3c;color:#fff;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;transition:all 0.3s;">
+                        <i class="fas fa-trash-alt"></i> ${t.deleteAll}
+                    </button>
+                    <span id="reviewSelectedCount" style="font-size:0.8rem;color:#999;margin-left:auto;"></span>
+                </div>
+            `;
+
+            list.innerHTML = topBar + reviews.map(r => {
+                const date = new Date(r.timestamp);
+                const dateStr = `${date.getDate()} ${t.months[date.getMonth()]} ${date.getFullYear()}, ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`;
+                let starsHtml = '';
+                for (let i = 0; i < 5; i++) {
+                    starsHtml += `<i class="fas fa-star" style="color:${i < r.rating ? '#ffa534' : '#ddd'};font-size:0.8rem;"></i>`;
+                }
+                return `
+                    <div style="background:#f8faf9;border-radius:12px;padding:16px;margin-bottom:12px;border-left:3px solid var(--gold);display:flex;gap:12px;align-items:flex-start;" id="adminReview_${r._key}">
+                        <input type="checkbox" class="review-checkbox" data-key="${r._key}" onchange="updateReviewSelectionCount()" style="width:18px;height:18px;cursor:pointer;margin-top:2px;flex-shrink:0;">
+                        <div style="flex:1;min-width:0;">
+                            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+                                <div>
+                                    <strong style="font-size:0.95rem;">${r.name}</strong>
+                                    ${r.city ? `<span style="color:#999;font-size:0.82rem;margin-left:8px;"><i class="fas fa-map-marker-alt"></i> ${r.city}</span>` : ''}
+                                    <div style="margin-top:4px;">${starsHtml}</div>
+                                </div>
+                                <span style="font-size:0.75rem;color:#999;">${dateStr}</span>
+                            </div>
+                            <p class="admin-review-text" id="reviewText_${r._key}" style="font-size:0.9rem;color:#333;line-height:1.6;margin:8px 0;">${r.text}</p>
+                            <div id="reviewBtns_${r._key}" style="display:flex;gap:8px;margin-top:10px;">
+                                <button onclick="editAdminReview('${r._key}')" style="padding:6px 14px;border:1px solid var(--gold);background:#fff;color:var(--gold);border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;transition:all 0.3s;">
+                                    <i class="fas fa-edit"></i> ${t.edit}
+                                </button>
+                                <button onclick="deleteAdminReview('${r._key}','${r.name.replace(/'/g, "\\'")}')" style="padding:6px 14px;border:1px solid #e74c3c;background:#fff;color:#e74c3c;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;transition:all 0.3s;">
+                                    <i class="fas fa-trash"></i> ${t.del}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        });
+    }
+
+    window.toggleAllReviews = function(checked) {
+        document.querySelectorAll('.review-checkbox').forEach(cb => cb.checked = checked);
+        updateReviewSelectionCount();
+    };
+
+    window.updateReviewSelectionCount = function() {
+        const t = getAdminReviewT();
+        const checked = document.querySelectorAll('.review-checkbox:checked').length;
+        const total = document.querySelectorAll('.review-checkbox').length;
+        const countEl = document.getElementById('reviewSelectedCount');
+        if (countEl) countEl.textContent = checked > 0 ? `${checked} / ${total} ${t.selected}` : '';
+        const selectAll = document.getElementById('reviewSelectAll');
+        if (selectAll) selectAll.checked = checked === total && total > 0;
+    };
+
+    window.deleteSelectedReviews = function() {
+        const t = getAdminReviewT();
+        const checked = document.querySelectorAll('.review-checkbox:checked');
+        if (checked.length === 0) return alert(t.noSelection);
+        if (!confirm(`${checked.length} ${t.confirmSelected}`)) return;
+        const updates = {};
+        checked.forEach(cb => { updates[cb.dataset.key] = null; });
+        adminDb.ref('reviews').update(updates).then(() => loadAdminReviews());
+    };
+
+    window.deleteAllReviews = function() {
+        const t = getAdminReviewT();
+        if (!confirm(t.confirmAll1)) return;
+        if (!confirm(t.confirmAll2)) return;
+        adminDb.ref('reviews').remove().then(() => loadAdminReviews());
+    };
+
+    window.deleteAdminReview = function(key, name) {
+        const t = getAdminReviewT();
+        if (!confirm(`"${name}" ${t.confirmOne}`)) return;
+        adminDb.ref('reviews/' + key).remove().then(() => {
+            loadAdminReviews();
+        });
+    };
+
+    window.editAdminReview = function(key) {
+        const t = getAdminReviewT();
+        const textEl = document.getElementById('reviewText_' + key);
+        if (!textEl) return;
+        const currentText = textEl.textContent;
+        const btnsDiv = document.getElementById('reviewBtns_' + key);
+        if (!btnsDiv) return;
+
+        // Replace text with textarea
+        textEl.outerHTML = `
+            <textarea id="reviewEditArea_${key}" style="width:100%;padding:10px;border:1.5px solid var(--gold);border-radius:8px;font-size:0.9rem;font-family:inherit;min-height:80px;box-sizing:border-box;resize:vertical;">${currentText}</textarea>
+        `;
+
+        // Replace buttons
+        btnsDiv.innerHTML = `
+            <button onclick="saveAdminReview('${key}')" style="padding:6px 14px;border:none;background:var(--gold);color:#fff;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">
+                <i class="fas fa-save"></i> ${t.save}
+            </button>
+            <button onclick="loadAdminReviews()" style="padding:6px 14px;border:1px solid #999;background:#fff;color:#999;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">
+                <i class="fas fa-times"></i> ${t.cancel}
+            </button>
+        `;
+    };
+
+    window.saveAdminReview = function(key) {
+        const textarea = document.getElementById('reviewEditArea_' + key);
+        if (!textarea) return;
+        const newText = textarea.value.trim();
+        if (!newText) return;
+
+        adminDb.ref('reviews/' + key).update({ text: newText }).then(() => {
+            loadAdminReviews();
+        });
+    };
 
     // Load articles list for deletion
     async function loadAdminArticles() {

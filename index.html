@@ -42,14 +42,12 @@
     <!-- Navbar -->
     <nav class="navbar" id="navbar">
         <div class="container navbar-content">
-            <a href="#about" class="navbar-logo">
-                <img src="esas-loqo.png" alt="Logo">
-            </a>
             <ul class="navbar-menu" id="navMenu">
                 <li><a href="#about" class="nav-link" data-i18n="nav_about">Ana Səhifə</a></li>
                 <li><a href="#services" class="nav-link" data-i18n="nav_services">Xidmətlər</a></li>
                 <li><a href="#problems" class="nav-link" data-i18n="nav_problems">Fəaliyyətlər</a></li>
                 <li><a href="#faq" class="nav-link" data-i18n="nav_faq">Sual-Cavab</a></li>
+                <li><a href="#reviews" class="nav-link" data-i18n="reviews_nav">Rəylər</a></li>
                 <li><a href="#blogSection" class="nav-link" data-i18n="nav_blog">Blog</a></li>
                 <li><a href="#contact" class="nav-link" data-i18n="nav_contact">Əlaqə</a></li>
             </ul>
@@ -459,21 +457,24 @@
             </div>
             <div class="admin-panel-body">
                 <!-- Tab buttons -->
-                <div style="display:flex;gap:10px;margin-bottom:20px;">
-                    <button class="admin-tab-btn active" data-tab="contentful" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:var(--gold);color:#fff;font-weight:600;cursor:pointer;transition:all 0.3s;">
+                <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+                    <button class="admin-tab-btn active" data-tab="contentful" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:var(--gold);color:#fff;font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
                         <i class="fas fa-pen-fancy"></i> <span data-admin-i18n="tabNewArticle">Yeni Məqalə</span>
                     </button>
-                    <button class="admin-tab-btn" data-tab="articles" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;">
+                    <button class="admin-tab-btn" data-tab="articles" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
                         <i class="fas fa-newspaper"></i> <span data-admin-i18n="tabArticles">Məqalələr</span>
                     </button>
-                    <button class="admin-tab-btn" data-tab="comments" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;">
+                    <button class="admin-tab-btn" data-tab="comments" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
                         <i class="fas fa-comments"></i> <span data-admin-i18n="tabComments">Şərhlər</span>
                     </button>
-                    <button class="admin-tab-btn" data-tab="users" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;">
+                    <button class="admin-tab-btn" data-tab="users" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
                         <i class="fas fa-users"></i> <span data-admin-i18n="tabUsers">İstifadəçilər</span>
                     </button>
-                    <button class="admin-tab-btn" data-tab="stats" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;">
+                    <button class="admin-tab-btn" data-tab="stats" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
                         <i class="fas fa-chart-bar"></i> <span data-admin-i18n="tabStats">Statistika</span>
+                    </button>
+                    <button class="admin-tab-btn" data-tab="reviews" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
+                        <i class="fas fa-star"></i> <span data-admin-i18n="tabReviews">Rəylər</span>
                     </button>
                 </div>
 
@@ -723,6 +724,17 @@
                         <p style="text-align:center;color:#999;padding:20px 0;">Yüklənir...</p>
                     </div>
                 </div>
+
+                <!-- Reviews tab -->
+                <div class="admin-tab-content" id="tabReviews" style="display:none;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                        <p style="color:var(--text-secondary);font-size:0.9rem;margin:0;">Pasiyent rəyləri:</p>
+                        <span id="adminReviewsCount" style="font-size:0.85rem;color:var(--gold);font-weight:600;"></span>
+                    </div>
+                    <div id="adminReviewsList" style="overflow-y:auto;max-height:60vh;">
+                        <p style="text-align:center;color:#999;padding:20px 0;">Yüklənir...</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -794,6 +806,58 @@
         </div>
     </section>
 
+    <!-- Reviews Section -->
+    <section class="section reviews-section" id="reviews">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="reviews_tag">Rəylər</span>
+                <h2 class="section-title" data-i18n="reviews_title">Pasiyent Rəyləri</h2>
+                <p class="section-subtitle" data-i18n="reviews_subtitle">Müayinə və müalicədən sonra Şahsəddin İmanlı haqqında fikirlərinizi bölüşün ki, digər insanlar da xidmətlə bağlı fikirlərinizdən faydalana bilsin. Xahiş edirik rəy yazarkən dürüst olun.</p>
+                <div class="section-line"></div>
+            </div>
+
+            <!-- Review Form -->
+            <div class="review-form-wrapper">
+                <h3 class="review-form-title" data-i18n="reviews_form_title">Rəyinizi yazın</h3>
+                <form class="review-form" id="reviewForm">
+                    <div class="review-form-row">
+                        <div class="review-form-group">
+                            <input type="text" id="reviewName" data-i18n-placeholder="reviews_name" placeholder="Adınız" required>
+                        </div>
+                        <div class="review-form-group">
+                            <input type="text" id="reviewCity" data-i18n-placeholder="reviews_city" placeholder="Şəhər (istəyə bağlı)">
+                        </div>
+                    </div>
+                    <div class="review-form-group">
+                        <div class="review-rating-select" id="reviewRatingSelect">
+                            <span class="review-rating-label" data-i18n="reviews_rating">Qiymətləndirmə:</span>
+                            <div class="review-stars-input">
+                                <i class="fas fa-star" data-star="1"></i>
+                                <i class="fas fa-star" data-star="2"></i>
+                                <i class="fas fa-star" data-star="3"></i>
+                                <i class="fas fa-star" data-star="4"></i>
+                                <i class="fas fa-star" data-star="5"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-form-group">
+                        <textarea id="reviewText" data-i18n-placeholder="reviews_text" placeholder="Təcrübənizi və fikirlərinizi bölüşün..." rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-gold review-submit-btn" id="reviewSubmitBtn" data-i18n="reviews_submit">Rəy Göndər</button>
+                    <p class="review-success" id="reviewSuccess" data-i18n="reviews_success">Rəyiniz uğurla göndərildi! Təşəkkürlər.</p>
+                </form>
+            </div>
+
+            <!-- Reviews List -->
+            <div class="reviews-grid" id="reviewsGrid">
+                <!-- Reviews rendered by JS -->
+            </div>
+            <div class="reviews-load-more" id="reviewsLoadMore" style="display:none;">
+                <button class="btn btn-outline-gold" id="loadMoreReviewsBtn" data-i18n="reviews_load_more">Daha çox göstər</button>
+            </div>
+        </div>
+    </section>
+
     <!-- Blog Section -->
     <section class="section blog-section" id="blogSection">
         <div class="container">
@@ -851,6 +915,17 @@
                     <p data-i18n="contact_online_desc">WhatsApp / Imo ilə dünyanın hər yerindən</p>
                 </div>
             </div>
+            <div class="contact-map">
+                <iframe
+                    src="https://maps.google.com/maps?q=40.4244291,49.8251384&z=17&output=embed"
+                    width="100%"
+                    height="400"
+                    style="border:0;border-radius:20px;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
         </div>
     </section>
 
@@ -881,6 +956,11 @@
             </div>
             <div class="footer-bottom">
                 <p data-i18n-html="footer_rights">&copy; 2026 Şahsəddin İmanlı. Bütün hüquqlar qorunur.</p>
+                <div class="footer-legal">
+                    <a href="privacy-policy.html">Məxfilik Siyasəti</a>
+                    <span>|</span>
+                    <a href="terms-of-use.html">İstifadə Şərtləri</a>
+                </div>
             </div>
         </div>
     </footer>
