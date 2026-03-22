@@ -371,37 +371,6 @@
         const adminDb = firebase.database();
         window.FIREBASE_REST = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
     </script>
-    <script>
-    // DEBUG: Test if fetch works
-    window.addEventListener('load', function() {
-        var testDiv = document.createElement('div');
-        testDiv.id = 'debugPanel';
-        testDiv.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#111;color:#0f0;font-family:monospace;font-size:12px;padding:8px;z-index:99999;max-height:150px;overflow-y:auto;';
-        document.body.appendChild(testDiv);
-        function log(msg) { testDiv.innerHTML += msg + '<br>'; console.log('[DEBUG]', msg); }
-
-        log('1. Page loaded, sessionStorage adminAuth = ' + sessionStorage.getItem('adminAuth'));
-        log('2. typeof firebase = ' + typeof firebase);
-        log('3. typeof adminDb = ' + typeof adminDb);
-        log('4. typeof FIREBASE_REST = ' + typeof FIREBASE_REST);
-        log('5. window.FIREBASE_REST = ' + window.FIREBASE_REST);
-
-        var url = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com/users.json';
-        log('6. Fetching: ' + url);
-        fetch(url)
-            .then(function(r) { log('7. Fetch status: ' + r.status); return r.json(); })
-            .then(function(data) { log('8. Users data keys: ' + (data ? Object.keys(data).length : 'null')); })
-            .catch(function(err) { log('ERROR: ' + err.message); });
-
-        // Catch ALL JS errors
-        window.onerror = function(msg, src, line, col, err) {
-            log('JS ERROR: ' + msg + ' at ' + (src||'').split('/').pop() + ':' + line);
-        };
-        window.addEventListener('unhandledrejection', function(e) {
-            log('PROMISE ERROR: ' + (e.reason ? (e.reason.message || e.reason) : 'unknown'));
-        });
-    });
-    </script>
     <script src="admin.js"></script>
 </body>
 </html>

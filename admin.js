@@ -370,7 +370,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function switchAdminTab(tab) {
-        console.log('[ADMIN] switchAdminTab:', tab);
         document.querySelectorAll('.admin-tab-btn').forEach(b => {
             const isActive = b.dataset.tab === tab;
             b.classList.toggle('active', isActive);
@@ -421,8 +420,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (descEl) descEl.textContent = t.desc;
         list.innerHTML = `<p style="text-align:center;color:#999;padding:20px 0;">${t.loading}</p>`;
 
-        fetch(FIREBASE_REST + '/reviews.json').then(function(r) { console.log('[REVIEWS] fetch status:', r.status); return r.json(); }).then(function(data) {
-            console.log('[REVIEWS] data received:', data ? Object.keys(data).length + ' reviews' : 'null');
+        fetch(FIREBASE_REST + '/reviews.json').then(function(r) { return r.json(); }).then(function(data) {
             const snapshot = { forEach: function(cb) { if(data) Object.keys(data).forEach(k => cb({ val: () => data[k], key: k })); } };
             const reviews = [];
             snapshot.forEach(child => {
@@ -779,8 +777,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         adminPostDataCache = postData;
 
-        fetch(FIREBASE_REST + '/comments.json').then(function(r) { console.log('[COMMENTS] fetch status:', r.status); return r.json(); }).then(function(data) {
-            console.log('[COMMENTS] data received, keys:', data ? Object.keys(data).length : 'null');
+        fetch(FIREBASE_REST + '/comments.json').then(function(r) { return r.json(); }).then(function(data) {
             const allPosts = data || {};
             // Convert REST data to flat comments array directly
             const allCommentsRaw = [];
@@ -796,7 +793,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     });
                 }
             });
-            console.log('[COMMENTS] parsed comments:', allCommentsRaw.length);
             // Replace old snapshot-based code
             const allComments = allCommentsRaw;
 
@@ -1626,8 +1622,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> ' + adminT('loading') + '</p>';
 
-        fetch(FIREBASE_REST + '/users.json').then(function(r) { console.log('[USERS] fetch status:', r.status); return r.json(); }).then(function(data) {
-            console.log('[USERS] data received:', data ? Object.keys(data).length + ' users' : 'null');
+        fetch(FIREBASE_REST + '/users.json').then(function(r) { return r.json(); }).then(function(data) {
             const snapshot = { forEach: function(cb) { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } };
             const users = [];
             snapshot.forEach(userSnap => {
