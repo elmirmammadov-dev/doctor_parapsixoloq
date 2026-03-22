@@ -10,7 +10,7 @@ const AUTH_TEXTS = {
         email: 'E-poçt',
         password: 'Şifrə',
         confirmPassword: 'Şifrəni təsdiqləyin',
-        profilePic: 'Profil şəkli (isteğe bağlı)',
+        profilePic: 'Profil şəkli (istəkdən asılı)',
         stayAnonymous: 'Anonim qal',
         loginBtn: 'Daxil ol',
         registerBtn: 'Qeydiyyatdan keç',
@@ -100,7 +100,7 @@ const AUTH_TEXTS = {
         email: 'E-posta',
         password: 'Şifre',
         confirmPassword: 'Şifreyi onaylayın',
-        profilePic: 'Profil fotoğrafı (isteğe bağlı)',
+        profilePic: 'Profil fotoğrafı (istəkdən asılı)',
         stayAnonymous: 'Anonim kal',
         loginBtn: 'Giriş yap',
         registerBtn: 'Kayıt ol',
@@ -237,7 +237,7 @@ function initAuth() {
                         </div>
                     </div>
                     <div class="auth-field">
-                        <label id="authRegPicLabel">Profil şəkli (isteğe bağlı)</label>
+                        <label id="authRegPicLabel">Profil şəkli (istəkdən asılı)</label>
                         <div class="auth-pic-upload">
                             <div class="auth-pic-preview" id="authPicPreview">
                                 <i class="fas fa-camera"></i>
