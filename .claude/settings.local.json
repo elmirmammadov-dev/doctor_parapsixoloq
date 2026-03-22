@@ -8,7 +8,14 @@
       "Bash(start \"\" \"e:\\\\Həkim saytı 2\\\\index.html\")",
       "Bash(start \"\" \"e:\\\\Həkim saytı son\\\\index.html\")",
       "Bash(start \"\" \"e:/Həkim saytı son/index.html\")",
-      "Bash(ls \"e:/Həkim saytı son/\"*.png \"e:/Həkim saytı son/\"*.jpg \"e:/Həkim saytı son/\"*.jpeg \"e:/Həkim saytı son/\"*.webp)"
+      "Bash(ls \"e:/Həkim saytı son/\"*.png \"e:/Həkim saytı son/\"*.jpg \"e:/Həkim saytı son/\"*.jpeg \"e:/Həkim saytı son/\"*.webp)",
+      "Bash(start \"\" \"e:\\\\Həkim saytı son\\\\blog-post.html\")",
+      "Bash(sed -n '550,850p' index.html)",
+      "Read(//tmp/**)",
+      "Bash(start \"\" \"e:\\\\Həkim saytı son\\\\admin.html\")",
+      "Bash(npm install:*)",
+      "Bash(node -e \":*)",
+      "Bash(node -e \"const fs=require\\(''fs''\\);let c=fs.readFileSync\\(''translations.js'',''utf-8''\\);c=c.replace\\(''const translations = '',''''\\).replace\\(/;\\\\s*$/,''''\\);fs.writeFileSync\\(''translations.json'',JSON.stringify\\(eval\\(''\\(''+c+''\\)''\\),null,2\\)\\);console.log\\(''Updated''\\);\")"
     ]
   }
 }

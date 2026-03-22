@@ -10,6 +10,8 @@ const translations = {
         btn_session: "Seansa Yazıl",
 
         // About
+        topbar_location: "Bakı & Naxçıvan",
+        hero_h1: "Şahsəddin İmanlı - Parapsixoloq & Psixoloq & Yoq",
         about_quote: "\"İnsanın ruhunu müalicə etmədən cismini müalicə etmək olmaz\"",
         trust_label: "Xəstələr tərəfindən etibar edilir",
         badge_years: "İLLİK TƏCRÜBƏ",
@@ -168,6 +170,8 @@ const translations = {
         footer_subtitle: "Parapsixoloq & Tantra Yoqa Müəllimi",
         footer_contact: "Bizimlə Əlaqə",
         footer_follow: "Bizi İzləyin",
+        footer_privacy: "Məxfilik Siyasəti",
+        footer_terms: "İstifadə Şərtləri",
         footer_rights: "&copy; 2026 Şahsəddin İmanlı. Bütün hüquqlar qorunur.",
 
         // Form messages
@@ -191,6 +195,8 @@ const translations = {
         nav_contact: "Контакт",
         btn_session: "Записаться на сеанс",
 
+        topbar_location: "Баку & Нахчыван",
+        hero_h1: "Шахсаддин Иманлы — Парапсихолог & Психолог & Йог",
         about_quote: "\"Невозможно лечить тело человека, не исцелив его душу\"",
         trust_label: "Доверие пациентов",
         badge_years: "ЛЕТ ОПЫТА",
@@ -339,6 +345,8 @@ const translations = {
         footer_subtitle: "Парапсихолог и Преподаватель Тантра-Йоги",
         footer_contact: "Свяжитесь с нами",
         footer_follow: "Следите за нами",
+        footer_privacy: "Политика конфиденциальности",
+        footer_terms: "Условия использования",
         footer_rights: "&copy; 2026 Шахсаддин Иманлы. Все права защищены.",
 
         form_sending: "Отправляется...",
@@ -360,6 +368,8 @@ const translations = {
         nav_contact: "Contact",
         btn_session: "Book a Session",
 
+        topbar_location: "Baku & Nakhchivan",
+        hero_h1: "Shahsaddin Imanli — Parapsychologist & Psychologist & Yogi",
         about_quote: "\"You cannot heal the body without healing the soul first\"",
         trust_label: "Trusted by Patients",
         badge_years: "YEARS OF EXPERIENCE",
@@ -508,6 +518,8 @@ const translations = {
         footer_subtitle: "Parapsychologist & Tantra Yoga Instructor",
         footer_contact: "Contact Us",
         footer_follow: "Follow Us",
+        footer_privacy: "Privacy Policy",
+        footer_terms: "Terms of Use",
         footer_rights: "&copy; 2026 Shahsaddin Imanli. All rights reserved.",
 
         form_sending: "Sending...",
@@ -529,6 +541,8 @@ const translations = {
         nav_contact: "İletişim",
         btn_session: "Seansa Yazıl",
 
+        topbar_location: "Bakü & Nahçıvan",
+        hero_h1: "Şahseddin İmanlı — Parapsikolojist & Psikolog & Yogi",
         about_quote: "\"İnsanın ruhunu tedavi etmeden bedenini tedavi etmek mümkün değildir\"",
         trust_label: "Hastalar tarafından güvenilir",
         badge_years: "YILLIK DENEYİM",
@@ -677,6 +691,8 @@ const translations = {
         footer_subtitle: "Parapsikolojist ve Tantra Yoga Eğitmeni",
         footer_contact: "Bizimle İletişime Geçin",
         footer_follow: "Bizi Takip Edin",
+        footer_privacy: "Gizlilik Politikası",
+        footer_terms: "Kullanım Şartları",
         footer_rights: "&copy; 2026 Şahseddin İmanlı. Tüm hakları saklıdır.",
 
         form_sending: "Gönderiliyor...",

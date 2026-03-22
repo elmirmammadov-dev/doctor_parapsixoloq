@@ -20,12 +20,12 @@
     <meta name="twitter:title" content="Məqalə | Şahsəddin İmanlı">
     <meta name="twitter:description" content="Parapsixologiya, sağlamlıq və mənəvi inkişaf haqqında faydalı məqalələr.">
 
-    <link rel="icon" type="image/png" href="esas-loqo.png">
+    <link rel="icon" type="image/png" href="/esas-loqo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
     <style>
         .blog-detail {
             max-width: 1200px;
@@ -713,8 +713,8 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
     </script>
-    <script src="auth.js"></script>
-    <script src="tracker.js"></script>
+    <script src="/auth.js"></script>
+    <script src="/tracker.js"></script>
     <script>
         const CONTENTFUL_SPACE = 'q3fe87ca4p3k';
         const CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
@@ -1315,7 +1315,7 @@
             let replyPhoto = '';
             if (window.isAdminLoggedIn) {
                 replyName = 'Şahsəddin İmanlı';
-                replyPhoto = 'profil sekli.png';
+                replyPhoto = '/profil sekli.png';
             } else if (user && !user.isAnonymous) {
                 replyName = user.displayName || user.email.split('@')[0];
                 replyPhoto = user.photoURL || '';
@@ -1368,7 +1368,7 @@
             let replyPhoto = '';
             if (window.isAdminLoggedIn) {
                 replyName = 'Şahsəddin İmanlı';
-                replyPhoto = 'profil sekli.png';
+                replyPhoto = '/profil sekli.png';
             } else if (user && !user.isAnonymous) {
                 replyName = user.displayName || user.email.split('@')[0];
                 replyPhoto = user.photoURL || '';
@@ -1427,7 +1427,7 @@
                 }
                 // Old single reply (from author) — include as first reply
                 if (c.reply && c.reply.text) {
-                    const oldReply = { name: 'Şahsəddin İmanlı', text: c.reply.text, timestamp: c.reply.timestamp, photoURL: 'profil sekli.png', isAuthor: true };
+                    const oldReply = { name: 'Şahsəddin İmanlı', text: c.reply.text, timestamp: c.reply.timestamp, photoURL: '/profil sekli.png', isAuthor: true };
                     replies.unshift(oldReply);
                 }
 
@@ -1538,7 +1538,7 @@
             };
             if (window.isAdminLoggedIn) {
                 commentData.isAuthor = true;
-                commentData.photoURL = 'profil sekli.png';
+                commentData.photoURL = '/profil sekli.png';
             } else {
                 if (user && user.photoURL) commentData.photoURL = user.photoURL;
             }
