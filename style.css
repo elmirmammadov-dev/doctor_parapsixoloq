@@ -4739,6 +4739,47 @@ img {
     }
 }
 
+    /* Review/comment text overflow fix */
+    .admin-panel-body p,
+    .admin-panel-body .admin-review-text {
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+    /* Review items overflow */
+    .admin-panel-body [style*="border-left: 3px"] {
+        overflow: hidden !important;
+        max-width: 100% !important;
+    }
+    .admin-panel-body [style*="border-left: 3px"] > div {
+        overflow: hidden !important;
+    }
+    /* User cards responsive */
+    .admin-panel-body [style*="border-radius:12px"][style*="padding:16px"] {
+        padding: 10px !important;
+    }
+    .admin-panel-body [style*="border-radius:12px"] button {
+        padding: 4px 8px !important;
+        font-size: 0.65rem !important;
+        white-space: nowrap;
+    }
+    .admin-panel-body [style*="border-radius:12px"] [style*="display:flex"][style*="gap"] {
+        flex-wrap: wrap !important;
+        gap: 4px !important;
+    }
+    /* User avatar smaller */
+    .admin-panel-body [style*="border-radius:50%"][style*="width:44px"] {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 0.8rem !important;
+    }
+    /* Email/text overflow */
+    .admin-panel-body a[href*="mailto"],
+    .admin-panel-body span[style*="color:#999"] {
+        word-break: break-all !important;
+        font-size: 0.72rem !important;
+    }
+}
+
 @media (max-width: 480px) {
     .admin-panel-header {
         padding: 10px 12px;

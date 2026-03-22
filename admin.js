@@ -471,7 +471,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 </div>
                                 <span style="font-size:0.75rem;color:#999;">${dateStr}</span>
                             </div>
-                            <p class="admin-review-text" id="reviewText_${r._key}" style="font-size:0.9rem;color:#333;line-height:1.6;margin:8px 0;">${r.text}</p>
+                            <p class="admin-review-text" id="reviewText_${r._key}" style="font-size:0.9rem;color:#333;line-height:1.6;margin:8px 0;word-break:break-word;overflow-wrap:break-word;">${r.text}</p>
                             <div id="reviewBtns_${r._key}" style="display:flex;gap:8px;margin-top:10px;">
                                 <button onclick="editAdminReview('${r._key}')" style="padding:6px 14px;border:1px solid var(--gold);background:#fff;color:var(--gold);border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;transition:all 0.3s;">
                                     <i class="fas fa-edit"></i> ${t.edit}
