@@ -4918,20 +4918,21 @@ img {
         left: 8px !important;
     }
     .about-badge {
-        bottom: 54px !important;
+        bottom: 50px !important;
         right: auto !important;
         left: 8px !important;
-        padding: 5px 10px !important;
-        border-radius: 8px !important;
+        padding: 3px 8px !important;
+        border-radius: 6px !important;
         flex-direction: row !important;
-        gap: 5px !important;
+        gap: 4px !important;
+        line-height: 1.2;
     }
     .badge-number {
-        font-size: 0.9rem !important;
+        font-size: 0.75rem !important;
         margin-bottom: 0 !important;
     }
     .badge-text {
-        font-size: 0.45rem !important;
+        font-size: 0.42rem !important;
     }
     .badge-number {
         font-size: 1.2rem;
