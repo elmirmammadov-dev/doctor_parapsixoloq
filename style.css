@@ -4381,3 +4381,103 @@ img {
     }
 }
 
+/* === MOBILE RESPONSIVE FIXES === */
+
+/* Tablet 1024px */
+@media (max-width: 1024px) {
+    .hero-image-ring {
+        width: 320px;
+        height: 320px;
+    }
+    .hero-image {
+        width: 280px;
+        height: 280px;
+    }
+    .blog-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tablet/Mobile 768px */
+@media (max-width: 768px) {
+    .hero-image-ring {
+        width: 260px;
+        height: 260px;
+    }
+    .hero-image {
+        width: 220px;
+        height: 220px;
+    }
+    .blog-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .problem-cards {
+        grid-template-columns: 1fr !important;
+    }
+    .hero-bar-label {
+        font-size: 0.75rem;
+    }
+    .hero-bar-calendar-btn span {
+        font-size: 0.8rem;
+    }
+    .blog-most-read-badge,
+    .blog-week-best-badge {
+        font-size: 0.6rem;
+        padding: 3px 10px;
+    }
+    .hero-banner-h1 {
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+    }
+    .section-subtitle {
+        font-size: 0.85rem;
+        padding: 0 12px;
+    }
+}
+
+/* Small Mobile 480px */
+@media (max-width: 480px) {
+    .hero-image-ring {
+        width: 220px;
+        height: 220px;
+    }
+    .hero-image {
+        width: 180px;
+        height: 180px;
+    }
+    .hero-bar-phone .phone-prefix-select {
+        min-width: 70px;
+        font-size: 0.8rem;
+    }
+    .hero-bar-field {
+        min-width: 100px;
+    }
+    .hero-banner-h1 {
+        font-size: 0.85rem;
+        letter-spacing: 0;
+    }
+    .section-title {
+        font-size: 1.4rem;
+    }
+    .reviews-grid {
+        gap: 16px;
+    }
+    .review-card {
+        padding: 20px;
+    }
+    .review-form-wrapper {
+        padding: 20px 16px;
+    }
+    .contact-map iframe {
+        height: 280px;
+    }
+    .footer-legal {
+        flex-direction: column;
+        gap: 6px;
+    }
+    .footer-legal span {
+        display: none;
+    }
+}
+
