@@ -258,6 +258,11 @@ img {
     letter-spacing: 1px;
     margin-bottom: 12px;
     text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    flex-direction: row-reverse;
 }
 
 .hero-banner-title.animated-title {
