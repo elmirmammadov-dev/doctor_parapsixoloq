@@ -80,36 +80,14 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Wait for Firebase to be ready, then restore tab
-    function initAdminPanel() {
-        if (typeof adminDb === 'undefined' || !adminDb) {
-            setTimeout(initAdminPanel, 200);
-            return;
-        }
-        // Test Firebase connection
-        adminDb.ref('.info/connected').once('value', function() {
-            if (location.hash.startsWith('#admin-')) {
-                const savedTab = location.hash.replace('#admin-', '');
-                switchAdminTab(savedTab || 'contentful');
-            } else {
-                switchAdminTab('contentful');
-            }
-            checkFirebaseStorage();
-        });
-        // Fallback: if connection check takes too long, load anyway after 3s
-        setTimeout(function() {
-            const tabs = document.querySelectorAll('.admin-tab-content');
-            const anyVisible = Array.from(tabs).some(t => t.style.display !== 'none');
-            if (!anyVisible) {
-                if (location.hash.startsWith('#admin-')) {
-                    switchAdminTab(location.hash.replace('#admin-', '') || 'contentful');
-                } else {
-                    switchAdminTab('contentful');
-                }
-            }
-        }, 3000);
+    // Init admin panel - no Firebase wait needed, each tab retries on its own
+    if (location.hash.startsWith('#admin-')) {
+        const savedTab = location.hash.replace('#admin-', '');
+        switchAdminTab(savedTab || 'contentful');
+    } else {
+        switchAdminTab('contentful');
     }
-    initAdminPanel();
+    setTimeout(function() { checkFirebaseStorage(); }, 2000);
 
     // Admin panel is now a full page — no overlay click-to-close
 
