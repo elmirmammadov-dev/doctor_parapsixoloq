@@ -313,9 +313,16 @@
                             <span class="badge-number">35+</span>
                             <span class="badge-text" data-i18n="badge_years">İLLİK TƏCRÜBƏ</span>
                         </div>
-                        <!-- Review + Rating Badges - bottom left side by side -->
+                        <!-- Review + Rating Combined Badge - bottom left -->
                         <div class="about-badges-left">
                         <div class="about-review-badge" id="aboutReviewBadge" onclick="document.getElementById('reviews').scrollIntoView({behavior:'smooth'})">
+                            <div class="badge-rating-part" id="aboutRatingStars">
+                                <div class="rating-stars-inner">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                                <span class="rating-score" id="ratingScore">5.0</span>
+                            </div>
+                            <span class="badge-divider"></span>
                             <i class="fas fa-comments"></i>
                             <span class="review-badge-count" id="reviewBadgeCount">0</span>
                             <span class="review-badge-label" data-i18n="review_badge_label">Rəy</span>
@@ -345,16 +352,6 @@
                                     <span id="tooltipTotal">0</span> <span data-i18n="review_tooltip_total">rəy əsasında</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="about-rating-stars" id="aboutRatingStars">
-                            <div class="rating-stars-inner">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <span class="rating-score" id="ratingScore">5.0</span>
                         </div>
                         </div>
                     </div>
