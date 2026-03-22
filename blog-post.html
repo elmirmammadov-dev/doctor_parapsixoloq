@@ -12,7 +12,7 @@
     <meta property="og:type" content="article">
     <meta property="og:title" content="Məqalə | Şahsəddin İmanlı">
     <meta property="og:description" content="Parapsixologiya, sağlamlıq və mənəvi inkişaf haqqında faydalı məqalələr.">
-    <meta property="og:image" content="https://www.sahseddinimanli.com/esas-loqo.png">
+    <meta property="og:image" content="https://www.sahseddinimanli.com/esas-loqo.webp">
     <meta property="og:site_name" content="Şahsəddin İmanlı">
 
     <!-- Twitter Card -->
@@ -20,7 +20,7 @@
     <meta name="twitter:title" content="Məqalə | Şahsəddin İmanlı">
     <meta name="twitter:description" content="Parapsixologiya, sağlamlıq və mənəvi inkişaf haqqında faydalı məqalələr.">
 
-    <link rel="icon" type="image/png" href="/esas-loqo.png">
+    <link rel="icon" type="image/png" href="/esas-loqo.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -934,7 +934,7 @@
                         <span class="blog-meta-item"><i class="fas fa-comments"></i> <span id="commentCountMeta">0</span> ${postTexts.comments}</span>
                     </div>
                     ${imgHtml}
-                    <div class="blog-detail-body">${bodyHtml}</div>
+                    <div class="blog-detail-body">${bodyHtml.replace(/<h1(\s|>)/gi, '<h2$1').replace(/<\/h1>/gi, '</h2>')}</div>
                     <div class="blog-reactions">
                         <button class="reaction-btn" id="likeBtn" onclick="toggleReaction('like')">
                             <i class="fas fa-thumbs-up"></i> <span id="likeCount">0</span>
@@ -1314,7 +1314,7 @@
             let replyPhoto = '';
             if (window.isAdminLoggedIn) {
                 replyName = 'Şahsəddin İmanlı';
-                replyPhoto = '/profil sekli.png';
+                replyPhoto = '/profil sekli.webp';
             } else if (user && !user.isAnonymous) {
                 replyName = user.displayName || user.email.split('@')[0];
                 replyPhoto = user.photoURL || '';
@@ -1367,7 +1367,7 @@
             let replyPhoto = '';
             if (window.isAdminLoggedIn) {
                 replyName = 'Şahsəddin İmanlı';
-                replyPhoto = '/profil sekli.png';
+                replyPhoto = '/profil sekli.webp';
             } else if (user && !user.isAnonymous) {
                 replyName = user.displayName || user.email.split('@')[0];
                 replyPhoto = user.photoURL || '';
@@ -1426,7 +1426,7 @@
                 }
                 // Old single reply (from author) — include as first reply
                 if (c.reply && c.reply.text) {
-                    const oldReply = { name: 'Şahsəddin İmanlı', text: c.reply.text, timestamp: c.reply.timestamp, photoURL: '/profil sekli.png', isAuthor: true };
+                    const oldReply = { name: 'Şahsəddin İmanlı', text: c.reply.text, timestamp: c.reply.timestamp, photoURL: '/profil sekli.webp', isAuthor: true };
                     replies.unshift(oldReply);
                 }
 
@@ -1537,7 +1537,7 @@
             };
             if (window.isAdminLoggedIn) {
                 commentData.isAuthor = true;
-                commentData.photoURL = '/profil sekli.png';
+                commentData.photoURL = '/profil sekli.webp';
             } else {
                 if (user && user.photoURL) commentData.photoURL = user.photoURL;
             }
