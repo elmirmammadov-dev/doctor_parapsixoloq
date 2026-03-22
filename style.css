@@ -3286,7 +3286,8 @@ img {
 
     .navbar-content {
         justify-content: flex-end;
-        gap: 8px;
+        gap: 6px;
+        align-items: center;
     }
 
     /* Mobile: auth + flags + hamburger in one row */
@@ -3296,8 +3297,8 @@ img {
     }
 
     .nav-auth-wrap button {
-        font-size: 0.75rem;
-        padding: 5px 10px;
+        font-size: 0.7rem;
+        padding: 5px 8px;
         border-radius: 8px;
     }
 
@@ -3305,16 +3306,21 @@ img {
         display: flex !important;
         order: 2;
         margin-left: 0;
-        gap: 3px;
+        gap: 2px;
+        flex-shrink: 0;
     }
 
     .lang-option {
-        padding: 3px 5px !important;
-        border-radius: 6px !important;
+        padding: 2px 3px !important;
+        border-radius: 4px !important;
+        min-width: 28px;
+        justify-content: center;
     }
 
     .lang-option img {
-        width: 18px !important;
+        width: 22px !important;
+        height: 15px !important;
+        display: block !important;
     }
 
     .lang-option span {
@@ -3365,7 +3371,7 @@ img {
 
     /* H1 - two lines: name centered, profession below */
     .hero-banner-h1 {
-        margin-top: -60px;
+        margin-top: -80px;
         font-size: 0.9rem;
         line-height: 1.6;
         text-align: center;
@@ -3387,30 +3393,30 @@ img {
         opacity: 0.85;
     }
 
-    /* Hero badges - both at same bottom level */
-    .hero-banner-img-wrap {
-        position: relative;
-    }
-    .hero-img-badge {
-        bottom: 16px !important;
+    /* Hero badges - both at exact same bottom level */
+    .hero-img-badge-left,
+    .hero-img-badge-right {
+        bottom: 12px !important;
+        top: auto !important;
     }
     .hero-img-badge-left {
         left: 8px !important;
     }
     .hero-img-badge-right {
         right: 8px !important;
-        bottom: 16px !important;
+        margin: 0 !important;
+        padding: 10px 12px !important;
+        font-size: 0.72rem !important;
     }
     .hero-img-badge-left .hero-bar-label {
-        padding: 10px 14px;
-        font-size: 0.75rem;
-    }
-    .hero-img-badge-right {
-        padding: 10px 14px !important;
-        font-size: 0.75rem !important;
+        padding: 10px 12px;
+        font-size: 0.72rem;
     }
     .hero-img-badge-right span {
-        font-size: 0.75rem;
+        font-size: 0.72rem;
+    }
+    .hero-img-badge-right i {
+        font-size: 0.7rem;
     }
 
     .nav-anon-label {
