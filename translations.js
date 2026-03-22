@@ -159,6 +159,9 @@ const translations = {
         contact_online_desc: "WhatsApp / Imo ilə dünyanın hər yerindən",
 
         // Reviews
+        review_badge_label: "Rəy",
+        review_tooltip_title: "Pasiyent Rəyləri",
+        review_tooltip_total: "rəy əsasında",
         reviews_tag: "Rəylər",
         reviews_title: "Pasiyent Rəyləri",
         reviews_subtitle: "Müayinə və müalicədən sonra Şahsəddin İmanlı haqqında fikirlərinizi bölüşün ki, digər insanlar da xidmətlə bağlı fikirlərinizdən faydalana bilsin. Xahiş edirik rəy yazarkən dürüst olun.",
@@ -342,6 +345,9 @@ const translations = {
         contact_online: "Онлайн-приём",
         contact_online_desc: "Из любой точки мира через WhatsApp / Imo",
 
+        review_badge_label: "Отзыв",
+        review_tooltip_title: "Отзывы Пациентов",
+        review_tooltip_total: "отзывов",
         reviews_tag: "Отзывы",
         reviews_title: "Отзывы Пациентов",
         reviews_subtitle: "Поделитесь своими впечатлениями о Шахсаддине Иманлы после обследования и лечения, чтобы другие люди могли воспользоваться вашим мнением об услуге. Пожалуйста, будьте честны в своих отзывах.",
@@ -522,6 +528,9 @@ const translations = {
         contact_online: "Online Visit",
         contact_online_desc: "From anywhere in the world via WhatsApp / Imo",
 
+        review_badge_label: "Reviews",
+        review_tooltip_title: "Patient Reviews",
+        review_tooltip_total: "reviews based",
         reviews_tag: "Reviews",
         reviews_title: "Patient Reviews",
         reviews_subtitle: "Share your thoughts about Shahsaddin Imanli after your examination and treatment so that others can benefit from your feedback. Please be honest in your reviews.",
@@ -702,6 +711,9 @@ const translations = {
         contact_online: "Online Kabul",
         contact_online_desc: "WhatsApp / Imo ile dünyanın her yerinden",
 
+        review_badge_label: "Yorum",
+        review_tooltip_title: "Hasta Yorumları",
+        review_tooltip_total: "yoruma dayalı",
         reviews_tag: "Yorumlar",
         reviews_title: "Hasta Yorumları",
         reviews_subtitle: "Muayene ve tedaviden sonra Şahseddin İmanlı hakkındaki düşüncelerinizi paylaşın ki, diğer insanlar da hizmetle ilgili görüşlerinizden faydalanabilsin. Lütfen yorumlarınızda dürüst olun.",

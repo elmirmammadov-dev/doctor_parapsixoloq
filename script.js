@@ -918,7 +918,68 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             allReviews.reverse();
             renderReviews();
+            updateRatingBadge(allReviews);
         });
+    }
+
+    // Update rating badge and stars from reviews data
+    function updateRatingBadge(reviews) {
+        if (!reviews || reviews.length === 0) return;
+
+        const total = reviews.length;
+        const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+        let sum = 0;
+
+        reviews.forEach(r => {
+            const rating = r.rating || 5;
+            counts[rating] = (counts[rating] || 0) + 1;
+            sum += rating;
+        });
+
+        const avg = (sum / total).toFixed(1);
+
+        // Update badge count
+        const countEl = document.getElementById('reviewBadgeCount');
+        if (countEl) countEl.textContent = total;
+
+        // Update rating score
+        const scoreEl = document.getElementById('ratingScore');
+        if (scoreEl) scoreEl.textContent = avg;
+
+        // Update top stars (fill based on avg)
+        const starsContainer = document.getElementById('aboutRatingStars');
+        if (starsContainer) {
+            const stars = starsContainer.querySelectorAll('.rating-stars-inner i');
+            const fullStars = Math.floor(avg);
+            stars.forEach((star, i) => {
+                star.style.color = i < fullStars ? '#ffa534' : '#ddd';
+            });
+        }
+
+        // Update tooltip
+        const tooltipScore = document.getElementById('tooltipScore');
+        if (tooltipScore) tooltipScore.textContent = avg;
+
+        const tooltipTotal = document.getElementById('tooltipTotal');
+        if (tooltipTotal) tooltipTotal.textContent = total;
+
+        // Update tooltip stars
+        const tooltipStars = document.getElementById('tooltipStars');
+        if (tooltipStars) {
+            const stars = tooltipStars.querySelectorAll('i');
+            const fullStars = Math.floor(avg);
+            stars.forEach((star, i) => {
+                star.style.color = i < fullStars ? '#ffa534' : '#ddd';
+            });
+        }
+
+        // Update bars
+        for (let i = 1; i <= 5; i++) {
+            const bar = document.getElementById('bar' + i);
+            const countSpan = document.getElementById('count' + i);
+            if (bar) bar.style.width = (total > 0 ? (counts[i] / total) * 100 : 0) + '%';
+            if (countSpan) countSpan.textContent = counts[i];
+        }
     }
 
 

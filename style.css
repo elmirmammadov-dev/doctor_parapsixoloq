@@ -1957,6 +1957,206 @@ img {
     display: none;
 }
 
+/* === RATING STARS - top center of image === */
+.about-rating-stars {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 50px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.rating-stars-inner {
+    display: flex;
+    gap: 2px;
+}
+
+.rating-stars-inner i {
+    color: #ffa534;
+    font-size: 0.85rem;
+}
+
+.rating-score {
+    font-weight: 800;
+    font-size: 1rem;
+    color: #1a3c2a;
+}
+
+/* === REVIEW BADGE - bottom left === */
+.about-review-badge {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--gradient-gold);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(45, 129, 87, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.about-review-badge:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(45, 129, 87, 0.4);
+}
+
+.about-review-badge i {
+    font-size: 1.1rem;
+}
+
+.review-badge-count {
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.review-badge-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+/* Tooltip */
+.review-badge-tooltip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 16px);
+    left: 0;
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    width: 280px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    z-index: 50;
+    animation: tooltipFadeIn 0.3s ease;
+}
+
+.review-badge-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 24px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    transform: rotate(45deg);
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.about-review-badge:hover .review-badge-tooltip {
+    display: block;
+}
+
+@keyframes tooltipFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tooltip-header {
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.tooltip-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1a3c2a;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.tooltip-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tooltip-score {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1a3c2a;
+    line-height: 1;
+}
+
+.tooltip-stars i {
+    color: #ffa534;
+    font-size: 0.9rem;
+}
+
+.tooltip-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.tooltip-stat-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: #666;
+}
+
+.tooltip-stat-row > span:first-child {
+    width: 30px;
+    text-align: right;
+    font-weight: 600;
+    color: #333;
+}
+
+.tooltip-stat-row > span:first-child i {
+    color: #ffa534;
+    font-size: 0.65rem;
+}
+
+.tooltip-stat-row > span:last-child {
+    width: 24px;
+    text-align: right;
+    font-weight: 600;
+    color: #999;
+    font-size: 0.72rem;
+}
+
+.tooltip-bar {
+    flex: 1;
+    height: 6px;
+    background: #f0f0f0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.tooltip-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffa534, #ff8c00);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    width: 0%;
+}
+
+.tooltip-footer {
+    font-size: 0.78rem;
+    color: #999;
+    text-align: center;
+    font-weight: 500;
+}
+
 .about-text-col p {
     color: var(--text-secondary);
     margin-bottom: 12px;
@@ -4809,3 +5009,35 @@ img {
     }
 }
 
+
+/* Rating badge mobile */
+@media (max-width: 768px) {
+    .about-rating-stars {
+        top: 10px;
+        padding: 6px 12px;
+    }
+    .rating-stars-inner i {
+        font-size: 0.7rem;
+    }
+    .rating-score {
+        font-size: 0.85rem;
+    }
+    .about-review-badge {
+        padding: 8px 14px;
+        border-radius: 12px;
+    }
+    .review-badge-count {
+        font-size: 1.2rem;
+    }
+    .review-badge-label {
+        font-size: 0.55rem;
+    }
+    .about-review-badge i {
+        font-size: 0.9rem;
+    }
+    .review-badge-tooltip {
+        width: 240px;
+        padding: 14px;
+        left: -10px;
+    }
+}

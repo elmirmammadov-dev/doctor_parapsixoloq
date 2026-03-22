@@ -20,7 +20,16 @@
       "Bash(mv \"ilk sekil.png\" \"hero-banner.png\")",
       "Bash(mv \"profil sekli 3.webp\" \"profil-sekli.webp\")",
       "Bash(mv \"profil sekli 3.png\" \"profil-sekli.png\")",
-      "Bash(mv \"profil sekli.webp\" \"profil-sekli-1.webp\")"
+      "Bash(mv \"profil sekli.webp\" \"profil-sekli-1.webp\")",
+      "Bash(node -e \"const fs=require\\(''fs''\\);let c=fs.readFileSync\\(''translations.js'',''utf-8''\\);c=c.replace\\(''const translations = '',''''\\).replace\\(/;\\\\s*$/,''''\\);fs.writeFileSync\\(''translations.json'',JSON.stringify\\(eval\\(''\\(''+c+''\\)''\\),null,2\\)\\);console.log\\(''Done''\\);\")",
+      "Bash(start \"\" \"https://hekim2026yenidizayn.vercel.app\")",
+      "Bash(curl -s \"https://hekim-sayti-comments-default-rtdb.firebaseio.com/users.json\")",
+      "Bash(curl -s \"https://hekim2026yenidizayn.vercel.app/admin.html\")",
+      "Bash(curl -s \"https://hekim-sayti-comments-default-rtdb.firebaseio.com/reviews.json?orderBy=%22timestamp%22\")",
+      "Bash(curl -s \"https://hekim-sayti-comments-default-rtdb.firebaseio.com/comments.json\")",
+      "Bash(curl -s \"https://hekim-sayti-comments-default-rtdb.firebaseio.com/reviews.json\")",
+      "Bash(curl -s \"https://hekim2026yenidizayn.vercel.app/admin.js\")",
+      "Bash(node -e \"const fs=require\\(''fs''\\);try{new Function\\(fs.readFileSync\\(''admin.js'',''utf-8''\\)\\);console.log\\(''SYNTAX OK''\\);}catch\\(e\\){console.log\\(''ERROR:'',e.message\\);}\")"
     ]
   }
 }
