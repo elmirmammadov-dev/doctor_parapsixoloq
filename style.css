@@ -4627,3 +4627,134 @@ img {
     }
 }
 
+/* === ADMIN PANEL MOBILE RESPONSIVE === */
+@media (max-width: 768px) {
+    .admin-panel {
+        max-width: 100%;
+    }
+    .admin-panel-header {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .admin-panel-header h3 {
+        font-size: 0.95rem;
+        width: 100%;
+    }
+    .admin-panel-header > div {
+        width: 100%;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .admin-panel-body {
+        padding: 16px;
+    }
+    /* Tab buttons - 3 per row */
+    .admin-panel-body > div:first-child {
+        gap: 6px !important;
+    }
+    .admin-tab-btn {
+        flex: 0 0 calc(33.33% - 6px) !important;
+        padding: 8px 4px !important;
+        font-size: 0.68rem !important;
+    }
+    .admin-tab-btn i {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 0.85rem;
+    }
+    .admin-tab-btn span {
+        display: block;
+        font-size: 0.62rem;
+    }
+    /* Admin lang buttons */
+    .admin-lang-btn {
+        padding: 4px 8px !important;
+        font-size: 0.7rem !important;
+    }
+    .admin-lang-btn img {
+        width: 14px !important;
+    }
+    /* Go to site button */
+    #goToSiteBtn {
+        padding: 5px 10px !important;
+        font-size: 0.75rem !important;
+    }
+    /* Close button */
+    .admin-panel-close {
+        font-size: 1.3rem;
+    }
+    /* Form inputs */
+    .admin-panel-body input[type="text"],
+    .admin-panel-body input[type="email"],
+    .admin-panel-body input[type="tel"],
+    .admin-panel-body textarea,
+    .admin-panel-body select {
+        font-size: 0.85rem !important;
+        padding: 8px 12px !important;
+    }
+    /* Rich text toolbar */
+    #articleToolbar,
+    .admin-panel-body .rt-btn,
+    .admin-panel-body .rt-btn-ru {
+        padding: 5px 8px !important;
+        font-size: 0.75rem !important;
+    }
+    #articleToolbar select {
+        min-width: 80px !important;
+        font-size: 0.72rem !important;
+    }
+    /* Article content editor */
+    #articleContent,
+    #articleContentRu {
+        min-height: 150px !important;
+        font-size: 0.88rem !important;
+        padding: 10px !important;
+    }
+    /* Submit button */
+    .admin-save-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 20px !important;
+        font-size: 0.88rem !important;
+    }
+    #cancelEditBtn {
+        width: 100%;
+        justify-content: center;
+    }
+    /* Comments/Reviews list items */
+    .admin-panel-body [style*="border-left: 3px"] {
+        padding: 10px !important;
+    }
+    /* SEO fields */
+    .admin-panel-body [style*="border:1.5px solid #2d8157"],
+    .admin-panel-body [style*="border:1.5px solid #7b68ee"] {
+        padding: 10px !important;
+    }
+    /* Russian locale fields */
+    #ruLocaleFields,
+    #ruContentField {
+        padding: 10px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-panel-header {
+        padding: 10px 12px;
+    }
+    .admin-panel-body {
+        padding: 12px;
+    }
+    .admin-tab-btn {
+        flex: 0 0 calc(50% - 4px) !important;
+        padding: 8px 4px !important;
+    }
+    #articleToolbar {
+        padding: 4px !important;
+    }
+    #articleToolbar select {
+        min-width: 60px !important;
+    }
+}
+
