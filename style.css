@@ -4767,17 +4767,18 @@ img {
         gap: 4px !important;
     }
     /* User cards mobile layout */
+    .admin-user-info {
+        gap: 10px !important;
+        padding: 10px 12px !important;
+    }
     .admin-user-actions {
-        margin-left: 0 !important;
-        padding: 8px 12px 12px !important;
+        flex: 0 0 100% !important;
+        justify-content: flex-start !important;
+        margin-top: 8px;
     }
     .admin-user-actions button {
         padding: 5px 8px !important;
         font-size: 0.68rem !important;
-    }
-    .admin-user-info {
-        gap: 10px !important;
-        padding: 10px 12px !important;
     }
     /* Article cards mobile */
     #adminArticlesList > div {
