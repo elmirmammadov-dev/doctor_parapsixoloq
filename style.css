@@ -3475,28 +3475,34 @@ img {
 
     .stats-content {
         flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 16px;
+        flex-wrap: nowrap;
+        justify-content: space-around;
+        gap: 8px;
     }
 
     .stat-item {
-        gap: 8px;
-        flex: 0 0 auto;
+        gap: 6px;
+        flex: 1;
+        flex-direction: column;
+        text-align: center;
     }
 
     .stat-number {
-        font-size: 1.4rem !important;
+        font-size: 1.2rem !important;
+    }
+
+    .stat-suffix {
+        font-size: 1rem !important;
     }
 
     .stat-label {
-        font-size: 0.7rem !important;
+        font-size: 0.6rem !important;
     }
 
     .stat-icon {
-        width: 36px !important;
-        height: 36px !important;
-        font-size: 0.9rem !important;
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 0.8rem !important;
     }
 
     .services-grid {
