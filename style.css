@@ -2134,7 +2134,7 @@ img {
     display: none;
     position: absolute;
     bottom: calc(100% + 16px);
-    left: 0;
+    right: calc(100% + 16px);
     background: #fff;
     border-radius: 16px;
     padding: 20px;
@@ -2147,13 +2147,13 @@ img {
 .review-badge-tooltip::after {
     content: '';
     position: absolute;
-    bottom: -8px;
-    left: 24px;
+    bottom: 16px;
+    right: -8px;
     width: 16px;
     height: 16px;
     background: #fff;
     transform: rotate(45deg);
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 4px -4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .about-review-badge:hover .review-badge-tooltip {
