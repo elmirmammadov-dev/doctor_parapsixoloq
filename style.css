@@ -1892,11 +1892,16 @@ img {
 .about-image-frame {
     position: relative;
     border-radius: 24px;
-    overflow: hidden;
+    overflow: visible;
     border: none;
     flex: 1;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
     min-height: 400px;
+}
+
+.about-image-frame img {
+    border-radius: 24px;
+    overflow: hidden;
 }
 
 .about-image-frame img {
@@ -1960,7 +1965,7 @@ img {
 /* === RATING STARS - top center of image === */
 .about-rating-stars {
     position: absolute;
-    top: 16px;
+    top: -22px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 3;
@@ -5013,7 +5018,7 @@ img {
 /* Rating badge mobile */
 @media (max-width: 768px) {
     .about-rating-stars {
-        top: 10px;
+        top: -18px;
         padding: 6px 12px;
     }
     .rating-stars-inner i {
