@@ -84,7 +84,7 @@ module.exports = async (req, res) => {
         );
         if (imageUrl) {
             html = html.replace(
-                '<meta property="og:image" content="https://www.sahseddinimanli.com/esas-loqo.png">',
+                '<meta property="og:image" content="https://www.sahseddinimanli.com/logo.webp">',
                 `<meta property="og:image" content="${imageUrl}">`
             );
         }

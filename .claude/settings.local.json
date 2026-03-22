@@ -15,7 +15,12 @@
       "Bash(start \"\" \"e:\\\\Həkim saytı son\\\\admin.html\")",
       "Bash(npm install:*)",
       "Bash(node -e \":*)",
-      "Bash(node -e \"const fs=require\\(''fs''\\);let c=fs.readFileSync\\(''translations.js'',''utf-8''\\);c=c.replace\\(''const translations = '',''''\\).replace\\(/;\\\\s*$/,''''\\);fs.writeFileSync\\(''translations.json'',JSON.stringify\\(eval\\(''\\(''+c+''\\)''\\),null,2\\)\\);console.log\\(''Updated''\\);\")"
+      "Bash(node -e \"const fs=require\\(''fs''\\);let c=fs.readFileSync\\(''translations.js'',''utf-8''\\);c=c.replace\\(''const translations = '',''''\\).replace\\(/;\\\\s*$/,''''\\);fs.writeFileSync\\(''translations.json'',JSON.stringify\\(eval\\(''\\(''+c+''\\)''\\),null,2\\)\\);console.log\\(''Updated''\\);\")",
+      "Bash(mv \"ilk sekil.webp\" \"hero-banner.webp\")",
+      "Bash(mv \"ilk sekil.png\" \"hero-banner.png\")",
+      "Bash(mv \"profil sekli 3.webp\" \"profil-sekli.webp\")",
+      "Bash(mv \"profil sekli 3.png\" \"profil-sekli.png\")",
+      "Bash(mv \"profil sekli.webp\" \"profil-sekli-1.webp\")"
     ]
   }
 }
