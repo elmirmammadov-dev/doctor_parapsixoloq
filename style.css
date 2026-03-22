@@ -3285,12 +3285,12 @@ img {
     }
 
     .navbar-content {
-        justify-content: flex-end;
+        justify-content: space-between;
         gap: 6px;
         align-items: center;
     }
 
-    /* Mobile: auth + flags + hamburger in one row */
+    /* Mobile: auth + flags left, hamburger right */
     .nav-auth-wrap {
         display: flex !important;
         order: 1;
@@ -3308,16 +3308,17 @@ img {
         margin-left: 0;
         gap: 3px;
         flex-shrink: 0;
+        margin-right: auto;
     }
 
     .lang-option {
-        padding: 4px 5px !important;
+        padding: 4px 6px !important;
         border-radius: 6px !important;
     }
 
     .lang-option img {
-        width: 24px !important;
-        height: 16px !important;
+        width: 28px !important;
+        height: 19px !important;
         display: block !important;
     }
 
