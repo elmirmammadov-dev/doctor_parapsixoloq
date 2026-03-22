@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Şahsəddin İmanlı</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="esas-loqo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <!-- Admin Panel -->
+    <div class="admin-panel-overlay" id="adminPanelOverlay">
+        <div class="admin-panel">
+            <div class="admin-panel-header">
+                <h3><i class="fas fa-shield-alt"></i> Admin Panel</h3>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <div id="adminLangSwitcher" style="display:inline-flex;gap:4px;">
+                        <button type="button" class="admin-lang-btn active" data-admin-lang="az" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid var(--gold);border-radius:8px;background:var(--gold);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.3s;">
+                            <img src="https://flagcdn.com/w20/az.png" alt="AZ" style="width:16px;height:11px;"> AZ
+                        </button>
+                        <button type="button" class="admin-lang-btn" data-admin-lang="ru" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid var(--gold);border-radius:8px;background:#fff;color:var(--gold);font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.3s;">
+                            <img src="https://flagcdn.com/w20/ru.png" alt="RU" style="width:16px;height:11px;"> RU
+                        </button>
+                    </div>
+                    <a href="index.html" id="goToSiteBtn" data-admin-i18n="goToSite" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:var(--gold);color:#fff;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;transition:opacity 0.3s;cursor:pointer;"><i class="fas fa-external-link-alt"></i> <span data-admin-i18n="goToSiteText">Sayta keç</span></a>
+                    <button class="admin-panel-close" id="adminPanelClose">&times;</button>
+                </div>
+            </div>
+            <div class="admin-panel-body">
+                <!-- Tab buttons -->
+                <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+                    <button class="admin-tab-btn active" data-tab="contentful" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:var(--gold);color:#fff;font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
+                        <i class="fas fa-pen-fancy"></i> <span data-admin-i18n="tabNewArticle">Yeni Məqalə</span>
+                    </button>
+                    <button class="admin-tab-btn" data-tab="articles" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
+                        <i class="fas fa-newspaper"></i> <span data-admin-i18n="tabArticles">Məqalələr</span>
+                    </button>
+                    <button class="admin-tab-btn" data-tab="comments" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
+                        <i class="fas fa-comments"></i> <span data-admin-i18n="tabComments">Şərhlər</span>
+                    </button>
+                    <button class="admin-tab-btn" data-tab="users" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
+                        <i class="fas fa-users"></i> <span data-admin-i18n="tabUsers">İstifadəçilər</span>
+                    </button>
+                    <button class="admin-tab-btn" data-tab="stats" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
+                        <i class="fas fa-chart-bar"></i> <span data-admin-i18n="tabStats">Statistika</span>
+                    </button>
+                    <button class="admin-tab-btn" data-tab="reviews" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
+                        <i class="fas fa-star"></i> <span data-admin-i18n="tabReviews">Rəylər</span>
+                    </button>
+                </div>
+
+                <!-- Contentful tab — New Article Form -->
+                <div class="admin-tab-content" id="tabContentful">
+                    <form id="newArticleForm" style="display:flex;flex-direction:column;gap:14px;">
+                        <!-- Title AZ -->
+                        <div>
+                            <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;"><span data-admin-i18n="labelTitle">Başlıq</span> <span style="font-size:0.75rem;color:#999;font-weight:400;">| Azerbaijani</span></label>
+                            <input type="text" id="articleTitle" required placeholder="Məqalənin başlığı" data-admin-i18n-placeholder="placeholderTitle" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                        </div>
+                        <!-- Date AZ -->
+                        <div>
+                            <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;"><span data-admin-i18n="labelDate">Tarix</span> <span style="font-size:0.75rem;color:#999;font-weight:400;">| Azerbaijani</span></label>
+                            <input type="text" id="articleDate" required placeholder="Məs: 9 mart 2026" data-admin-i18n-placeholder="placeholderDate" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                        </div>
+                        <!-- SEO Fields -->
+                        <div style="border:1.5px solid #2d8157;border-radius:12px;padding:14px;background:#f0faf5;">
+                            <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;">
+                                <i class="fas fa-search" style="color:#2d8157;"></i>
+                                <span style="font-weight:700;font-size:0.85rem;color:#2d8157;">SEO Parametrləri</span>
+                            </div>
+                            <div style="margin-bottom:10px;">
+                                <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">Meta Açıqlama <span style="font-size:0.72rem;color:#999;font-weight:400;">| Google axtarış nəticəsində görünəcək (max 160 simvol)</span></label>
+                                <textarea id="articleMetaDesc" placeholder="Məqalənin qısa açıqlaması - Google-da axtarış nəticəsində görünəcək..." maxlength="160" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;transition:border 0.3s;box-sizing:border-box;resize:vertical;min-height:60px;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                                <div style="text-align:right;font-size:0.72rem;color:#999;margin-top:2px;"><span id="metaDescCount">0</span>/160</div>
+                            </div>
+                            <div style="margin-bottom:10px;">
+                                <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">Açar söz <span style="font-size:0.72rem;color:#999;font-weight:400;">| Əsas mövzu sözü (məs: panik atak)</span></label>
+                                <input type="text" id="articleKeyword" placeholder="Məqalənin əsas açar sözü" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                            </div>
+                            <div>
+                                <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">Şəkil Alt Mətni <span style="font-size:0.72rem;color:#999;font-weight:400;">| Şəkil yüklənmədikdə görünəcək mətn (SEO üçün vacib)</span></label>
+                                <input type="text" id="articleImageAlt" placeholder="Məs: Panik atak müalicəsi haqqında məqalə" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                            </div>
+                        </div>
+                        <!-- Russian locale toggle -->
+                        <div>
+                            <button type="button" id="toggleRuLocale" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1.5px dashed #bbb;border-radius:10px;background:#fff;color:#666;font-size:0.82rem;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='#bbb';this.style.color='#666'">
+                                <i class="fas fa-globe"></i> <span data-admin-i18n="toggleRuSupport">Rus dili dəstəyini aç</span>
+                            </button>
+                        </div>
+                        <!-- Russian fields (hidden by default) -->
+                        <div id="ruLocaleFields" style="display:none;border:1.5px solid #e0e0e0;border-radius:12px;padding:14px;background:#f9f9ff;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                                <span style="font-weight:600;font-size:0.82rem;color:#666;"><img src="https://flagcdn.com/w20/ru.png" alt="RU" style="vertical-align:middle;margin-right:4px;"> Russian</span>
+                                <button type="button" id="closeRuLocale" style="background:none;border:none;color:#999;cursor:pointer;font-size:0.9rem;padding:2px 6px;" title="Bağla"><i class="fas fa-times"></i></button>
+                            </div>
+                            <div style="margin-bottom:10px;">
+                                <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;">Başlıq <span style="font-size:0.75rem;color:#999;font-weight:400;">| Russian</span></label>
+                                <input type="text" id="articleTitleRu" placeholder="Заголовок статьи" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                            </div>
+                            <div style="margin-bottom:10px;">
+                                <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;">Tarix <span style="font-size:0.75rem;color:#999;font-weight:400;">| Russian</span></label>
+                                <input type="text" id="articleDateRu" placeholder="Напр: 9 марта 2026" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                            </div>
+                            <!-- Russian SEO -->
+                            <div style="border:1.5px solid #7b68ee;border-radius:10px;padding:12px;background:#f5f3ff;margin-top:6px;">
+                                <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                                    <i class="fas fa-search" style="color:#7b68ee;"></i>
+                                    <span style="font-weight:700;font-size:0.82rem;color:#7b68ee;">SEO | Russian</span>
+                                </div>
+                                <div style="margin-bottom:8px;">
+                                    <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">Мета описание <span style="font-size:0.72rem;color:#999;font-weight:400;">| макс. 160 символов</span></label>
+                                    <textarea id="articleMetaDescRu" placeholder="Краткое описание статьи для Google..." maxlength="160" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;transition:border 0.3s;box-sizing:border-box;resize:vertical;min-height:50px;font-family:inherit;" onfocus="this.style.borderColor='#7b68ee'" onblur="this.style.borderColor='#ddd'"></textarea>
+                                    <div style="text-align:right;font-size:0.72rem;color:#999;margin-top:2px;"><span id="metaDescCountRu">0</span>/160</div>
+                                </div>
+                                <div>
+                                    <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">Ключевое слово <span style="font-size:0.72rem;color:#999;font-weight:400;">| основное слово темы</span></label>
+                                    <input type="text" id="articleKeywordRu" placeholder="Напр: панические атаки" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='#7b68ee'" onblur="this.style.borderColor='#ddd'">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Image -->
+                        <div>
+                            <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;"><span data-admin-i18n="labelImage">Şəkil</span></label>
+                            <input type="file" id="articleImage" accept="image/*" style="width:100%;padding:8px;border:1.5px solid #ddd;border-radius:10px;font-size:0.85rem;box-sizing:border-box;">
+                            <img id="articleImagePreview" style="display:none;max-width:100%;max-height:200px;border-radius:10px;margin-top:8px;object-fit:cover;">
+                        </div>
+                        <!-- Rich Text Toolbar -->
+                        <div>
+                            <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;"><span data-admin-i18n="labelText">Mətn</span> <span style="font-size:0.75rem;color:#999;font-weight:400;">| Azerbaijani</span></label>
+                            <div id="articleToolbar" style="border:1px solid #ddd;border-radius:10px;padding:8px;margin-bottom:6px;background:#fafafa;">
+                                <!-- Row 1: Font family + Font size -->
+                                <div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
+                                    <select id="rtFontFamily" title="Şrift seçin" style="padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:0.82rem;background:#fff;cursor:pointer;min-width:140px;">
+                                        <option value="" style="font-family:inherit;">Şrift seçin</option>
+                                        <option value="Arial" style="font-family:Arial;">Arial</option>
+                                        <option value="Times New Roman" style="font-family:'Times New Roman';">Times New Roman</option>
+                                        <option value="Georgia" style="font-family:Georgia;">Georgia</option>
+                                        <option value="Verdana" style="font-family:Verdana;">Verdana</option>
+                                        <option value="Tahoma" style="font-family:Tahoma;">Tahoma</option>
+                                        <option value="Trebuchet MS" style="font-family:'Trebuchet MS';">Trebuchet MS</option>
+                                        <option value="Calibri" style="font-family:Calibri;">Calibri</option>
+                                        <option value="Segoe UI" style="font-family:'Segoe UI';">Segoe UI</option>
+                                        <option value="Roboto" style="font-family:Roboto;">Roboto</option>
+                                        <option value="Open Sans" style="font-family:'Open Sans';">Open Sans</option>
+                                        <option value="Montserrat" style="font-family:Montserrat;">Montserrat</option>
+                                        <option value="Inter" style="font-family:Inter;">Inter</option>
+                                        <option value="Nunito" style="font-family:Nunito;">Nunito</option>
+                                        <option value="PT Sans" style="font-family:'PT Sans';">PT Sans</option>
+                                        <option value="PT Serif" style="font-family:'PT Serif';">PT Serif</option>
+                                        <option value="Courier New" style="font-family:'Courier New';">Courier New</option>
+                                    </select>
+                                    <select id="rtFontSize" title="Ölçü" style="padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:0.82rem;background:#fff;cursor:pointer;width:65px;">
+                                        <option value="">Ölçü</option>
+                                        <option value="1">8</option>
+                                        <option value="2">10</option>
+                                        <option value="3" selected>12</option>
+                                        <option value="4">14</option>
+                                        <option value="5">18</option>
+                                        <option value="6">24</option>
+                                        <option value="7">36</option>
+                                    </select>
+                                    <select id="rtHeading" title="Başlıq" style="padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:0.82rem;background:#fff;cursor:pointer;min-width:120px;">
+                                        <option value="" style="font-size:14px;">Normal text</option>
+                                        <option value="h1" style="font-size:24px;font-weight:bold;">Heading 1</option>
+                                        <option value="h2" style="font-size:20px;font-weight:bold;">Heading 2</option>
+                                        <option value="h3" style="font-size:17px;font-weight:bold;">Heading 3</option>
+                                        <option value="h4" style="font-size:15px;font-weight:bold;">Heading 4</option>
+                                        <option value="h5" style="font-size:13px;font-weight:bold;">Heading 5</option>
+                                        <option value="h6" style="font-size:11px;font-weight:bold;">Heading 6</option>
+                                    </select>
+                                </div>
+                                <!-- Row 2: Formatting buttons -->
+                                <div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;">
+                                    <button type="button" class="rt-btn" data-cmd="bold" title="Qalın (Ctrl+B)" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-bold"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="italic" title="Kursiv (Ctrl+I)" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-italic"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="underline" title="Altıxətli (Ctrl+U)" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-underline"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="strikethrough" title="Üstüxətli" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-strikethrough"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" class="rt-btn" data-cmd="justifyLeft" title="Sola" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-left"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="justifyCenter" title="Ortaya" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-center"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="justifyRight" title="Sağa" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-right"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="justifyFull" title="Hər iki tərəfə" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-justify"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" class="rt-btn" data-cmd="ul" title="Siyahı" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-list-ul"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="ol" title="Nömrəli siyahı" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-list-ol"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="quote" title="Sitat" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-quote-right"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <label title="Mətn rəngi" style="padding:4px 8px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:0.82rem;">
+                                        <i class="fas fa-font" style="color:#333;"></i>
+                                        <input type="color" id="rtTextColor" value="#000000" style="width:20px;height:20px;border:none;padding:0;cursor:pointer;background:transparent;">
+                                    </label>
+                                    <label title="Fon rəngi" style="padding:4px 8px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:0.82rem;">
+                                        <i class="fas fa-highlighter" style="color:#f39c12;"></i>
+                                        <input type="color" id="rtBgColor" value="#ffff00" style="width:20px;height:20px;border:none;padding:0;cursor:pointer;background:transparent;">
+                                    </label>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" class="rt-btn" data-cmd="undo" title="Geri al" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-undo"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="redo" title="İrəli al" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-redo"></i></button>
+                                    <button type="button" class="rt-btn" data-cmd="removeFormat" title="Formatı təmizlə" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-eraser"></i></button>
+                                </div>
+                            </div>
+                            <div id="articleContent" contenteditable="true" style="min-height:200px;padding:14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;line-height:1.7;outline:none;overflow-y:auto;max-height:400px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></div>
+                        </div>
+                        <!-- Russian content (hidden by default) -->
+                        <div id="ruContentField" style="display:none;border:1.5px solid #e0e0e0;border-radius:12px;padding:14px;background:#f9f9ff;">
+                            <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;">Mətn <span style="font-size:0.75rem;color:#999;font-weight:400;">| Russian</span></label>
+                            <!-- Russian Rich Text Toolbar -->
+                            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;padding:8px;background:#f8f8f8;border-radius:8px;border:1px solid #e0e0e0;">
+                                <div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;">
+                                    <select id="rtFontFamilyRu" style="padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:0.8rem;background:#fff;cursor:pointer;">
+                                        <option value="">Şrift seçin</option>
+                                        <option value="Arial" style="font-family:Arial;">Arial</option>
+                                        <option value="Georgia" style="font-family:Georgia;">Georgia</option>
+                                        <option value="Times New Roman" style="font-family:'Times New Roman';">Times New Roman</option>
+                                        <option value="Courier New" style="font-family:'Courier New';">Courier New</option>
+                                        <option value="Verdana" style="font-family:Verdana;">Verdana</option>
+                                        <option value="Trebuchet MS" style="font-family:'Trebuchet MS';">Trebuchet MS</option>
+                                    </select>
+                                    <select id="rtFontSizeRu" style="padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:0.8rem;background:#fff;cursor:pointer;">
+                                        <option value="">12</option>
+                                        <option value="1">8</option>
+                                        <option value="2">10</option>
+                                        <option value="3" selected>12</option>
+                                        <option value="4">14</option>
+                                        <option value="5">18</option>
+                                        <option value="6">24</option>
+                                        <option value="7">36</option>
+                                    </select>
+                                    <select id="rtHeadingRu" style="padding:5px 8px;border:1px solid #ddd;border-radius:6px;font-size:0.8rem;background:#fff;cursor:pointer;">
+                                        <option value="">Normal text</option>
+                                        <option value="h1" style="font-size:24px;font-weight:bold;">Heading 1</option>
+                                        <option value="h2" style="font-size:20px;font-weight:bold;">Heading 2</option>
+                                        <option value="h3" style="font-size:17px;font-weight:bold;">Heading 3</option>
+                                        <option value="h4" style="font-size:15px;font-weight:bold;">Heading 4</option>
+                                        <option value="h5" style="font-size:13px;font-weight:bold;">Heading 5</option>
+                                        <option value="h6" style="font-size:11px;font-weight:bold;">Heading 6</option>
+                                    </select>
+                                </div>
+                                <div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;">
+                                    <button type="button" class="rt-btn-ru" data-cmd="bold" title="Жирный" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-bold"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="italic" title="Курсив" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-italic"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="underline" title="Подчеркнутый" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-underline"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="strikethrough" title="Зачеркнутый" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-strikethrough"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" class="rt-btn-ru" data-cmd="justifyLeft" title="По левому краю" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-left"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="justifyCenter" title="По центру" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-center"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="justifyRight" title="По правому краю" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-right"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="justifyFull" title="По ширине" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-align-justify"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" class="rt-btn-ru" data-cmd="ul" title="Список" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-list-ul"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="ol" title="Нумерованный список" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-list-ol"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="quote" title="Цитата" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-quote-right"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <label title="Цвет текста" style="padding:4px 8px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:0.82rem;">
+                                        <i class="fas fa-font" style="color:#333;"></i>
+                                        <input type="color" id="rtTextColorRu" value="#000000" style="width:20px;height:20px;border:none;padding:0;cursor:pointer;background:transparent;">
+                                    </label>
+                                    <label title="Цвет фона" style="padding:4px 8px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:0.82rem;">
+                                        <i class="fas fa-highlighter" style="color:#f39c12;"></i>
+                                        <input type="color" id="rtBgColorRu" value="#ffff00" style="width:20px;height:20px;border:none;padding:0;cursor:pointer;background:transparent;">
+                                    </label>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" class="rt-btn-ru" data-cmd="undo" title="Отменить" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-undo"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="redo" title="Повторить" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-redo"></i></button>
+                                    <button type="button" class="rt-btn-ru" data-cmd="removeFormat" title="Очистить формат" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-eraser"></i></button>
+                                </div>
+                            </div>
+                            <div id="articleContentRu" contenteditable="true" style="min-height:150px;padding:14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;line-height:1.7;outline:none;overflow-y:auto;max-height:300px;background:#fff;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'" placeholder="Текст статьи на русском..."></div>
+                        </div>
+                        <!-- Submit -->
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <button type="submit" id="articleSubmitBtn" class="admin-save-btn" style="padding:12px 28px;display:inline-flex;align-items:center;gap:8px;">
+                                <i class="fas fa-paper-plane"></i> <span data-admin-i18n="publishArticle">Məqaləni Dərc Et</span>
+                            </button>
+                            <button type="button" id="cancelEditBtn" style="display:none;padding:12px 28px;background:#e74c3c;color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.3s;align-items:center;gap:8px;" onclick="cancelEditMode()">
+                                <i class="fas fa-times"></i> <span data-admin-i18n="cancelEdit">Ləğv et</span>
+                            </button>
+                            <span id="articleStatus" style="font-size:0.85rem;color:var(--text-secondary);"></span>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Articles tab — Delete articles -->
+                <div class="admin-tab-content" id="tabArticles" style="display:none;">
+                    <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:16px;" data-admin-i18n="articlesDesc">Məqaləni redaktə etmək və ya silmək üçün yanındakı düymələrə basın:</p>
+                    <div id="adminArticlesList" style="overflow-y:auto;max-height:500px;">
+                        <p style="text-align:center;color:#999;padding:20px 0;">Yüklənir...</p>
+                    </div>
+                </div>
+
+                <!-- Comments tab -->
+                <div class="admin-tab-content" id="tabComments" style="display:none;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+                        <p style="color:var(--text-secondary);font-size:0.9rem;margin:0;" data-admin-i18n="commentsDesc">Bütün blog şərhləri:</p>
+                        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+                            <select id="adminCommentSort" style="padding:6px 12px;border:1px solid #ddd;border-radius:8px;font-size:0.8rem;cursor:pointer;">
+                                <option value="newest" data-admin-i18n="sortNewest">Ən yeni əvvəl</option>
+                                <option value="oldest" data-admin-i18n="sortOldest">Ən köhnə əvvəl</option>
+                            </select>
+                            <button id="adminSelectAllComments" style="padding:6px 14px;background:#f0f0f0;color:#333;border:1px solid #ddd;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;">
+                                <i class="fas fa-check-double"></i> <span data-admin-i18n="selectAll">Hamısını seç</span>
+                            </button>
+                            <button id="adminDeleteSelectedComments" style="padding:6px 14px;background:#e74c3c;color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;display:none;">
+                                <i class="fas fa-trash"></i> <span data-admin-i18n="deleteSelected">Seçilənləri sil</span> (<span id="adminSelectedCount">0</span>)
+                            </button>
+                            <button id="adminDeleteAllComments" style="padding:6px 14px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;">
+                                <i class="fas fa-trash-alt"></i> <span data-admin-i18n="deleteAll">Hamısını sil</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="adminCommentsList" style="overflow-y:auto;">
+                        <p style="text-align:center;color:#999;padding:20px 0;">Yüklənir...</p>
+                    </div>
+                </div>
+
+                <!-- Stats tab -->
+                <div class="admin-tab-content" id="tabStats" style="display:none;">
+                    <div id="adminStatsContent">
+                        <p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> Yüklənir...</p>
+                    </div>
+                </div>
+
+                <!-- Users tab -->
+                <div class="admin-tab-content" id="tabUsers" style="display:none;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                        <p style="color:var(--text-secondary);font-size:0.9rem;margin:0;" data-admin-i18n="usersDesc">Qeydiyyatdan keçən istifadəçilər:</p>
+                        <span id="adminUsersCount" style="font-size:0.85rem;color:var(--gold);font-weight:600;"></span>
+                    </div>
+                    <div id="adminUsersList" style="overflow-y:auto;">
+                        <p style="text-align:center;color:#999;padding:20px 0;">Yüklənir...</p>
+                    </div>
+                </div>
+
+                <!-- Reviews tab -->
+                <div class="admin-tab-content" id="tabReviews" style="display:none;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                        <p style="color:var(--text-secondary);font-size:0.9rem;margin:0;">Pasiyent rəyləri:</p>
+                        <span id="adminReviewsCount" style="font-size:0.85rem;color:var(--gold);font-weight:600;"></span>
+                    </div>
+                    <div id="adminReviewsList" style="overflow-y:auto;max-height:60vh;">
+                        <p style="text-align:center;color:#999;padding:20px 0;">Yüklənir...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="translations.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBpgpRCBTtg4Tt0XRMUmOH8qs9RBcj04vo",
+            authDomain: "hekim-sayti-comments.firebaseapp.com",
+            databaseURL: "https://hekim-sayti-comments-default-rtdb.firebaseio.com",
+            projectId: "hekim-sayti-comments",
+            storageBucket: "hekim-sayti-comments.firebasestorage.app",
+            messagingSenderId: "158921605576",
+            appId: "1:158921605576:web:1c5d06133260aae200c0fd"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const adminDb = firebase.database();
+    </script>
+    <script src="admin.js"></script>
+</body>
+</html>

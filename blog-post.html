@@ -836,16 +836,74 @@
                 const f = item.fields;
                 document.title = f.title + ' | Şahsəddin İmanlı';
 
+                // Dynamic SEO meta tags
+                let seoData = {};
+                try {
+                    const seoSnap = await db.ref('articleSeo/' + postId).once('value');
+                    seoData = seoSnap.val() || {};
+                } catch(e) {}
+
+                const isRu = currentLang === 'ru';
+                const seoDesc = (isRu && seoData.metaDescRu) ? seoData.metaDescRu : (seoData.metaDesc || f.title + ' - Şahsəddin İmanlı tərəfindən yazılmış məqalə.');
+                const seoKeyword = (isRu && seoData.keywordRu) ? seoData.keywordRu : (seoData.keyword || '');
+                const seoImageAlt = seoData.imageAlt || f.title;
+
+                // Update existing meta description
+                let metaDesc = document.querySelector('meta[name="description"]');
+                if (metaDesc) { metaDesc.setAttribute('content', seoDesc); }
+
+                // Update meta keywords
+                let metaKw = document.querySelector('meta[name="keywords"]');
+                if (metaKw) { metaKw.setAttribute('content', seoKeyword + ', parapsixologiya, Şahsəddin İmanlı'); }
+
+                // Update Open Graph
+                const ogUpdates = { 'og:title': f.title + ' | Şahsəddin İmanlı', 'og:description': seoDesc, 'og:url': window.location.href };
+                Object.entries(ogUpdates).forEach(([prop, val]) => {
+                    let tag = document.querySelector(`meta[property="${prop}"]`);
+                    if (tag) tag.setAttribute('content', val);
+                });
+
+                // Update Twitter
+                const twUpdates = { 'twitter:title': f.title + ' | Şahsəddin İmanlı', 'twitter:description': seoDesc };
+                Object.entries(twUpdates).forEach(([name, val]) => {
+                    let tag = document.querySelector(`meta[name="${name}"]`);
+                    if (tag) tag.setAttribute('content', val);
+                });
+
                 let imgHtml = '';
+                let imgUrl = '';
                 if (f.image && f.image.sys) {
                     const assetRes = await fetch(
                         `https://cdn.contentful.com/spaces/${CONTENTFUL_SPACE}/assets/${f.image.sys.id}?access_token=${CONTENTFUL_TOKEN}&locale=${locale}`
                     );
                     const asset = await assetRes.json();
                     if (asset.fields && asset.fields.file) {
-                        imgHtml = `<img class="blog-detail-image" src="https:${asset.fields.file.url}" alt="${f.title}">`;
+                        imgUrl = 'https:' + asset.fields.file.url;
+                        imgHtml = `<img class="blog-detail-image" src="${imgUrl}" alt="${seoImageAlt}">`;
+                        // Update OG image
+                        let ogImg = document.querySelector('meta[property="og:image"]');
+                        if (ogImg) ogImg.setAttribute('content', imgUrl);
+                        let twImg = document.querySelector('meta[name="twitter:image"]');
+                        if (twImg) twImg.setAttribute('content', imgUrl);
                     }
                 }
+
+                // JSON-LD Article Schema
+                const articleSchema = document.createElement('script');
+                articleSchema.type = 'application/ld+json';
+                articleSchema.textContent = JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "Article",
+                    "headline": f.title,
+                    "description": seoDesc,
+                    "image": imgUrl || '',
+                    "datePublished": f.date || '',
+                    "author": { "@type": "Person", "name": "Şahsəddin İmanlı" },
+                    "publisher": { "@type": "Organization", "name": "Şahsəddin İmanlı", "url": "https://www.sahseddinimanli.com" },
+                    "mainEntityOfPage": { "@type": "WebPage", "@id": window.location.href },
+                    "keywords": seoKeyword
+                });
+                document.head.appendChild(articleSchema);
 
                 // Try Firebase raw HTML first (preserves alignment, colors etc.)
                 let bodyHtml = '';
@@ -1146,6 +1204,9 @@
         let replyVisibleCounts = {};
 
         function getPostId() {
+            // Support both /blog/ID and ?id=ID formats
+            const pathMatch = window.location.pathname.match(/\/blog\/([^\/]+)/);
+            if (pathMatch) return pathMatch[1];
             return new URLSearchParams(window.location.search).get('id');
         }
 

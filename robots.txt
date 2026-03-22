@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /admin.html
 Disallow: /.claude/
 
 Sitemap: https://www.sahseddinimanli.com/sitemap.xml

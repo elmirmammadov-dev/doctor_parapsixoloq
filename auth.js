@@ -284,10 +284,9 @@ function initAuth() {
         // Check admin credentials
         if (emailOrUser === 'Novokuzneck' && pass === 'Dudenge1!') {
             window.isAdminLoggedIn = true;
+            sessionStorage.setItem('adminAuth', 'true');
             closeAuthModal();
-            if (typeof window.openAdminPanel === 'function') {
-                window.openAdminPanel();
-            }
+            window.location.href = 'admin.html';
             // Update comment form for admin
             const nameInput = document.getElementById('commentName');
             const emailInput = document.getElementById('commentEmail');
