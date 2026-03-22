@@ -416,10 +416,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const countEl = document.getElementById('adminReviewsCount');
         const descEl = document.querySelector('#tabReviews p');
         if (!list) return;
-        if (typeof adminDb === 'undefined' || !adminDb) {
-            setTimeout(window.loadAdminReviews, 500);
-            return;
-        }
         const t = getAdminReviewT();
         if (descEl) descEl.textContent = t.desc;
         list.innerHTML = `<p style="text-align:center;color:#999;padding:20px 0;">${t.loading}</p>`;
@@ -747,10 +743,6 @@ document.addEventListener("DOMContentLoaded", function() {
     function loadAdminComments() {
         const listEl = document.getElementById('adminCommentsList');
         if (!listEl) return;
-        if (typeof adminDb === 'undefined' || !adminDb) {
-            setTimeout(loadAdminComments, 500);
-            return;
-        }
 
         listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> ' + adminT('loading') + '</p>';
 
@@ -1622,10 +1614,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const listEl = document.getElementById('adminUsersList');
         const countEl = document.getElementById('adminUsersCount');
         if (!listEl) return;
-        if (typeof adminDb === 'undefined' || !adminDb) {
-            setTimeout(loadAdminUsers, 500);
-            return;
-        }
 
         listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> ' + adminT('loading') + '</p>';
 
@@ -1793,10 +1781,6 @@ document.addEventListener("DOMContentLoaded", function() {
     function loadAdminStats() {
         const container = document.getElementById('adminStatsContent');
         if (!container) return;
-        if (typeof adminDb === 'undefined' || !adminDb) {
-            setTimeout(loadAdminStats, 500);
-            return;
-        }
 
         container.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> ' + adminT('loading') + '</p>';
 
