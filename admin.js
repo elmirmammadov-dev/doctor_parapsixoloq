@@ -782,7 +782,19 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(postData => {
 
         adminPostDataCache = postData;
-        adminDb.ref('comments').once('value', snapshot => {
+
+        // Timeout: if Firebase doesn't respond in 8s, show error
+        let commLoaded = false;
+        setTimeout(function() {
+            if (!commLoaded && listEl) {
+                listEl.innerHTML = '<p style="text-align:center;color:#e74c3c;padding:20px 0;">Firebase bağlantısı qurulmadı. Səhifəni yeniləyin.</p>';
+            }
+        }, 8000);
+
+        const commRef = adminDb.ref('comments');
+        const commHandler = commRef.on('value', snapshot => {
+            commRef.off('value', commHandler);
+            commLoaded = true;
             const allComments = [];
             snapshot.forEach(postSnap => {
                 const postId = postSnap.key;
@@ -1625,9 +1637,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
         listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> ' + adminT('loading') + '</p>';
 
+        let usersLoaded = false;
+        setTimeout(function() {
+            if (!usersLoaded && listEl) {
+                listEl.innerHTML = '<p style="text-align:center;color:#e74c3c;padding:20px 0;">Firebase bağlantısı qurulmadı. Səhifəni yeniləyin.</p>';
+            }
+        }, 8000);
+
         const ref = adminDb.ref('users');
         const handler = ref.on('value', snapshot => {
             ref.off('value', handler);
+            usersLoaded = true;
             const users = [];
             snapshot.forEach(userSnap => {
                 users.push({
