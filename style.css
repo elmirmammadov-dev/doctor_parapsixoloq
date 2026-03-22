@@ -2133,7 +2133,7 @@ img {
 .review-badge-tooltip {
     display: none;
     position: absolute;
-    bottom: calc(100% + 16px);
+    bottom: calc(100% - 40px);
     right: calc(100% + 16px);
     background: #fff;
     border-radius: 16px;
