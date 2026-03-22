@@ -79,14 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Init admin panel - no Firebase wait needed, each tab retries on its own
-    if (location.hash.startsWith('#admin-')) {
-        const savedTab = location.hash.replace('#admin-', '');
-        switchAdminTab(savedTab || 'contentful');
-    } else {
-        switchAdminTab('contentful');
-    }
-    setTimeout(function() { checkFirebaseStorage(); }, 2000);
+    // Tab init moved to after adminTranslations/adminT are defined (see below)
 
     // Admin panel is now a full page — no overlay click-to-close
 
@@ -409,6 +402,15 @@ document.addEventListener("DOMContentLoaded", function() {
     function getAdminReviewT() {
         return ADMIN_REVIEW_TEXTS[adminLang] || ADMIN_REVIEW_TEXTS.az;
     }
+
+    // Init admin panel - after all translations and functions are defined
+    if (location.hash.startsWith('#admin-')) {
+        const savedTab = location.hash.replace('#admin-', '');
+        switchAdminTab(savedTab || 'contentful');
+    } else {
+        switchAdminTab('contentful');
+    }
+    setTimeout(function() { checkFirebaseStorage(); }, 2000);
 
     window.loadAdminReviews = function() {
         const list = document.getElementById('adminReviewsList');
