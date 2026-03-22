@@ -743,6 +743,10 @@ img {
     padding: 14px;
     font-size: 1rem;
     border-radius: 12px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .review-success {
