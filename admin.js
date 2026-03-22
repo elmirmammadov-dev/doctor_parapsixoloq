@@ -569,8 +569,9 @@ document.addEventListener("DOMContentLoaded", function() {
         listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> ' + adminT('loading') + '</p>';
 
         try {
+            const articleLocale = LANG_TO_LOCALE[adminLang] || 'az';
             const res = await fetch(
-                `https://cdn.contentful.com/spaces/${CONTENTFUL_SPACE}/entries?access_token=${CONTENTFUL_TOKEN}&content_type=blogPost&include=1&order=-sys.createdAt&locale=az`
+                `https://cdn.contentful.com/spaces/${CONTENTFUL_SPACE}/entries?access_token=${CONTENTFUL_TOKEN}&content_type=blogPost&include=1&order=-sys.createdAt&locale=${articleLocale}`
             );
             const data = await res.json();
             if (!data.items || data.items.length === 0) {
