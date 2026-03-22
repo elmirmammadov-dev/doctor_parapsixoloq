@@ -369,9 +369,7 @@
             firebase.initializeApp(firebaseConfig);
         }
         const adminDb = firebase.database();
-        // Force reconnect on page load
-        adminDb.goOffline();
-        adminDb.goOnline();
+        const FIREBASE_REST = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
     </script>
     <script src="admin.js"></script>
 </body>

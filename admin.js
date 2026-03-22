@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const LANG_TO_LOCALE = { az: 'az', ru: 'ru', en: 'az', tr: 'az' };
     const CONTENTFUL_SPACE = 'q3fe87ca4p3k';
     const CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
+    const FIREBASE_REST = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
 
     // Show admin panel immediately
     const overlay = document.getElementById("adminPanelOverlay");
@@ -423,7 +424,8 @@ document.addEventListener("DOMContentLoaded", function() {
         if (descEl) descEl.textContent = t.desc;
         list.innerHTML = `<p style="text-align:center;color:#999;padding:20px 0;">${t.loading}</p>`;
 
-        adminDb.ref('reviews').orderByChild('timestamp').once('value').then(snapshot => {
+        fetch(FIREBASE_REST + '/reviews.json?orderBy="timestamp"').then(r => r.json()).then(data => {
+            const snapshot = { forEach: function(cb) { if(data) Object.keys(data).forEach(k => cb({ val: () => data[k], key: k })); } };
             const reviews = [];
             snapshot.forEach(child => {
                 const r = child.val();
@@ -783,7 +785,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         adminPostDataCache = postData;
 
-        adminDb.ref('comments').once('value').then(snapshot => {
+        fetch(FIREBASE_REST + '/comments.json').then(r => r.json()).then(data => {
+            const snapshot = { forEach: function(cb) { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k], forEach: function(innerCb) { const inner = data[k]; if(inner) Object.keys(inner).forEach(ik => innerCb({ key: ik, val: () => inner[ik] })); } })); } };
             const allComments = [];
             snapshot.forEach(postSnap => {
                 const postId = postSnap.key;
@@ -1626,7 +1629,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> ' + adminT('loading') + '</p>';
 
-        adminDb.ref('users').once('value').then(snapshot => {
+        fetch(FIREBASE_REST + '/users.json').then(r => r.json()).then(data => {
+            const snapshot = { forEach: function(cb) { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } };
             const users = [];
             snapshot.forEach(userSnap => {
                 users.push({
