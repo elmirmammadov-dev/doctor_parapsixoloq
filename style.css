@@ -249,6 +249,17 @@ img {
     cursor: default;
 }
 
+.hero-banner-h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-weight: 700;
+    color: var(--gold);
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
 .hero-banner-title.animated-title {
     font-family: var(--font-display);
     font-size: clamp(2rem, 5vw, 3.2rem);

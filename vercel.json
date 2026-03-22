@@ -1,6 +1,18 @@
 {
   "rewrites": [
     {
+      "source": "/ru",
+      "destination": "/api/render-lang?lang=ru"
+    },
+    {
+      "source": "/en",
+      "destination": "/api/render-lang?lang=en"
+    },
+    {
+      "source": "/tr",
+      "destination": "/api/render-lang?lang=tr"
+    },
+    {
       "source": "/blog/:id",
       "destination": "/api/render-blog?id=:id"
     },
