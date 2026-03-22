@@ -823,7 +823,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     replyHtml = `
                         <div style="margin-top:8px;padding:10px 12px;background:#e8f5e9;border-radius:8px;border-left:3px solid var(--gold);">
                             <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-                                <img src="profil sekli.png" style="width:20px;height:20px;border-radius:50%;object-fit:cover;">
+                                <img src="profil-sekli-1.webp" style="width:20px;height:20px;border-radius:50%;object-fit:cover;">
                                 <strong style="font-size:0.8rem;color:var(--gold);">Şahsəddin İmanlı</strong>
                                 <span style="font-size:0.7rem;color:#999;">${replyDate}</span>
                             </div>
