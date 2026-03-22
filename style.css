@@ -1991,9 +1991,9 @@ img {
 
 .badge-divider {
     width: 1.5px;
-    height: 24px;
+    height: 28px;
     background: rgba(255, 255, 255, 0.35);
-    margin: 0 6px;
+    margin: 0 4px;
 }
 
 .rating-stars-tooltip {
@@ -2092,12 +2092,12 @@ img {
 
 .rating-stars-inner i {
     color: #ffc940;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 .rating-score {
     font-weight: 800;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     color: #fff;
 }
 
@@ -2106,10 +2106,10 @@ img {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     background: var(--gradient-gold);
     color: #fff;
-    padding: 14px 24px;
+    padding: 16px 28px;
     border-radius: 16px;
     box-shadow: 0 8px 30px rgba(45, 129, 87, 0.3);
     cursor: pointer;
@@ -2122,17 +2122,17 @@ img {
 }
 
 .about-review-badge i.fa-comments {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
 }
 
 .review-badge-count {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 800;
     line-height: 1;
 }
 
 .review-badge-label {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
