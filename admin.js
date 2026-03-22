@@ -1434,6 +1434,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 const kwRuEl = document.getElementById('articleKeywordRu');
                 if (mdRuEl) { mdRuEl.value = seo.metaDescRu || ''; const ctr = document.getElementById('metaDescCountRu'); if(ctr) ctr.textContent = (seo.metaDescRu || '').length; }
                 if (kwRuEl) kwRuEl.value = seo.keywordRu || '';
+                const iaRuEl = document.getElementById('articleImageAltRu');
+                if (iaRuEl) iaRuEl.value = seo.imageAltRu || '';
             } catch(e) {}
 
             // Set edit mode
@@ -1489,8 +1491,10 @@ document.addEventListener("DOMContentLoaded", function() {
             // Russian SEO fields
             const metaDescRuEl = document.getElementById('articleMetaDescRu');
             const keywordRuEl = document.getElementById('articleKeywordRu');
+            const imageAltRuEl = document.getElementById('articleImageAltRu');
             const metaDescRu = metaDescRuEl ? metaDescRuEl.value.trim() : '';
             const keywordRu = keywordRuEl ? keywordRuEl.value.trim() : '';
+            const imageAltRu = imageAltRuEl ? imageAltRuEl.value.trim() : '';
 
             // Russian locale fields
             const titleRuEl = document.getElementById('articleTitleRu');
@@ -1557,6 +1561,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     const seoObj = { metaDesc, keyword, imageAlt };
                     if (metaDescRu) seoObj.metaDescRu = metaDescRu;
                     if (keywordRu) seoObj.keywordRu = keywordRu;
+                    if (imageAltRu) seoObj.imageAltRu = imageAltRu;
                     await adminDb.ref('articleSeo/' + editingEntryId).set(seoObj);
 
                     statusEl.textContent = 'Məqalə uğurla yeniləndi!';
@@ -1585,6 +1590,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         const seoObj2 = { metaDesc, keyword, imageAlt };
                         if (metaDescRu) seoObj2.metaDescRu = metaDescRu;
                         if (keywordRu) seoObj2.keywordRu = keywordRu;
+                        if (imageAltRu) seoObj2.imageAltRu = imageAltRu;
                         await adminDb.ref('articleSeo/' + newEntryId).set(seoObj2);
                     }
 
@@ -1600,6 +1606,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (imageAltEl) imageAltEl.value = '';
                     if (metaDescRuEl) { metaDescRuEl.value = ''; const ctr = document.getElementById('metaDescCountRu'); if(ctr) ctr.textContent = '0'; }
                     if (keywordRuEl) keywordRuEl.value = '';
+                    if (imageAltRuEl) imageAltRuEl.value = '';
                     articleImagePreview.style.display = 'none';
                 }
 

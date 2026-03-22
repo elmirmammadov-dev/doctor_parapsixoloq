@@ -845,7 +845,7 @@
                 const isRu = currentLang === 'ru';
                 const seoDesc = (isRu && seoData.metaDescRu) ? seoData.metaDescRu : (seoData.metaDesc || f.title + ' - Şahsəddin İmanlı tərəfindən yazılmış məqalə.');
                 const seoKeyword = (isRu && seoData.keywordRu) ? seoData.keywordRu : (seoData.keyword || '');
-                const seoImageAlt = seoData.imageAlt || f.title;
+                const seoImageAlt = (isRu && seoData.imageAltRu) ? seoData.imageAltRu : (seoData.imageAlt || f.title);
 
                 // Update existing meta description
                 let metaDesc = document.querySelector('meta[name="description"]');
