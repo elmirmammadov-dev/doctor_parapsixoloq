@@ -365,8 +365,13 @@
             messagingSenderId: "158921605576",
             appId: "1:158921605576:web:1c5d06133260aae200c0fd"
         };
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const adminDb = firebase.database();
+        // Force reconnect on page load
+        adminDb.goOffline();
+        adminDb.goOnline();
     </script>
     <script src="admin.js"></script>
 </body>
