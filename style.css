@@ -4766,17 +4766,18 @@ img {
         flex-wrap: wrap !important;
         gap: 4px !important;
     }
-    /* User avatar smaller */
-    .admin-panel-body [style*="border-radius:50%"][style*="width:44px"] {
-        width: 32px !important;
-        height: 32px !important;
-        font-size: 0.8rem !important;
+    /* User cards mobile layout */
+    .admin-user-actions {
+        margin-left: 0 !important;
+        padding: 8px 12px 12px !important;
     }
-    /* Email/text overflow */
-    .admin-panel-body a[href*="mailto"],
-    .admin-panel-body span[style*="color:#999"] {
-        word-break: break-all !important;
-        font-size: 0.72rem !important;
+    .admin-user-actions button {
+        padding: 5px 8px !important;
+        font-size: 0.68rem !important;
+    }
+    .admin-user-info {
+        gap: 10px !important;
+        padding: 10px 12px !important;
     }
 }
 

@@ -1686,20 +1686,20 @@ document.addEventListener("DOMContentLoaded", function() {
                     : '';
 
                 return `
-                    <div style="border:1px solid ${isBanned ? '#f8cccc' : '#eee'};border-radius:12px;margin-bottom:10px;background:${isBanned ? '#fff5f5' : '#fafafa'};overflow:hidden;">
-                        <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;">
+                    <div class="admin-user-card" style="border:1px solid ${isBanned ? '#f8cccc' : '#eee'};border-radius:12px;margin-bottom:10px;background:${isBanned ? '#fff5f5' : '#fafafa'};overflow:hidden;">
+                        <div class="admin-user-info" style="display:flex;align-items:center;gap:14px;padding:14px 16px;">
                             ${avatar}
                             <div style="flex:1;min-width:0;">
                                 <div style="font-weight:600;font-size:0.95rem;color:var(--text-primary);">${name} ${statusHtml}</div>
-                                <div style="font-size:0.82rem;color:var(--text-muted);margin-top:2px;">${email}</div>
+                                <div style="font-size:0.82rem;color:var(--text-muted);margin-top:2px;word-break:break-all;">${email}</div>
                                 <div style="font-size:0.75rem;color:#999;margin-top:2px;">${date}</div>
                             </div>
-                            <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">
-                                ${warnToggleBtn}
-                                <button onclick="adminWarnUser('${u.uid}','${name}')" style="padding:6px 10px;background:#f39c12;color:#fff;border:none;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;"><i class="fas fa-exclamation-triangle"></i> ${adminT('warn')}</button>
-                                ${banBtn}
-                                <button onclick="adminDeleteUser('${u.uid}','${name}')" style="padding:6px 10px;background:#e74c3c;color:#fff;border:none;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;"><i class="fas fa-trash"></i> ${adminT('deleteUser')}</button>
-                            </div>
+                        </div>
+                        <div class="admin-user-actions" style="display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 14px;margin-left:54px;">
+                            ${warnToggleBtn}
+                            <button onclick="adminWarnUser('${u.uid}','${name}')" style="padding:6px 10px;background:#f39c12;color:#fff;border:none;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;"><i class="fas fa-exclamation-triangle"></i> ${adminT('warn')}</button>
+                            ${banBtn}
+                            <button onclick="adminDeleteUser('${u.uid}','${name}')" style="padding:6px 10px;background:#e74c3c;color:#fff;border:none;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;"><i class="fas fa-trash"></i> ${adminT('deleteUser')}</button>
                         </div>
                         ${warningHistoryHtml}
                     </div>
