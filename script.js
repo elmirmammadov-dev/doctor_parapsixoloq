@@ -735,14 +735,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const imgId = f.image && f.image.sys ? f.image.sys.id : null;
                 let imgUrl = imgId ? assets[imgId] : null;
                 // Prefer ImgBB cover image from Firebase SEO
+                let coverPos = '50% 50%';
                 if (seoData[id] && seoData[id].coverImage) {
                     imgUrl = seoData[id].coverImage;
+                }
+                if (seoData[id] && seoData[id].coverPos) {
+                    coverPos = seoData[id].coverPos;
                 }
                 return {
                     id: id,
                     html: `
                     <a href="/blog/${id}" class="blog-post-card" style="text-decoration:none;color:inherit;cursor:pointer;">
-                        ${imgUrl ? `<img src="${imgUrl}" alt="${f.title}">` : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`}
+                        ${imgUrl ? `<img src="${imgUrl}" alt="${f.title}" style="object-position:${coverPos};">` : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`}
                         <div class="blog-post-info">
                             <h4>${f.title}</h4>
                             <div style="display:flex;align-items:center;gap:12px;margin-top:4px;">

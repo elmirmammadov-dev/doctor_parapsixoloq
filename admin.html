@@ -135,7 +135,17 @@
                         <div>
                             <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;"><span data-admin-i18n="labelImage">Şəkil</span></label>
                             <input type="file" id="articleImage" accept="image/*" style="width:100%;padding:8px;border:1.5px solid #ddd;border-radius:10px;font-size:0.85rem;box-sizing:border-box;">
-                            <img id="articleImagePreview" style="display:none;max-width:100%;max-height:200px;border-radius:10px;margin-top:8px;object-fit:cover;">
+                            <div id="coverPreviewWrap" style="display:none;margin-top:8px;position:relative;">
+                                <div style="font-size:0.72rem;color:#999;margin-bottom:4px;"><i class="fas fa-arrows-alt"></i> Şəkli kartda necə görünəcəyini tənzimləmək üçün sürükləyin</div>
+                                <div id="coverPreviewCard" style="width:220px;height:220px;border-radius:12px;overflow:hidden;border:2px solid #2d8157;position:relative;cursor:grab;background:#f0f0f0;">
+                                    <img id="articleImagePreview" style="width:100%;height:100%;object-fit:cover;object-position:50% 50%;pointer-events:none;user-select:none;">
+                                </div>
+                                <div style="margin-top:4px;display:flex;gap:4px;align-items:center;flex-wrap:wrap;">
+                                    <span style="font-size:0.7rem;color:#2d8157;font-weight:600;">Pozisiya:</span>
+                                    <span id="coverPosLabel" style="font-size:0.7rem;color:#666;">50% 50%</span>
+                                    <button type="button" onclick="resetCoverPos()" style="padding:2px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.68rem;">Sıfırla</button>
+                                </div>
+                            </div>
                         </div>
                         <!-- Rich Text Toolbar -->
                         <div>

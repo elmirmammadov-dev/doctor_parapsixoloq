@@ -1253,6 +1253,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const articleImageInput = document.getElementById('articleImage');
     const articleImagePreview = document.getElementById('articleImagePreview');
+    const coverPreviewWrap = document.getElementById('coverPreviewWrap');
+    const coverPreviewCard = document.getElementById('coverPreviewCard');
+    let coverPosX = 50, coverPosY = 50;
+
     if (articleImageInput) {
         articleImageInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
@@ -1260,17 +1264,61 @@ document.addEventListener("DOMContentLoaded", function() {
                 const reader = new FileReader();
                 reader.onload = (ev) => {
                     articleImagePreview.src = ev.target.result;
-                    articleImagePreview.style.display = 'block';
+                    if (coverPreviewWrap) coverPreviewWrap.style.display = 'block';
+                    coverPosX = 50; coverPosY = 50;
+                    articleImagePreview.style.objectPosition = '50% 50%';
+                    var lbl = document.getElementById('coverPosLabel');
+                    if (lbl) lbl.textContent = '50% 50%';
                 };
                 reader.readAsDataURL(file);
             } else {
-                articleImagePreview.style.display = 'none';
-                // Remove cover controls if exist
-                var oldBar = document.getElementById('coverImgResizeBar');
-                if (oldBar) oldBar.remove();
+                if (coverPreviewWrap) coverPreviewWrap.style.display = 'none';
             }
         });
     }
+
+    // Drag to reposition cover image
+    if (coverPreviewCard) {
+        let dragging = false, startX, startY, startPosX, startPosY;
+        coverPreviewCard.addEventListener('mousedown', function(e) {
+            dragging = true; startX = e.clientX; startY = e.clientY;
+            startPosX = coverPosX; startPosY = coverPosY;
+            coverPreviewCard.style.cursor = 'grabbing';
+            e.preventDefault();
+        });
+        coverPreviewCard.addEventListener('touchstart', function(e) {
+            dragging = true; startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+            startPosX = coverPosX; startPosY = coverPosY;
+            e.preventDefault();
+        }, {passive: false});
+        document.addEventListener('mousemove', function(e) {
+            if (!dragging) return;
+            var dx = e.clientX - startX, dy = e.clientY - startY;
+            coverPosX = Math.max(0, Math.min(100, startPosX - dx * 0.3));
+            coverPosY = Math.max(0, Math.min(100, startPosY - dy * 0.3));
+            articleImagePreview.style.objectPosition = coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%';
+            var lbl = document.getElementById('coverPosLabel');
+            if (lbl) lbl.textContent = coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%';
+        });
+        document.addEventListener('touchmove', function(e) {
+            if (!dragging) return;
+            var dx = e.touches[0].clientX - startX, dy = e.touches[0].clientY - startY;
+            coverPosX = Math.max(0, Math.min(100, startPosX - dx * 0.3));
+            coverPosY = Math.max(0, Math.min(100, startPosY - dy * 0.3));
+            articleImagePreview.style.objectPosition = coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%';
+            var lbl = document.getElementById('coverPosLabel');
+            if (lbl) lbl.textContent = coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%';
+        }, {passive: false});
+        document.addEventListener('mouseup', function() { dragging = false; coverPreviewCard.style.cursor = 'grab'; });
+        document.addEventListener('touchend', function() { dragging = false; });
+    }
+
+    window.resetCoverPos = function() {
+        coverPosX = 50; coverPosY = 50;
+        if (articleImagePreview) articleImagePreview.style.objectPosition = '50% 50%';
+        var lbl = document.getElementById('coverPosLabel');
+        if (lbl) lbl.textContent = '50% 50%';
+    };
 
     // Cover image resize controls
     if (articleImagePreview) {
@@ -1680,9 +1728,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (iaRuEl) iaRuEl.value = seo.imageAltRu || '';
                 // Show cover image preview if exists
                 const previewEl = document.getElementById('articleImagePreview');
+                const wrapEl = document.getElementById('coverPreviewWrap');
                 if (previewEl && seo.coverImage) {
                     previewEl.src = seo.coverImage;
-                    previewEl.style.display = 'block';
+                    if (wrapEl) wrapEl.style.display = 'block';
+                    if (seo.coverPos) {
+                        previewEl.style.objectPosition = seo.coverPos;
+                        var parts = seo.coverPos.split('%');
+                        coverPosX = parseFloat(parts[0]) || 50;
+                        coverPosY = parseFloat(parts[1]) || 50;
+                        var lbl = document.getElementById('coverPosLabel');
+                        if (lbl) lbl.textContent = seo.coverPos;
+                    }
                 }
             } catch(e) {}
 
@@ -1798,7 +1855,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         htmlData.ru = contentRuHtml;
                     }
                     await adminDb.ref('articleHtml/' + editingEntryId).set(htmlData);
-                    const seoObj = { metaDesc, keyword, imageAlt };
+                    const seoObj = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%' };
                     if (coverImageUrl) seoObj.coverImage = coverImageUrl;
                     if (metaDescRu) seoObj.metaDescRu = metaDescRu;
                     if (keywordRu) seoObj.keywordRu = keywordRu;
@@ -1828,7 +1885,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             htmlData.ru = contentRuHtml;
                         }
                         await adminDb.ref('articleHtml/' + newEntryId).set(htmlData);
-                        const seoObj2 = { metaDesc, keyword, imageAlt };
+                        const seoObj2 = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%' };
                         if (coverImageUrl) seoObj2.coverImage = coverImageUrl;
                         if (metaDescRu) seoObj2.metaDescRu = metaDescRu;
                         if (keywordRu) seoObj2.keywordRu = keywordRu;
