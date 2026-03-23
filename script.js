@@ -798,14 +798,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const nameInput = document.getElementById('reviewName');
             if (!nameInput) return;
             // If already has a saved name, keep it
-            const savedName = localStorage.getItem('reviewUserName');
+            const savedName = sessionStorage.getItem('reviewUserName');
             if (user && !user.isAnonymous) {
                 // Registered user - show only first name
                 const firstName = (user.displayName || '').split(' ')[0];
                 nameInput.value = firstName;
                 nameInput.readOnly = true;
                 nameInput.style.opacity = '0.7';
-                localStorage.setItem('reviewUserName', firstName);
+                sessionStorage.setItem('reviewUserName', firstName);
             } else if (savedName) {
                 nameInput.value = savedName;
             }
@@ -817,7 +817,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // Restore saved name on page load
     (function() {
-        const savedName = localStorage.getItem('reviewUserName');
+        const savedName = sessionStorage.getItem('reviewUserName');
         const nameInput = document.getElementById('reviewName');
         if (savedName && nameInput && !nameInput.value) {
             nameInput.value = savedName;
@@ -852,7 +852,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Save name for persistence
-            localStorage.setItem('reviewUserName', name);
+            sessionStorage.setItem('reviewUserName', name);
 
             adminDb.ref('reviews').push(reviewData).then(() => {
                 btn.disabled = false;
