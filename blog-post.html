@@ -137,6 +137,17 @@
             overflow-wrap: break-word;
             word-wrap: break-word;
             word-break: break-word;
+            overflow: hidden;
+        }
+        .blog-detail-body::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+        .blog-detail-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
         }
         .blog-detail-body h1,
         .blog-detail-body h2,
