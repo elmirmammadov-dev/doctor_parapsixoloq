@@ -1105,7 +1105,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Insert image into rich text editor
-    function insertImageToEditor(editorId) {
+    window.insertImageToEditor = function(editorId) {
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*';
