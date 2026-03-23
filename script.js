@@ -755,7 +755,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === REVIEWS SECTION ===
     const REVIEWS_PER_PAGE = 6;
-    let reviewsLoaded = REVIEWS_PER_PAGE;
+    let currentReviewPage = 0;
     let allReviews = [];
     let selectedRating = 5;
 
@@ -914,7 +914,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const grid = document.getElementById('reviewsGrid');
         if (!grid) return;
 
-        const visible = allReviews.slice(0, reviewsLoaded);
+        const start = currentReviewPage * REVIEWS_PER_PAGE;
+        const visible = allReviews.slice(start, start + REVIEWS_PER_PAGE);
+        const totalPages = Math.ceil(allReviews.length / REVIEWS_PER_PAGE);
         const months = ['Yan','Fev','Mar','Apr','May','İyn','İyl','Avq','Sen','Okt','Noy','Dek'];
 
         grid.innerHTML = visible.map(r => {
@@ -942,21 +944,35 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }).join('');
 
-        const loadMoreEl = document.getElementById('reviewsLoadMore');
-        if (loadMoreEl) {
-            loadMoreEl.style.display = allReviews.length > reviewsLoaded ? 'block' : 'none';
+        // Pagination
+        const paginationEl = document.getElementById('reviewsLoadMore');
+        if (paginationEl && totalPages > 1) {
+            paginationEl.style.display = 'flex';
+            let paginationHtml = '';
+            if (currentReviewPage > 0) {
+                paginationHtml += `<button class="review-page-btn" onclick="changeReviewPage(${currentReviewPage - 1})"><i class="fas fa-chevron-left"></i></button>`;
+            }
+            for (let i = 0; i < totalPages; i++) {
+                paginationHtml += `<button class="review-page-btn ${i === currentReviewPage ? 'active' : ''}" onclick="changeReviewPage(${i})">${i + 1}</button>`;
+            }
+            if (currentReviewPage < totalPages - 1) {
+                paginationHtml += `<button class="review-page-btn" onclick="changeReviewPage(${currentReviewPage + 1})"><i class="fas fa-chevron-right"></i></button>`;
+            }
+            paginationEl.innerHTML = paginationHtml;
+        } else if (paginationEl) {
+            paginationEl.style.display = 'none';
         }
 
     }
 
-    // Load more
-    const loadMoreBtn = document.getElementById('loadMoreReviewsBtn');
-    if (loadMoreBtn) {
-        loadMoreBtn.addEventListener('click', function() {
-            reviewsLoaded += REVIEWS_PER_PAGE;
-            renderReviews();
-        });
-    }
+    // Page change
+    window.changeReviewPage = function(page) {
+        currentReviewPage = page;
+        renderReviews();
+        // Scroll to reviews section
+        const reviewsSection = document.getElementById('reviews');
+        if (reviewsSection) reviewsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
 
     window.toggleReviewText = function(key) {
         const el = document.getElementById('reviewCardText_' + key);

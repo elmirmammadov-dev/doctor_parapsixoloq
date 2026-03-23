@@ -875,9 +875,37 @@ img {
     margin-top: auto;
 }
 
-.reviews-load-more {
+.reviews-load-more,
+.reviews-pagination {
     text-align: center;
     margin-top: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.review-page-btn {
+    width: 38px;
+    height: 38px;
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--gold);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.review-page-btn:hover {
+    background: var(--gold-light);
+}
+.review-page-btn.active {
+    background: var(--gold);
+    color: #fff;
 }
 
 .btn-outline-gold {
