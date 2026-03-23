@@ -1105,6 +1105,82 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Insert image into rich text editor
+    // Image resize controls in editor
+    function setupEditorImageResize(editorId) {
+        const editor = document.getElementById(editorId);
+        if (!editor) return;
+        editor.addEventListener('click', function(e) {
+            // Remove any existing resize controls
+            document.querySelectorAll('.img-resize-bar').forEach(b => b.remove());
+            document.querySelectorAll('.img-selected').forEach(i => i.classList.remove('img-selected'));
+
+            if (e.target.tagName === 'IMG') {
+                const img = e.target;
+                img.classList.add('img-selected');
+                img.style.outline = '2px solid #2d8157';
+
+                const bar = document.createElement('div');
+                bar.className = 'img-resize-bar';
+                bar.style.cssText = 'display:flex;gap:4px;align-items:center;padding:6px 8px;background:#f0faf5;border:1px solid #2d8157;border-radius:8px;margin:4px 0;font-size:0.75rem;flex-wrap:wrap;';
+                bar.innerHTML = `
+                    <span style="color:#2d8157;font-weight:600;">Ölçü:</span>
+                    <button type="button" onclick="resizeEditorImg(this,25)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">25%</button>
+                    <button type="button" onclick="resizeEditorImg(this,50)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">50%</button>
+                    <button type="button" onclick="resizeEditorImg(this,75)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">75%</button>
+                    <button type="button" onclick="resizeEditorImg(this,100)" style="padding:3px 8px;border:1px solid #2d8157;border-radius:4px;background:#e8f5e9;cursor:pointer;font-size:0.72rem;font-weight:600;">100%</button>
+                    <span style="color:#999;">|</span>
+                    <span style="color:#2d8157;font-weight:600;">Hizalama:</span>
+                    <button type="button" onclick="alignEditorImg(this,'left')" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">Sol</button>
+                    <button type="button" onclick="alignEditorImg(this,'center')" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">Orta</button>
+                    <button type="button" onclick="alignEditorImg(this,'right')" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">Sağ</button>
+                    <span style="color:#999;">|</span>
+                    <button type="button" onclick="removeEditorImg(this)" style="padding:3px 8px;border:1px solid #e74c3c;border-radius:4px;background:#ffeaea;cursor:pointer;font-size:0.72rem;color:#e74c3c;">Sil</button>
+                `;
+                img.parentNode.insertBefore(bar, img.nextSibling);
+            }
+        });
+    }
+
+    window.resizeEditorImg = function(btn, pct) {
+        const bar = btn.closest('.img-resize-bar');
+        const img = bar ? bar.previousElementSibling : null;
+        if (img && img.tagName === 'IMG') {
+            img.style.maxWidth = pct + '%';
+            img.style.width = pct + '%';
+        }
+    };
+
+    window.alignEditorImg = function(btn, align) {
+        const bar = btn.closest('.img-resize-bar');
+        const img = bar ? bar.previousElementSibling : null;
+        if (img && img.tagName === 'IMG') {
+            if (align === 'center') {
+                img.style.marginLeft = 'auto';
+                img.style.marginRight = 'auto';
+                img.style.display = 'block';
+            } else if (align === 'right') {
+                img.style.marginLeft = 'auto';
+                img.style.marginRight = '0';
+                img.style.display = 'block';
+            } else {
+                img.style.marginLeft = '0';
+                img.style.marginRight = 'auto';
+                img.style.display = 'block';
+            }
+        }
+    };
+
+    window.removeEditorImg = function(btn) {
+        const bar = btn.closest('.img-resize-bar');
+        const img = bar ? bar.previousElementSibling : null;
+        if (img && img.tagName === 'IMG') img.remove();
+        if (bar) bar.remove();
+    };
+
+    // Setup resize for both editors
+    setupEditorImageResize('articleContent');
+    setupEditorImageResize('articleContentRu');
+
     window.insertImageToEditor = function(editorId) {
         const input = document.createElement('input');
         input.type = 'file';
@@ -1493,7 +1569,19 @@ document.addEventListener("DOMContentLoaded", function() {
             // Populate AZ fields
             document.getElementById('articleTitle').value = f.title?.az || '';
             document.getElementById('articleDate').value = f.date?.az || '';
-            document.getElementById('articleContent').innerHTML = f.content?.az ? richTextToHtml(f.content.az) : '';
+
+            // Load raw HTML from Firebase (preserves images and formatting)
+            let firebaseHtml = null;
+            try {
+                const htmlRes = await fetch(FIREBASE_REST + '/articleHtml/' + entryId + '.json');
+                firebaseHtml = await htmlRes.json();
+            } catch(e) {}
+
+            if (firebaseHtml && firebaseHtml.az) {
+                document.getElementById('articleContent').innerHTML = firebaseHtml.az;
+            } else {
+                document.getElementById('articleContent').innerHTML = f.content?.az ? richTextToHtml(f.content.az) : '';
+            }
 
             // Populate RU fields if they exist
             const titleRuEl = document.getElementById('articleTitleRu');
@@ -1502,12 +1590,18 @@ document.addEventListener("DOMContentLoaded", function() {
             const ruFields = document.getElementById('ruLocaleFields');
             const ruContentField = document.getElementById('ruContentField');
 
-            if (f.title?.ru || f.date?.ru || f.content?.ru) {
+            if (f.title?.ru || f.date?.ru || f.content?.ru || (firebaseHtml && firebaseHtml.ru)) {
                 if (ruFields) ruFields.style.display = 'flex';
                 if (ruContentField) ruContentField.style.display = 'block';
                 if (titleRuEl) titleRuEl.value = f.title?.ru || '';
                 if (dateRuEl) dateRuEl.value = f.date?.ru || '';
-                if (contentRuEl) contentRuEl.innerHTML = f.content?.ru ? richTextToHtml(f.content.ru) : '';
+                if (contentRuEl) {
+                    if (firebaseHtml && firebaseHtml.ru) {
+                        contentRuEl.innerHTML = firebaseHtml.ru;
+                    } else {
+                        contentRuEl.innerHTML = f.content?.ru ? richTextToHtml(f.content.ru) : '';
+                    }
+                }
             }
 
             // Load SEO data from Firebase
@@ -1526,6 +1620,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (kwRuEl) kwRuEl.value = seo.keywordRu || '';
                 const iaRuEl = document.getElementById('articleImageAltRu');
                 if (iaRuEl) iaRuEl.value = seo.imageAltRu || '';
+                // Show cover image preview if exists
+                const previewEl = document.getElementById('articleImagePreview');
+                if (previewEl && seo.coverImage) {
+                    previewEl.src = seo.coverImage;
+                    previewEl.style.display = 'block';
+                }
             } catch(e) {}
 
             // Set edit mode
