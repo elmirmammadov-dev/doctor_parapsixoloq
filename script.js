@@ -969,6 +969,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.changeReviewPage = function(page) {
         currentReviewPage = page;
         renderReviews();
+        // On mobile/tablet only, scroll to reviews grid
+        if (window.innerWidth <= 1024) {
+            const grid = document.getElementById('reviewsGrid');
+            if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     };
 
     window.toggleReviewText = function(key) {
