@@ -286,25 +286,36 @@ function initAuth() {
             window.isAdminLoggedIn = true;
             sessionStorage.setItem('adminAuth', 'true');
             closeAuthModal();
-            window.location.href = 'admin.html';
-            // Update comment form for admin
-            const nameInput = document.getElementById('commentName');
-            const emailInput = document.getElementById('commentEmail');
-            if (nameInput) {
-                nameInput.value = 'Şahsəddin İmanlı';
-                nameInput.readOnly = true;
-                nameInput.style.background = '#f5f5f5';
-            }
-            if (emailInput) {
-                emailInput.value = 'Shahseddinimanli2016@gmail.com';
-                emailInput.readOnly = true;
-                emailInput.style.background = '#f5f5f5';
-            }
-            const badgeEl = document.getElementById('adminBadgeLabel');
-            if (badgeEl) {
-                const lang = localStorage.getItem('lang') || 'az';
-                badgeEl.textContent = lang === 'ru' ? 'Автор' : 'Müəllif';
-                badgeEl.style.display = 'inline';
+            // If on blog post page, stay on page so admin can reply to comments
+            const isOnBlogPost = window.location.pathname.match(/\/blog\//) || document.getElementById('blogDetail');
+            if (isOnBlogPost) {
+                // Update comment form for admin
+                const nameInput = document.getElementById('commentName');
+                const emailInput = document.getElementById('commentEmail');
+                if (nameInput) {
+                    nameInput.value = 'Şahsəddin İmanlı';
+                    nameInput.readOnly = true;
+                    nameInput.style.background = '#f5f5f5';
+                }
+                if (emailInput) {
+                    emailInput.value = 'Shahseddinimanli2016@gmail.com';
+                    emailInput.readOnly = true;
+                    emailInput.style.background = '#f5f5f5';
+                }
+                const badgeEl = document.getElementById('adminBadgeLabel');
+                if (badgeEl) {
+                    const lang = localStorage.getItem('lang') || 'az';
+                    badgeEl.textContent = lang === 'ru' ? 'Автор' : 'Müəllif';
+                    badgeEl.style.display = 'inline';
+                }
+                // Update navbar to show admin is logged in
+                const authBtn = document.getElementById('userAuthBtn');
+                if (authBtn) {
+                    authBtn.innerHTML = '<img src="/profil-sekli-1.webp" class="nav-user-avatar" alt="Şahsəddin İmanlı" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"> <span class="nav-user-name">Şahsəddin</span>';
+                    authBtn.onclick = function() { window.location.href = '/admin.html'; };
+                }
+            } else {
+                window.location.href = '/admin.html';
             }
             return;
         }

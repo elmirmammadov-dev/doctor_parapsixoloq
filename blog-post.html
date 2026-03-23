@@ -716,6 +716,36 @@
     <script src="/auth.js"></script>
     <script src="/tracker.js"></script>
     <script>
+        // Restore admin session if previously logged in
+        if (sessionStorage.getItem('adminAuth') === 'true') {
+            window.isAdminLoggedIn = true;
+            document.addEventListener('DOMContentLoaded', function() {
+                const nameInput = document.getElementById('commentName');
+                const emailInput = document.getElementById('commentEmail');
+                if (nameInput) {
+                    nameInput.value = 'Şahsəddin İmanlı';
+                    nameInput.readOnly = true;
+                    nameInput.style.background = '#f5f5f5';
+                }
+                if (emailInput) {
+                    emailInput.value = 'Shahseddinimanli2016@gmail.com';
+                    emailInput.readOnly = true;
+                    emailInput.style.background = '#f5f5f5';
+                }
+                const badgeEl = document.getElementById('adminBadgeLabel');
+                if (badgeEl) {
+                    const lang = localStorage.getItem('lang') || 'az';
+                    badgeEl.textContent = lang === 'ru' ? 'Автор' : 'Müəllif';
+                    badgeEl.style.display = 'inline';
+                }
+                const authBtn = document.getElementById('userAuthBtn');
+                if (authBtn) {
+                    authBtn.innerHTML = '<img src="/profil-sekli-1.webp" class="nav-user-avatar" alt="Şahsəddin İmanlı" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"> <span class="nav-user-name">Şahsəddin</span>';
+                    authBtn.onclick = function() { window.location.href = '/admin.html'; };
+                }
+            });
+        }
+
         const CONTENTFUL_SPACE = 'q3fe87ca4p3k';
         const CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
         const LANG_TO_LOCALE = { az: 'az', ru: 'ru', en: 'az', tr: 'az' };
