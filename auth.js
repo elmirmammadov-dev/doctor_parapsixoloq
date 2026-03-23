@@ -519,12 +519,15 @@ function adjustPicPos(dir) {
 }
 
 async function loginAnonymous() {
+    // Close modal immediately - don't wait for Firebase
+    closeAuthModal();
+    const authBtn = document.getElementById('userAuthBtn');
+    if (authBtn) authBtn.innerHTML = '<i class="fas fa-user-secret"></i> <span class="nav-user-name">Anonim</span>';
     try {
         await firebase.auth().signInAnonymously();
         if (typeof window.siteLogActivity === 'function') window.siteLogActivity('auth', 'Anonim olaraq daxil oldu');
-        closeAuthModal();
     } catch (err) {
-        document.getElementById('authLoginError').textContent = getFirebaseErrorMsg(err.code);
+        if (authBtn) authBtn.innerHTML = '<i class="fas fa-user"></i> <span class="nav-user-name">Giriş</span>';
     }
 }
 
