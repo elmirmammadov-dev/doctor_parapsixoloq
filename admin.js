@@ -1057,21 +1057,30 @@ document.addEventListener("DOMContentLoaded", function() {
     const WORKER_URL = 'https://polished-mouse-8b71contentful-proxy.abdullayevmeherrem10.workers.dev';
     const IMGBB_API_KEY = '4bb47b5bd678f51c6d670bdf0817dd1d';
 
-    // Convert image to WebP for SEO optimization
-    function convertToWebP(file, quality) {
+    // Convert image to WebP + resize for SEO optimization
+    function convertToWebP(file, quality, maxWidth) {
         quality = quality || 0.85;
-        return new Promise((resolve, reject) => {
-            const img = new Image();
+        maxWidth = maxWidth || 1920;
+        return new Promise(function(resolve) {
+            var img = new Image();
             img.onload = function() {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                canvas.getContext('2d').drawImage(img, 0, 0);
+                var w = img.width;
+                var h = img.height;
+                // Resize if wider than maxWidth
+                if (w > maxWidth) {
+                    h = Math.round(h * (maxWidth / w));
+                    w = maxWidth;
+                }
+                var canvas = document.createElement('canvas');
+                canvas.width = w;
+                canvas.height = h;
+                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                URL.revokeObjectURL(img.src);
                 canvas.toBlob(function(blob) {
                     if (blob) {
                         resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.webp'), { type: 'image/webp' }));
                     } else {
-                        resolve(file); // fallback to original
+                        resolve(file);
                     }
                 }, 'image/webp', quality);
             };
