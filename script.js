@@ -797,13 +797,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const user = firebase.auth && firebase.auth().currentUser;
             const nameInput = document.getElementById('reviewName');
             if (!nameInput) return;
+            // If already has a saved name, keep it
+            const savedName = localStorage.getItem('reviewUserName');
             if (user && !user.isAnonymous) {
-                nameInput.value = user.displayName || '';
+                // Registered user - show only first name
+                const firstName = (user.displayName || '').split(' ')[0];
+                nameInput.value = firstName;
                 nameInput.readOnly = true;
                 nameInput.style.opacity = '0.7';
-            } else {
-                nameInput.readOnly = false;
-                nameInput.style.opacity = '1';
+                localStorage.setItem('reviewUserName', firstName);
+            } else if (savedName) {
+                nameInput.value = savedName;
             }
         } catch(e) {}
     }
@@ -811,6 +815,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof firebase !== 'undefined' && firebase.auth) {
         firebase.auth().onAuthStateChanged(function() { prefillReviewForm(); });
     }
+    // Restore saved name on page load
+    (function() {
+        const savedName = localStorage.getItem('reviewUserName');
+        const nameInput = document.getElementById('reviewName');
+        if (savedName && nameInput && !nameInput.value) {
+            nameInput.value = savedName;
+        }
+    })();
 
     // Submit review
     const reviewForm = document.getElementById('reviewForm');
@@ -839,10 +851,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 reviewData.photoURL = currentUser.photoURL;
             }
 
+            // Save name for persistence
+            localStorage.setItem('reviewUserName', name);
+
             adminDb.ref('reviews').push(reviewData).then(() => {
                 btn.disabled = false;
                 btn.textContent = 'Rəy Göndər';
+                const savedCity = city;
                 reviewForm.reset();
+                // Restore name and city after reset
+                document.getElementById('reviewName').value = name;
+                if (savedCity) document.getElementById('reviewCity').value = savedCity;
                 selectedRating = 5;
                 starsInput.forEach((s, i) => {
                     s.style.color = i < 5 ? '#ffa534' : '#ddd';
