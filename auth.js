@@ -1,5 +1,5 @@
 // ===== USER AUTH SYSTEM =====
-const IMGBB_API_KEY = 'b0ea4e45e7f59b52e498a12e549e7a28'; // Free ImgBB API key
+const IMGBB_API_KEY = 'b1a73ddcdac93d67a842d887adc92634'; // Free ImgBB API key
 const AUTH_TEXTS = {
     az: {
         login: 'Giriş',
@@ -362,8 +362,13 @@ function initAuth() {
             let photoURL = '';
             if (picFile) {
                 btn.textContent = t.uploading;
-                const resized = await resizeImage(picFile, 200);
-                photoURL = await uploadToImgBB(resized);
+                try {
+                    const resized = await resizeImage(picFile, 200);
+                    photoURL = await uploadToImgBB(resized);
+                } catch (imgErr) {
+                    console.warn('Image upload failed, continuing without photo:', imgErr);
+                    photoURL = '';
+                }
             }
 
             btn.textContent = t.registering;
@@ -387,7 +392,14 @@ function initAuth() {
             if (typeof window.siteLogActivity === 'function') window.siteLogActivity('auth', name + ' ' + surname + ' qeydiyyatdan keçdi');
             closeAuthModal();
         } catch (err) {
-            errorEl.textContent = getFirebaseErrorMsg(err.code);
+            console.error('Registration error:', err);
+            if (err.code) {
+                errorEl.textContent = getFirebaseErrorMsg(err.code);
+            } else if (err.message === 'Image upload failed') {
+                errorEl.textContent = 'Şəkil yüklənmədi. Şəkilsiz yenidən cəhd edin.';
+            } else {
+                errorEl.textContent = err.message || t.genericError;
+            }
         } finally {
             btn.disabled = false;
             btn.textContent = t.registerBtn;
