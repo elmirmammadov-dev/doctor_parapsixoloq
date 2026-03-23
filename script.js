@@ -806,6 +806,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 nameInput.readOnly = true;
                 nameInput.style.opacity = '0.7';
                 sessionStorage.setItem('reviewUserName', firstName);
+            } else if (user && user.isAnonymous) {
+                // Anonymous user
+                nameInput.value = 'Anonim';
+                nameInput.readOnly = true;
+                nameInput.style.opacity = '0.7';
+                sessionStorage.setItem('reviewUserName', 'Anonim');
             } else if (savedName) {
                 nameInput.value = savedName;
             }
@@ -833,6 +839,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const city = document.getElementById('reviewCity').value.trim();
             const text = document.getElementById('reviewText').value.trim();
             if (!name || !text) return;
+
+            // Check if already submitted a review
+            if (sessionStorage.getItem('reviewSubmitted')) {
+                const errorEl = document.getElementById('reviewSuccess');
+                if (errorEl) {
+                    errorEl.style.display = 'block';
+                    errorEl.style.color = '#e74c3c';
+                    errorEl.textContent = 'Siz artıq rəy göndərmisiniz. Təşəkkürlər!';
+                    setTimeout(() => { errorEl.style.display = 'none'; errorEl.style.color = ''; }, 4000);
+                }
+                return;
+            }
 
             const btn = document.getElementById('reviewSubmitBtn');
             btn.disabled = true;
@@ -868,9 +886,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     s.style.transform = i < 5 ? 'scale(1.15)' : 'scale(1)';
                     s.classList.toggle('active', i < 5);
                 });
+                sessionStorage.setItem('reviewSubmitted', 'true');
                 const successEl = document.getElementById('reviewSuccess');
                 successEl.style.display = 'block';
                 setTimeout(() => { successEl.style.display = 'none'; }, 4000);
+                // Disable form after submission
+                btn.disabled = true;
+                btn.style.opacity = '0.6';
+                document.getElementById('reviewText').disabled = true;
             }).catch(() => {
                 btn.disabled = false;
                 btn.textContent = 'Rəy Göndər';
