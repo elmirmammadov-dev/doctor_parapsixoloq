@@ -640,7 +640,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Remove card from UI
             btn.closest('div[style]').remove();
             // Refresh blog posts on main page
-            fetchBlogPosts();
+            if (typeof fetchBlogPosts === 'function') fetchBlogPosts();
         } catch (err) {
             alert('Silmə xətası: ' + err.message);
             btn.disabled = false;
@@ -1567,7 +1567,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     statusEl.textContent = 'Məqalə uğurla yeniləndi!';
                     statusEl.style.color = '#27ae60';
                     // Formu sıfırlamadan edit rejimində qal
-                    fetchBlogPosts();
+                    if (typeof fetchBlogPosts === 'function') fetchBlogPosts();
                 } else {
                     // CREATE new entry
                     statusEl.textContent = 'Məqalə yaradılır...';
@@ -1611,7 +1611,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
 
                 // Refresh blog posts
-                fetchBlogPosts();
+                if (typeof fetchBlogPosts === 'function') fetchBlogPosts();
             } catch (err) {
                 statusEl.textContent = adminT('errorPrefix') + err.message;
                 statusEl.style.color = '#e74c3c';
