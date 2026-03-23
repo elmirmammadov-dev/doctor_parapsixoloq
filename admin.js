@@ -1057,10 +1057,35 @@ document.addEventListener("DOMContentLoaded", function() {
     const WORKER_URL = 'https://polished-mouse-8b71contentful-proxy.abdullayevmeherrem10.workers.dev';
     const IMGBB_API_KEY = '4bb47b5bd678f51c6d670bdf0817dd1d';
 
-    // Upload image to ImgBB
+    // Convert image to WebP for SEO optimization
+    function convertToWebP(file, quality) {
+        quality = quality || 0.85;
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                canvas.getContext('2d').drawImage(img, 0, 0);
+                canvas.toBlob(function(blob) {
+                    if (blob) {
+                        resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.webp'), { type: 'image/webp' }));
+                    } else {
+                        resolve(file); // fallback to original
+                    }
+                }, 'image/webp', quality);
+            };
+            img.onerror = function() { resolve(file); };
+            img.src = URL.createObjectURL(file);
+        });
+    }
+
+    // Upload image to ImgBB (auto-converts to WebP)
     async function uploadToImgBB(file) {
+        // Convert to WebP before uploading
+        const webpFile = await convertToWebP(file, 0.85);
         const formData = new FormData();
-        formData.append('image', file);
+        formData.append('image', webpFile);
         const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API_KEY, {
             method: 'POST',
             body: formData
