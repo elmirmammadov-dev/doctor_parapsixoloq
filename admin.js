@@ -1112,8 +1112,11 @@ document.addEventListener("DOMContentLoaded", function() {
         input.onchange = async function() {
             const file = input.files[0];
             if (!file) return;
+
+            // Ask for alt text via prompt
+            const altText = prompt('Şəkil üçün alt mətn yazın (SEO üçün vacib):', file.name.replace(/\.[^.]+$/, '')) || file.name.replace(/\.[^.]+$/, '');
+
             const editor = document.getElementById(editorId);
-            // Show loading placeholder
             const placeholder = document.createElement('div');
             placeholder.style.cssText = 'text-align:center;padding:10px;color:#999;font-size:0.8rem;';
             placeholder.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Şəkil yüklənir...';
@@ -1123,9 +1126,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 placeholder.remove();
                 const img = document.createElement('img');
                 img.src = url;
-                img.alt = file.name;
+                img.alt = altText;
                 img.style.cssText = 'max-width:100%;height:auto;border-radius:8px;margin:8px 0;display:block;';
-                // Insert at cursor position or end
                 const sel = window.getSelection();
                 if (sel.rangeCount && editor.contains(sel.anchorNode)) {
                     const range = sel.getRangeAt(0);
