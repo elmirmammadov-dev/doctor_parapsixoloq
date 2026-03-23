@@ -1157,18 +1157,22 @@ document.addEventListener("DOMContentLoaded", function() {
         const bar = btn.closest('.img-resize-bar');
         const img = bar ? bar.previousElementSibling : null;
         if (img && img.tagName === 'IMG') {
+            // Reset all
+            img.style.float = 'none';
+            img.style.marginLeft = '';
+            img.style.marginRight = '';
+            img.style.display = 'block';
             if (align === 'center') {
                 img.style.marginLeft = 'auto';
                 img.style.marginRight = 'auto';
-                img.style.display = 'block';
             } else if (align === 'right') {
-                img.style.marginLeft = 'auto';
-                img.style.marginRight = '0';
-                img.style.display = 'block';
+                img.style.float = 'right';
+                img.style.marginLeft = '12px';
+                img.style.marginBottom = '8px';
             } else {
-                img.style.marginLeft = '0';
-                img.style.marginRight = 'auto';
-                img.style.display = 'block';
+                img.style.float = 'left';
+                img.style.marginRight = '12px';
+                img.style.marginBottom = '8px';
             }
         }
     };
