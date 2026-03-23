@@ -1122,12 +1122,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 const bar = document.createElement('div');
                 bar.className = 'img-resize-bar';
                 bar.style.cssText = 'display:flex;gap:4px;align-items:center;padding:6px 8px;background:#f0faf5;border:1px solid #2d8157;border-radius:8px;margin:4px 0;font-size:0.75rem;flex-wrap:wrap;';
+                var curWidth = parseInt(img.style.width) || 100;
                 bar.innerHTML = `
                     <span style="color:#2d8157;font-weight:600;">Ölçü:</span>
                     <button type="button" onclick="resizeEditorImg(this,25)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">25%</button>
                     <button type="button" onclick="resizeEditorImg(this,50)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">50%</button>
                     <button type="button" onclick="resizeEditorImg(this,75)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">75%</button>
                     <button type="button" onclick="resizeEditorImg(this,100)" style="padding:3px 8px;border:1px solid #2d8157;border-radius:4px;background:#e8f5e9;cursor:pointer;font-size:0.72rem;font-weight:600;">100%</button>
+                    <input type="number" min="1" max="100" value="${curWidth}" onchange="resizeEditorImg(this,this.value)" style="width:45px;padding:3px 4px;border:1px solid #ddd;border-radius:4px;font-size:0.72rem;text-align:center;" title="Xüsusi ölçü (%)">
+                    <span style="font-size:0.68rem;color:#999;">%</span>
                     <span style="color:#999;">|</span>
                     <span style="color:#2d8157;font-weight:600;">Hizalama:</span>
                     <button type="button" onclick="alignEditorImg(this,'left')" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">Sol</button>
@@ -1258,9 +1261,60 @@ document.addEventListener("DOMContentLoaded", function() {
                 reader.readAsDataURL(file);
             } else {
                 articleImagePreview.style.display = 'none';
+                // Remove cover controls if exist
+                var oldBar = document.getElementById('coverImgResizeBar');
+                if (oldBar) oldBar.remove();
             }
         });
     }
+
+    // Cover image resize controls
+    if (articleImagePreview) {
+        articleImagePreview.addEventListener('click', function() {
+            var oldBar = document.getElementById('coverImgResizeBar');
+            if (oldBar) { oldBar.remove(); return; }
+            var img = articleImagePreview;
+            var curW = parseInt(img.style.maxWidth) || 100;
+            var bar = document.createElement('div');
+            bar.id = 'coverImgResizeBar';
+            bar.style.cssText = 'display:flex;gap:4px;align-items:center;padding:6px 8px;background:#f0faf5;border:1px solid #2d8157;border-radius:8px;margin:4px 0;font-size:0.75rem;flex-wrap:wrap;';
+            bar.innerHTML = '<span style="color:#2d8157;font-weight:600;">Ölçü:</span>'
+                + '<button type="button" onclick="resizeCoverImg(25)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">25%</button>'
+                + '<button type="button" onclick="resizeCoverImg(50)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">50%</button>'
+                + '<button type="button" onclick="resizeCoverImg(75)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">75%</button>'
+                + '<button type="button" onclick="resizeCoverImg(100)" style="padding:3px 8px;border:1px solid #2d8157;border-radius:4px;background:#e8f5e9;cursor:pointer;font-size:0.72rem;font-weight:600;">100%</button>'
+                + '<input type="number" min="1" max="100" value="' + curW + '" onchange="resizeCoverImg(this.value)" style="width:45px;padding:3px 4px;border:1px solid #ddd;border-radius:4px;font-size:0.72rem;text-align:center;" title="Xüsusi ölçü (%)">'
+                + '<span style="font-size:0.68rem;color:#999;">%</span>'
+                + '<span style="color:#999;">|</span>'
+                + '<span style="color:#2d8157;font-weight:600;">Hizalama:</span>'
+                + '<button type="button" onclick="alignCoverImg(\'left\')" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">Sol</button>'
+                + '<button type="button" onclick="alignCoverImg(\'center\')" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">Orta</button>'
+                + '<button type="button" onclick="alignCoverImg(\'right\')" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">Sağ</button>'
+                + '<span style="color:#999;">|</span>'
+                + '<button type="button" onclick="removeCoverImg()" style="padding:3px 8px;border:1px solid #e74c3c;border-radius:4px;background:#ffeaea;cursor:pointer;font-size:0.72rem;color:#e74c3c;">Sil</button>';
+            img.parentNode.insertBefore(bar, img.nextSibling);
+        });
+    }
+
+    window.resizeCoverImg = function(pct) {
+        var img = document.getElementById('articleImagePreview');
+        if (img) { img.style.maxWidth = pct + '%'; img.style.width = pct + '%'; }
+    };
+    window.alignCoverImg = function(align) {
+        var img = document.getElementById('articleImagePreview');
+        if (!img) return;
+        if (align === 'center') { img.style.marginLeft = 'auto'; img.style.marginRight = 'auto'; img.style.display = 'block'; }
+        else if (align === 'right') { img.style.marginLeft = 'auto'; img.style.marginRight = '0'; img.style.display = 'block'; }
+        else { img.style.marginLeft = '0'; img.style.marginRight = 'auto'; img.style.display = 'block'; }
+    };
+    window.removeCoverImg = function() {
+        var img = document.getElementById('articleImagePreview');
+        if (img) { img.style.display = 'none'; img.src = ''; }
+        var inp = document.getElementById('articleImage');
+        if (inp) inp.value = '';
+        var bar = document.getElementById('coverImgResizeBar');
+        if (bar) bar.remove();
+    };
 
     // === Rich text toolbar helper: save/restore selection ===
     let savedSelection = null;
