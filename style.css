@@ -2171,8 +2171,8 @@ img {
     display: none;
     position: absolute;
     bottom: calc(100% + 12px);
-    right: calc(100% + 12px);
-    left: auto;
+    left: 0;
+    right: auto;
     transform: none;
     background: #fff;
     border-radius: 12px;
@@ -2190,9 +2190,9 @@ img {
 .review-badge-tooltip::after {
     content: '';
     position: absolute;
-    bottom: 16px;
-    right: -8px;
-    left: auto;
+    bottom: -8px;
+    left: 24px;
+    right: auto;
     transform: rotate(45deg);
     width: 16px;
     height: 16px;
