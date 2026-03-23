@@ -1110,14 +1110,27 @@ document.addEventListener("DOMContentLoaded", function() {
         const editor = document.getElementById(editorId);
         if (!editor) return;
         editor.addEventListener('click', function(e) {
-            // Remove any existing resize controls
+            // Remove any existing resize controls and delete buttons
             document.querySelectorAll('.img-resize-bar').forEach(b => b.remove());
-            document.querySelectorAll('.img-selected').forEach(i => i.classList.remove('img-selected'));
+            document.querySelectorAll('.img-inline-delete').forEach(b => b.remove());
+            document.querySelectorAll('.img-selected').forEach(i => { i.classList.remove('img-selected'); i.style.outline = ''; });
 
             if (e.target.tagName === 'IMG') {
                 const img = e.target;
                 img.classList.add('img-selected');
                 img.style.outline = '2px solid #2d8157';
+                // Add X delete button if not already wrapped
+                if (!img.parentElement.classList.contains('editor-img-wrap')) {
+                    var xBtn = document.createElement('button');
+                    xBtn.type = 'button';
+                    xBtn.innerHTML = '<i class="fas fa-times"></i>';
+                    xBtn.className = 'img-inline-delete';
+                    xBtn.style.cssText = 'position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;background:rgba(231,76,60,0.9);color:#fff;border:none;cursor:pointer;font-size:0.75rem;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);z-index:5;';
+                    xBtn.onclick = function(ev) { ev.stopPropagation(); img.remove(); xBtn.remove(); };
+                    img.style.position = 'relative';
+                    img.parentNode.style.position = 'relative';
+                    img.parentNode.insertBefore(xBtn, img.nextSibling);
+                }
 
                 const bar = document.createElement('div');
                 bar.className = 'img-resize-bar';
@@ -1207,18 +1220,29 @@ document.addEventListener("DOMContentLoaded", function() {
             try {
                 const url = await uploadToImgBB(file);
                 placeholder.remove();
+                const wrap = document.createElement('div');
+                wrap.style.cssText = 'position:relative;display:inline-block;max-width:100%;margin:8px 0;';
+                wrap.className = 'editor-img-wrap';
                 const img = document.createElement('img');
                 img.src = url;
                 img.alt = altText;
-                img.style.cssText = 'max-width:100%;height:auto;border-radius:8px;margin:8px 0;display:block;';
+                img.style.cssText = 'max-width:100%;height:auto;border-radius:8px;display:block;';
+                const xBtn = document.createElement('button');
+                xBtn.type = 'button';
+                xBtn.innerHTML = '<i class="fas fa-times"></i>';
+                xBtn.style.cssText = 'position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;background:rgba(231,76,60,0.9);color:#fff;border:none;cursor:pointer;font-size:0.75rem;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);z-index:5;';
+                xBtn.title = 'Şəkli sil';
+                xBtn.onclick = function() { wrap.remove(); };
+                wrap.appendChild(img);
+                wrap.appendChild(xBtn);
                 const sel = window.getSelection();
                 if (sel.rangeCount && editor.contains(sel.anchorNode)) {
                     const range = sel.getRangeAt(0);
                     range.deleteContents();
-                    range.insertNode(img);
+                    range.insertNode(wrap);
                     range.collapse(false);
                 } else {
-                    editor.appendChild(img);
+                    editor.appendChild(wrap);
                 }
                 editor.appendChild(document.createElement('br'));
             } catch (err) {
