@@ -791,6 +791,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Auto-fill review form for logged-in users
+    function prefillReviewForm() {
+        try {
+            const user = firebase.auth && firebase.auth().currentUser;
+            const nameInput = document.getElementById('reviewName');
+            if (!nameInput) return;
+            if (user && !user.isAnonymous) {
+                nameInput.value = user.displayName || '';
+                nameInput.readOnly = true;
+                nameInput.style.opacity = '0.7';
+            } else {
+                nameInput.readOnly = false;
+                nameInput.style.opacity = '1';
+            }
+        } catch(e) {}
+    }
+    // Listen for auth state changes
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+        firebase.auth().onAuthStateChanged(function() { prefillReviewForm(); });
+    }
+
     // Submit review
     const reviewForm = document.getElementById('reviewForm');
     if (reviewForm) {
@@ -812,6 +833,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 text: text,
                 timestamp: Date.now()
             };
+            // Add user photo if logged in
+            const currentUser = firebase.auth && firebase.auth().currentUser;
+            if (currentUser && !currentUser.isAnonymous && currentUser.photoURL) {
+                reviewData.photoURL = currentUser.photoURL;
+            }
 
             adminDb.ref('reviews').push(reviewData).then(() => {
                 btn.disabled = false;
@@ -852,7 +878,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return `
                 <div class="review-card">
                     <div class="review-card-header">
-                        <div class="review-card-avatar">${initial}</div>
+                        ${r.photoURL ? `<img src="${r.photoURL}" class="review-card-avatar" style="width:42px;height:42px;border-radius:50%;object-fit:cover;object-position:top center;" alt="${r.name}">` : `<div class="review-card-avatar">${initial}</div>`}
                         <div class="review-card-info">
                             <div class="review-card-name">${r.name}</div>
                             ${r.city ? `<div class="review-card-city"><i class="fas fa-map-marker-alt"></i> ${r.city}</div>` : ''}
