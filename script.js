@@ -969,9 +969,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.changeReviewPage = function(page) {
         currentReviewPage = page;
         renderReviews();
-        // Scroll to reviews section
-        const reviewsSection = document.getElementById('reviews');
-        if (reviewsSection) reviewsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
     window.toggleReviewText = function(key) {
