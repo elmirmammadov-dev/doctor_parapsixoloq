@@ -812,8 +812,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 nameInput.readOnly = true;
                 nameInput.style.opacity = '0.7';
                 sessionStorage.setItem('reviewUserName', 'Anonim');
-            } else if (savedName) {
-                nameInput.value = savedName;
+            } else {
+                // Logged out or no user - clear and make editable
+                nameInput.readOnly = false;
+                nameInput.style.opacity = '1';
+                if (savedName && savedName !== 'Anonim') {
+                    nameInput.value = savedName;
+                } else {
+                    nameInput.value = '';
+                    sessionStorage.removeItem('reviewUserName');
+                }
             }
         } catch(e) {}
     }
