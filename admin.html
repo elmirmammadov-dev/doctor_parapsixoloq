@@ -210,6 +210,8 @@
                                     <button type="button" class="rt-btn" data-cmd="undo" title="Geri al" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-undo"></i></button>
                                     <button type="button" class="rt-btn" data-cmd="redo" title="İrəli al" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-redo"></i></button>
                                     <button type="button" class="rt-btn" data-cmd="removeFormat" title="Formatı təmizlə" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-eraser"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" onclick="insertImageToEditor('articleContent')" title="Şəkil əlavə et" style="padding:6px 10px;border:1px solid #2d8157;border-radius:6px;background:#e8f5e9;cursor:pointer;font-size:0.85rem;color:#2d8157;font-weight:600;"><i class="fas fa-image"></i> Şəkil</button>
                                 </div>
                             </div>
                             <div id="articleContent" contenteditable="true" style="min-height:200px;padding:14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;line-height:1.7;outline:none;overflow-y:auto;max-height:400px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></div>
@@ -276,6 +278,8 @@
                                     <button type="button" class="rt-btn-ru" data-cmd="undo" title="Отменить" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-undo"></i></button>
                                     <button type="button" class="rt-btn-ru" data-cmd="redo" title="Повторить" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-redo"></i></button>
                                     <button type="button" class="rt-btn-ru" data-cmd="removeFormat" title="Очистить формат" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.85rem;"><i class="fas fa-eraser"></i></button>
+                                    <div style="width:1px;height:24px;background:#ddd;margin:0 3px;"></div>
+                                    <button type="button" onclick="insertImageToEditor('articleContentRu')" title="Добавить изображение" style="padding:6px 10px;border:1px solid #7b68ee;border-radius:6px;background:#f0ebff;cursor:pointer;font-size:0.85rem;color:#7b68ee;font-weight:600;"><i class="fas fa-image"></i> Фото</button>
                                 </div>
                             </div>
                             <div id="articleContentRu" contenteditable="true" style="min-height:150px;padding:14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;line-height:1.7;outline:none;overflow-y:auto;max-height:300px;background:#fff;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'" placeholder="Текст статьи на русском..."></div>

@@ -722,11 +722,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     assets[a.sys.id] = 'https:' + a.fields.file.url;
                 });
             }
+            // Fetch ImgBB cover images from Firebase SEO data
+            let seoData = {};
+            try {
+                const seoRes = await fetch('https://hekim-sayti-comments-default-rtdb.firebaseio.com/articleSeo.json');
+                seoData = await seoRes.json() || {};
+            } catch(e) {}
+
             allBlogCards = data.items.map(item => {
                 const f = item.fields;
                 const id = item.sys.id;
                 const imgId = f.image && f.image.sys ? f.image.sys.id : null;
-                const imgUrl = imgId ? assets[imgId] : null;
+                let imgUrl = imgId ? assets[imgId] : null;
+                // Prefer ImgBB cover image from Firebase SEO
+                if (seoData[id] && seoData[id].coverImage) {
+                    imgUrl = seoData[id].coverImage;
+                }
                 return {
                     id: id,
                     html: `

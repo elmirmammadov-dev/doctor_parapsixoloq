@@ -901,20 +901,28 @@
 
                 let imgHtml = '';
                 let imgUrl = '';
-                if (f.image && f.image.sys) {
-                    const assetRes = await fetch(
-                        `https://cdn.contentful.com/spaces/${CONTENTFUL_SPACE}/assets/${f.image.sys.id}?access_token=${CONTENTFUL_TOKEN}&locale=${locale}`
-                    );
-                    const asset = await assetRes.json();
-                    if (asset.fields && asset.fields.file) {
-                        imgUrl = 'https:' + asset.fields.file.url;
-                        imgHtml = `<img class="blog-detail-image" src="${imgUrl}" alt="${seoImageAlt}">`;
-                        // Update OG image
-                        let ogImg = document.querySelector('meta[property="og:image"]');
-                        if (ogImg) ogImg.setAttribute('content', imgUrl);
-                        let twImg = document.querySelector('meta[name="twitter:image"]');
-                        if (twImg) twImg.setAttribute('content', imgUrl);
-                    }
+                // Check ImgBB cover image from Firebase SEO first
+                if (seoData && seoData.coverImage) {
+                    imgUrl = seoData.coverImage;
+                    imgHtml = `<img class="blog-detail-image" src="${imgUrl}" alt="${seoImageAlt}">`;
+                } else if (f.image && f.image.sys) {
+                    // Fallback to Contentful asset
+                    try {
+                        const assetRes = await fetch(
+                            `https://cdn.contentful.com/spaces/${CONTENTFUL_SPACE}/assets/${f.image.sys.id}?access_token=${CONTENTFUL_TOKEN}&locale=${locale}`
+                        );
+                        const asset = await assetRes.json();
+                        if (asset.fields && asset.fields.file) {
+                            imgUrl = 'https:' + asset.fields.file.url;
+                            imgHtml = `<img class="blog-detail-image" src="${imgUrl}" alt="${seoImageAlt}">`;
+                        }
+                    } catch(e) {}
+                }
+                if (imgUrl) {
+                    let ogImg = document.querySelector('meta[property="og:image"]');
+                    if (ogImg) ogImg.setAttribute('content', imgUrl);
+                    let twImg = document.querySelector('meta[name="twitter:image"]');
+                    if (twImg) twImg.setAttribute('content', imgUrl);
                 }
 
                 // JSON-LD Article Schema

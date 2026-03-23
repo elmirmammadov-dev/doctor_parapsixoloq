@@ -1055,6 +1055,60 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // === NEW ARTICLE — ADMIN PANEL ===
     const WORKER_URL = 'https://polished-mouse-8b71contentful-proxy.abdullayevmeherrem10.workers.dev';
+    const IMGBB_API_KEY = '4bb47b5bd678f51c6d670bdf0817dd1d';
+
+    // Upload image to ImgBB
+    async function uploadToImgBB(file) {
+        const formData = new FormData();
+        formData.append('image', file);
+        const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API_KEY, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error?.message || 'Şəkil yüklənmədi');
+        return data.data.url;
+    }
+
+    // Insert image into rich text editor
+    function insertImageToEditor(editorId) {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = async function() {
+            const file = input.files[0];
+            if (!file) return;
+            const editor = document.getElementById(editorId);
+            // Show loading placeholder
+            const placeholder = document.createElement('div');
+            placeholder.style.cssText = 'text-align:center;padding:10px;color:#999;font-size:0.8rem;';
+            placeholder.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Şəkil yüklənir...';
+            editor.appendChild(placeholder);
+            try {
+                const url = await uploadToImgBB(file);
+                placeholder.remove();
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = file.name;
+                img.style.cssText = 'max-width:100%;height:auto;border-radius:8px;margin:8px 0;display:block;';
+                // Insert at cursor position or end
+                const sel = window.getSelection();
+                if (sel.rangeCount && editor.contains(sel.anchorNode)) {
+                    const range = sel.getRangeAt(0);
+                    range.deleteContents();
+                    range.insertNode(img);
+                    range.collapse(false);
+                } else {
+                    editor.appendChild(img);
+                }
+                editor.appendChild(document.createElement('br'));
+            } catch (err) {
+                placeholder.innerHTML = '<span style="color:#e74c3c;">Xəta: ' + err.message + '</span>';
+                setTimeout(() => placeholder.remove(), 3000);
+            }
+        };
+        input.click();
+    }
 
     // Image preview
     // Russian locale toggle
@@ -1516,20 +1570,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
             try {
                 let assetId = null;
+                let coverImageUrl = null;
 
-                // Upload image if provided
+                // Upload cover image to ImgBB if provided
                 if (imageFile) {
-                    statusEl.textContent = 'Şəkil yüklənir...';
-                    const formData = new FormData();
-                    formData.append('file', imageFile);
-                    formData.append('fileName', imageFile.name);
-                    const uploadRes = await fetch(WORKER_URL + '/upload-asset', {
-                        method: 'POST',
-                        body: formData,
-                    });
-                    const uploadData = await uploadRes.json();
-                    if (uploadData.error) throw new Error(uploadData.error);
-                    assetId = uploadData.assetId;
+                    statusEl.textContent = 'Şəkil yüklənir (ImgBB)...';
+                    coverImageUrl = await uploadToImgBB(imageFile);
                 }
 
                 // Convert HTML to Contentful rich text
@@ -1547,7 +1593,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     const entryRes = await fetch(WORKER_URL + '/update-entry', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ entryId: editingEntryId, title, date, content: richText, assetId, titleRu, dateRu, contentRu: richTextRu }),
+                        body: JSON.stringify({ entryId: editingEntryId, title, date, content: richText, assetId: null, titleRu, dateRu, contentRu: richTextRu }),
                     });
                     const entryData = await entryRes.json();
                     if (entryData.error) throw new Error(entryData.error);
@@ -1559,10 +1605,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                     await adminDb.ref('articleHtml/' + editingEntryId).set(htmlData);
                     const seoObj = { metaDesc, keyword, imageAlt };
+                    if (coverImageUrl) seoObj.coverImage = coverImageUrl;
                     if (metaDescRu) seoObj.metaDescRu = metaDescRu;
                     if (keywordRu) seoObj.keywordRu = keywordRu;
                     if (imageAltRu) seoObj.imageAltRu = imageAltRu;
-                    await adminDb.ref('articleSeo/' + editingEntryId).set(seoObj);
+                    await adminDb.ref('articleSeo/' + editingEntryId).update(seoObj);
 
                     statusEl.textContent = 'Məqalə uğurla yeniləndi!';
                     statusEl.style.color = '#27ae60';
@@ -1574,7 +1621,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     const entryRes = await fetch(WORKER_URL + '/create-entry', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ title, date, content: richText, assetId, titleRu, dateRu, contentRu: richTextRu }),
+                        body: JSON.stringify({ title, date, content: richText, assetId: null, titleRu, dateRu, contentRu: richTextRu }),
                     });
                     const entryData = await entryRes.json();
                     if (entryData.error) throw new Error(entryData.error);
@@ -1588,6 +1635,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         }
                         await adminDb.ref('articleHtml/' + newEntryId).set(htmlData);
                         const seoObj2 = { metaDesc, keyword, imageAlt };
+                        if (coverImageUrl) seoObj2.coverImage = coverImageUrl;
                         if (metaDescRu) seoObj2.metaDescRu = metaDescRu;
                         if (keywordRu) seoObj2.keywordRu = keywordRu;
                         if (imageAltRu) seoObj2.imageAltRu = imageAltRu;
