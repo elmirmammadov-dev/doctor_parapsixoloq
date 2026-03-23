@@ -743,8 +743,14 @@
     <script src="/auth.js"></script>
     <script src="/tracker.js"></script>
     <script>
-        // Restore admin session if previously logged in
-        if (sessionStorage.getItem('adminAuth') === 'true') {
+        // Clear blog admin session when leaving this page
+        window.addEventListener('beforeunload', function() {
+            // Only clear if navigating away (not refreshing same blog post)
+            sessionStorage.removeItem('blogAdminAuth');
+        });
+
+        // Restore admin session if previously logged in (blog-only session)
+        if (sessionStorage.getItem('blogAdminAuth') === 'true') {
             window.isAdminLoggedIn = true;
             document.addEventListener('DOMContentLoaded', function() {
                 const nameInput = document.getElementById('commentName');

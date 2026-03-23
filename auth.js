@@ -286,9 +286,10 @@ function initAuth() {
             window.isAdminLoggedIn = true;
             sessionStorage.setItem('adminAuth', 'true');
             closeAuthModal();
-            // If on blog post page, stay on page so admin can reply to comments
+            // If on blog post page, set blog-only admin session
             const isOnBlogPost = window.location.pathname.match(/\/blog\//) || document.getElementById('blogDetail');
             if (isOnBlogPost) {
+                sessionStorage.setItem('blogAdminAuth', 'true');
                 // Update comment form for admin
                 const nameInput = document.getElementById('commentName');
                 const emailInput = document.getElementById('commentEmail');
