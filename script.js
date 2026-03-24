@@ -736,7 +736,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let imgUrl = imgId ? assets[imgId] : null;
                 // Prefer ImgBB cover image from Firebase SEO
                 let coverPos = '50% 50%';
-                let coverZoom = 1, coverTx = 0, coverTy = 0;
+                let coverZoom = 1;
                 if (seoData[id] && seoData[id].coverImage) {
                     imgUrl = seoData[id].coverImage;
                 }
@@ -746,19 +746,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (seoData[id] && seoData[id].coverZoom) {
                     coverZoom = seoData[id].coverZoom;
                 }
-                if (seoData[id] && seoData[id].coverTx) coverTx = seoData[id].coverTx;
-                if (seoData[id] && seoData[id].coverTy) coverTy = seoData[id].coverTy;
-                let imgStyle = '';
-                if (coverZoom > 1) {
-                    imgStyle = `object-position:50% 50%;transform:scale(${coverZoom}) translate(${coverTx.toFixed(1)}px,${coverTy.toFixed(1)}px);`;
-                } else {
-                    imgStyle = `object-position:${coverPos};`;
-                }
+                // Use background-image for zoom+position support
+                const bgSize = coverZoom > 1 ? (coverZoom * 100) + '%' : 'cover';
                 return {
                     id: id,
                     html: `
                     <a href="/blog/${id}" class="blog-post-card" style="text-decoration:none;color:inherit;cursor:pointer;">
-                        ${imgUrl ? `<img src="${imgUrl}" alt="${f.title}" style="${imgStyle}">` : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`}
+                        ${imgUrl ? `<div class="blog-post-cover" role="img" aria-label="${f.title}" style="background-image:url(${imgUrl});background-size:${bgSize};background-position:${coverPos};background-repeat:no-repeat;"></div>` : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`}
                         <div class="blog-post-info">
                             <h4>${f.title}</h4>
                             <div style="display:flex;align-items:center;gap:12px;margin-top:4px;">
