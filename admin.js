@@ -1154,6 +1154,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     <button type="button" onclick="alignEditorImg(this,'right')" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">Sağ</button>
                     <span style="color:#999;">|</span>
                     <button type="button" onclick="removeEditorImg(this)" style="padding:3px 8px;border:1px solid #e74c3c;border-radius:4px;background:#ffeaea;cursor:pointer;font-size:0.72rem;color:#e74c3c;">Sil</button>
+                    <span style="color:#999;">|</span>
+                    <button type="button" onclick="closeImgResizeBar(this)" style="padding:3px 6px;border:1px solid #999;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;color:#666;" title="Bağla">✕</button>
                 `;
                 bar.addEventListener('click', function(ev) { ev.stopPropagation(); });
                 bar.addEventListener('mousedown', function(ev) { ev.stopPropagation(); });
@@ -1193,6 +1195,20 @@ document.addEventListener("DOMContentLoaded", function() {
                 img.style.marginBottom = '8px';
             }
         }
+    };
+
+    window.closeImgResizeBar = function(btn) {
+        const bar = btn.closest('.img-resize-bar');
+        const img = bar ? bar.previousElementSibling : null;
+        if (img) { img.classList.remove('img-selected'); img.style.outline = ''; }
+        // Remove associated delete button too
+        if (bar && bar.nextElementSibling && bar.nextElementSibling.classList.contains('img-inline-delete')) {
+            bar.nextElementSibling.remove();
+        }
+        if (img && img.nextElementSibling && img.nextElementSibling.classList.contains('img-inline-delete')) {
+            img.nextElementSibling.remove();
+        }
+        if (bar) bar.remove();
     };
 
     window.removeEditorImg = function(btn) {
