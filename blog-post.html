@@ -441,26 +441,50 @@
         }
         .blog-form-features {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px 16px;
-            margin-top: 20px;
+            flex-direction: column;
+            gap: 0;
+            margin-top: 22px;
+            border-top: 1px solid rgba(26, 138, 92, 0.1);
+            padding-top: 18px;
         }
-        .blog-form-features span {
-            display: inline-flex;
+        .blog-form-features .blog-feat-item {
+            display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.78rem;
-            color: #555;
-            background: rgba(26, 138, 92, 0.06);
-            padding: 6px 12px;
-            border-radius: 20px;
+            gap: 12px;
+            padding: 11px 0;
+            border-bottom: 1px solid rgba(26, 138, 92, 0.07);
         }
-        .blog-feat-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--gold, #1a8a5c);
+        .blog-form-features .blog-feat-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .blog-feat-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(26, 138, 92, 0.1), rgba(26, 138, 92, 0.04));
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
+            color: #1a8a5c;
+            font-size: 0.85rem;
+        }
+        .blog-feat-text {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        .blog-feat-text strong {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #2c2c3a;
+            letter-spacing: -0.01em;
+        }
+        .blog-feat-text small {
+            font-size: 0.7rem;
+            color: #8a8a9a;
+            font-weight: 400;
         }
         .blog-sidebar-sticky {
             /* No longer needed - sidebar itself is sticky */
@@ -953,9 +977,18 @@
                     <p>Tezliklə sizinlə əlaqə saxlanılacaq.</p>
                 </div>
                 <div class="blog-form-features">
-                    <span><span class="blog-feat-dot"></span> <span id="blogFeat1">Ödənişli müayinə</span></span>
-                    <span><span class="blog-feat-dot"></span> <span id="blogFeat2">24 saat cavab</span></span>
-                    <span><span class="blog-feat-dot"></span> <span id="blogFeat3">Tam məxfilik</span></span>
+                    <div class="blog-feat-item">
+                        <div class="blog-feat-icon"><i class="fas fa-stethoscope"></i></div>
+                        <div class="blog-feat-text"><strong id="blogFeat1">Ödənişli müayinə</strong><small id="blogFeatSub1">Peşəkar tibbi konsultasiya</small></div>
+                    </div>
+                    <div class="blog-feat-item">
+                        <div class="blog-feat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="blog-feat-text"><strong id="blogFeat2">24 saat cavab</strong><small id="blogFeatSub2">Sürətli geri dönüş</small></div>
+                    </div>
+                    <div class="blog-feat-item">
+                        <div class="blog-feat-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="blog-feat-text"><strong id="blogFeat3">Tam məxfilik</strong><small id="blogFeatSub3">Məlumatlarınız qorunur</small></div>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -1288,6 +1321,7 @@
                 labelName: 'AD', labelSurname: 'SOYAD', labelPhone: 'TELEFON',
                 name: 'Adınızı yazın', surname: 'Soyadınızı yazın', phone: 'XX XXX XX XX', submit: 'Müraciət göndər',
                 feat1: 'Ödənişli müayinə', feat2: '24 saat cavab', feat3: 'Tam məxfilik',
+                featSub1: 'Peşəkar tibbi konsultasiya', featSub2: 'Sürətli geri dönüş', featSub3: 'Məlumatlarınız qorunur',
                 successTitle: 'Müraciətiniz qəbul edildi', successDesc: 'Tezliklə sizinlə əlaqə saxlanılacaq.',
                 sending: 'Göndərilir...', sent: 'Göndərildi!', error: 'Xəta baş verdi, yenidən cəhd edin.',
                 weekdays: ['BE','ÇA','Ç','CA','C','Ş','B'],
@@ -1300,6 +1334,7 @@
                 labelName: 'ИМЯ', labelSurname: 'ФАМИЛИЯ', labelPhone: 'ТЕЛЕФОН',
                 name: 'Введите имя', surname: 'Введите фамилию', phone: 'XX XXX XX XX', submit: 'Отправить заявку',
                 feat1: 'Платный осмотр', feat2: '24 часа ответ', feat3: 'Конфиденциальность',
+                featSub1: 'Профессиональная консультация', featSub2: 'Быстрый ответ', featSub3: 'Ваши данные защищены',
                 successTitle: 'Заявка принята', successDesc: 'Скоро свяжемся с вами.',
                 sending: 'Отправляется...', sent: 'Отправлено!', error: 'Произошла ошибка, попробуйте снова.',
                 weekdays: ['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'],
@@ -1328,6 +1363,9 @@
             document.getElementById('blogFeat1').textContent = t.feat1;
             document.getElementById('blogFeat2').textContent = t.feat2;
             document.getElementById('blogFeat3').textContent = t.feat3;
+            document.getElementById('blogFeatSub1').textContent = t.featSub1;
+            document.getElementById('blogFeatSub2').textContent = t.featSub2;
+            document.getElementById('blogFeatSub3').textContent = t.featSub3;
             // Update weekday headers
             const weekdayEl = document.getElementById('blogCalendarWeekdays');
             weekdayEl.innerHTML = t.weekdays.map(d => `<span>${d}</span>`).join('');
