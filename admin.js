@@ -178,6 +178,9 @@ document.addEventListener("DOMContentLoaded", function() {
             deleteBtn: 'Sil',
             noTitle: 'Başlıqsız',
             confirmDeleteArticle: 'Bu məqaləni silmək istədiyinizə əminsiniz?',
+            confirmDeleteSelectedArticles: 'məqaləni silmək istədiyinizə əminsiniz?',
+            confirmDeleteAllArticles: 'BÜTÜN məqalələri silmək istədiyinizə əminsiniz? Bu əməliyyat geri qaytarıla bilməz!',
+            deletingArticles: 'Məqalələr silinir...',
             // Comments
             confirmDeleteReply: 'Bu cavabı silmək istədiyinizə əminsiniz?',
             confirmDeleteComment: 'Bu şərhi silmək istədiyinizə əminsiniz?',
@@ -288,6 +291,9 @@ document.addEventListener("DOMContentLoaded", function() {
             deleteBtn: 'Удалить',
             noTitle: 'Без заголовка',
             confirmDeleteArticle: 'Вы уверены, что хотите удалить эту статью?',
+            confirmDeleteSelectedArticles: 'статей — удалить выбранные?',
+            confirmDeleteAllArticles: 'Удалить ВСЕ статьи? Это действие нельзя отменить!',
+            deletingArticles: 'Удаление статей...',
             // Comments
             confirmDeleteReply: 'Вы уверены, что хотите удалить этот ответ?',
             confirmDeleteComment: 'Вы уверены, что хотите удалить этот комментарий?',
@@ -590,6 +596,8 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             listEl.innerHTML = '';
+            adminSelectedArticles.clear();
+            updateArticleSelectedCount();
             data.items.forEach(item => {
                 const f = item.fields;
                 const id = item.sys.id;
@@ -597,8 +605,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 const imgUrl = imgId ? assets[imgId] : null;
 
                 const card = document.createElement('div');
+                card.dataset.articleId = id;
                 card.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #eee;border-radius:10px;margin-bottom:10px;background:#fafafa;';
                 card.innerHTML = `
+                    <input type="checkbox" class="admin-article-checkbox" data-id="${id}" onchange="toggleArticleSelect('${id}', this.checked)" style="width:18px;height:18px;cursor:pointer;flex-shrink:0;accent-color:#2e7d32;">
                     ${imgUrl ? `<img src="${imgUrl}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : `<div style="width:60px;height:60px;background:#f0f7f3;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-image" style="color:#ccc;"></i></div>`}
                     <div style="flex:1;min-width:0;">
                         <p style="font-weight:600;font-size:0.9rem;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.title || adminT('noTitle')}</p>
@@ -638,7 +648,12 @@ document.addEventListener("DOMContentLoaded", function() {
             if (data.error) throw new Error(data.error);
 
             // Remove card from UI
-            btn.closest('div[style]').remove();
+            const card = btn.closest('[data-article-id]');
+            if (card) {
+                adminSelectedArticles.delete(card.dataset.articleId);
+                card.remove();
+                updateArticleSelectedCount();
+            }
             // Refresh blog posts on main page
             if (typeof fetchBlogPosts === 'function') fetchBlogPosts();
         } catch (err) {
@@ -647,6 +662,112 @@ document.addEventListener("DOMContentLoaded", function() {
             btn.innerHTML = originalText;
         }
     };
+
+    // Article bulk select/delete
+    let adminSelectedArticles = new Set();
+
+    function updateArticleSelectedCount() {
+        const countEl = document.getElementById('adminSelectedArticleCount');
+        const btn = document.getElementById('adminDeleteSelectedArticles');
+        if (countEl) countEl.textContent = adminSelectedArticles.size;
+        if (btn) btn.style.display = adminSelectedArticles.size > 0 ? 'inline-flex' : 'none';
+    }
+
+    window.toggleArticleSelect = function(id, checked) {
+        if (checked) adminSelectedArticles.add(id);
+        else adminSelectedArticles.delete(id);
+        updateArticleSelectedCount();
+    };
+
+    // Select all / deselect all articles
+    const selectAllArticlesBtn = document.getElementById('adminSelectAllArticles');
+    if (selectAllArticlesBtn) {
+        selectAllArticlesBtn.addEventListener('click', function() {
+            const checkboxes = document.querySelectorAll('.admin-article-checkbox');
+            const allChecked = adminSelectedArticles.size === checkboxes.length && checkboxes.length > 0;
+            checkboxes.forEach(cb => {
+                cb.checked = !allChecked;
+                const id = cb.dataset.id;
+                if (!allChecked) adminSelectedArticles.add(id);
+                else adminSelectedArticles.delete(id);
+            });
+            updateArticleSelectedCount();
+        });
+    }
+
+    // Delete selected articles
+    const deleteSelectedArticlesBtn = document.getElementById('adminDeleteSelectedArticles');
+    if (deleteSelectedArticlesBtn) {
+        deleteSelectedArticlesBtn.addEventListener('click', async function() {
+            if (adminSelectedArticles.size === 0) return;
+            if (!confirm(adminSelectedArticles.size + ' ' + adminT('confirmDeleteSelectedArticles'))) return;
+
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + adminT('deletingArticles');
+
+            try {
+                for (const entryId of adminSelectedArticles) {
+                    const res = await fetch(WORKER_URL + '/delete-entry', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ entryId }),
+                    });
+                    const data = await res.json();
+                    if (data.error) console.error('Error deleting ' + entryId + ':', data.error);
+                    // Remove card from UI
+                    const card = document.querySelector(`[data-article-id="${entryId}"]`);
+                    if (card) card.remove();
+                }
+                adminSelectedArticles.clear();
+                updateArticleSelectedCount();
+                if (typeof fetchBlogPosts === 'function') fetchBlogPosts();
+            } catch (err) {
+                alert('Silmə xətası: ' + err.message);
+            }
+
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-trash"></i> <span data-admin-i18n="deleteSelected">' + adminT('deleteSelected') + '</span> (<span id="adminSelectedArticleCount">0</span>)';
+        });
+    }
+
+    // Delete all articles
+    const deleteAllArticlesBtn = document.getElementById('adminDeleteAllArticles');
+    if (deleteAllArticlesBtn) {
+        deleteAllArticlesBtn.addEventListener('click', async function() {
+            const allCards = document.querySelectorAll('[data-article-id]');
+            if (allCards.length === 0) return;
+            if (!confirm(adminT('confirmDeleteAllArticles'))) return;
+
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + adminT('deletingArticles');
+
+            try {
+                for (const card of allCards) {
+                    const entryId = card.dataset.articleId;
+                    const res = await fetch(WORKER_URL + '/delete-entry', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ entryId }),
+                    });
+                    const data = await res.json();
+                    if (data.error) console.error('Error deleting ' + entryId + ':', data.error);
+                    card.remove();
+                }
+                adminSelectedArticles.clear();
+                updateArticleSelectedCount();
+                const listEl = document.getElementById('adminArticlesList');
+                if (listEl && listEl.children.length === 0) {
+                    listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;">Heç bir məqalə tapılmadı.</p>';
+                }
+                if (typeof fetchBlogPosts === 'function') fetchBlogPosts();
+            } catch (err) {
+                alert('Silmə xətası: ' + err.message);
+            }
+
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-trash-alt"></i> <span data-admin-i18n="deleteAll">' + adminT('deleteAll') + '</span>';
+        });
+    }
 
     // Load all comments from Firebase (with blog post titles from Contentful)
     let adminCommentSortOrder = 'newest';
