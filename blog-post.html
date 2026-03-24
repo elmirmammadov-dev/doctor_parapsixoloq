@@ -169,7 +169,6 @@
         .blog-detail-body h1,
         .blog-detail-body h2,
         .blog-detail-body h3 {
-            font-family: var(--font-display);
             color: var(--text-primary);
             margin-top: 1.5em;
             margin-bottom: 0.5em;
@@ -188,7 +187,6 @@
             margin: 1.5em 0;
             background: var(--bg-secondary);
             border-radius: 0 12px 12px 0;
-            font-style: italic;
             display: block;
         }
         .blog-detail-body font {
@@ -198,12 +196,8 @@
         .blog-detail-body b, .blog-detail-body strong {
             color: var(--text-primary);
         }
-        /* Numbered headings with green accent */
+        /* Heading styles — respect inline styles from editor */
         .blog-detail-body h2 {
-            font-size: 1.3rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
             padding-left: 16px;
             border-left: 4px solid var(--gold, #1a8a5c);
             margin-top: 2em;
@@ -211,7 +205,6 @@
             line-height: 1.4;
         }
         .blog-detail-body h3 {
-            font-size: 1.1rem;
             margin-top: 1.5em;
             margin-bottom: 0.6em;
         }
