@@ -290,8 +290,177 @@
         .blog-sidebar .calendar-day {
             font-size: 0.85rem;
         }
+        .blog-sidebar-right {
+            border-top: 3px solid var(--gold, #1a8a5c);
+        }
         .blog-sidebar-right .blog-sidebar-sticky {
-            padding: 24px;
+            padding: 28px 24px 24px;
+        }
+        .blog-form-label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--gold, #1a8a5c);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .blog-form-title {
+            font-family: var(--font-display, 'Montserrat', sans-serif);
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin: 0 0 6px;
+        }
+        .blog-form-desc {
+            font-size: 0.82rem;
+            color: #8a8a9a;
+            margin: 0 0 24px;
+            line-height: 1.4;
+        }
+        .blog-call-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .blog-form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .blog-form-field-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #555;
+            text-transform: uppercase;
+        }
+        .blog-form-field input[type="text"],
+        .blog-form-field input[type="tel"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: #333;
+            background: #fff;
+            transition: border-color 0.2s;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .blog-form-field input:focus {
+            border-color: var(--gold, #1a8a5c);
+        }
+        .blog-form-field input::placeholder {
+            color: #b0b0b0;
+        }
+        .blog-phone-input {
+            display: flex;
+            align-items: center;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .blog-phone-input:focus-within {
+            border-color: var(--gold, #1a8a5c);
+        }
+        .blog-phone-input .phone-prefix-select {
+            border: none;
+            background: #fff;
+            padding: 12px 4px 12px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #333;
+            outline: none;
+            cursor: pointer;
+            min-width: 90px;
+        }
+        .blog-phone-input input[type="tel"] {
+            border: none !important;
+            padding: 12px 16px 12px 8px;
+            border-radius: 0;
+            flex: 1;
+        }
+        .blog-form-submit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px 24px;
+            background: var(--gold, #1a8a5c);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 4px;
+        }
+        .blog-form-submit:hover {
+            background: #15744d;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(26, 138, 92, 0.3);
+        }
+        .blog-form-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .blog-form-success {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .blog-form-success-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(26, 138, 92, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        .blog-form-success-icon i {
+            font-size: 1.4rem;
+            color: var(--gold, #1a8a5c);
+        }
+        .blog-form-success h4 {
+            font-family: var(--font-display, 'Montserrat', sans-serif);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--gold, #1a8a5c);
+            margin: 0 0 6px;
+        }
+        .blog-form-success p {
+            font-size: 0.82rem;
+            color: #8a8a9a;
+            margin: 0;
+        }
+        .blog-form-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            margin-top: 20px;
+        }
+        .blog-form-features span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            color: #555;
+            background: rgba(26, 138, 92, 0.06);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+        .blog-feat-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold, #1a8a5c);
+            flex-shrink: 0;
         }
         .blog-sidebar-sticky {
             /* No longer needed - sidebar itself is sticky */
@@ -751,33 +920,42 @@
         <!-- Right Sidebar: Call Form -->
         <aside class="blog-sidebar blog-sidebar-right">
             <div class="blog-sidebar-sticky">
-                <h3 class="hero-form-title" id="blogFormTitle">Zəng Sifarişi</h3>
-                <p class="hero-form-desc" id="blogFormDesc">Qısa zamanda əlaqə saxlamaq üçün nömrənizi yazın.</p>
-                <form class="hero-call-form" id="blogCallForm">
-                    <div class="form-group">
-                        <div class="input-icon"><i class="fas fa-user"></i></div>
-                        <input type="text" name="ad" id="blogInputName" placeholder="Ad" required>
+                <span class="blog-form-label" id="blogFormLabel">ƏLAQƏ FORMU</span>
+                <h3 class="blog-form-title" id="blogFormTitle">Zəng sifarişi</h3>
+                <p class="blog-form-desc" id="blogFormDesc">Nömrənizi yazın — 24 saat ərzində geri zəng edəcəyik.</p>
+                <form class="blog-call-form" id="blogCallForm">
+                    <div class="blog-form-field">
+                        <label class="blog-form-field-label" id="blogLabelName">AD</label>
+                        <input type="text" name="ad" id="blogInputName" placeholder="Adınızı yazın" required>
                     </div>
-                    <div class="form-group">
-                        <div class="input-icon"><i class="fas fa-user"></i></div>
-                        <input type="text" name="soyad" id="blogInputSurname" placeholder="Soyad" required>
+                    <div class="blog-form-field">
+                        <label class="blog-form-field-label" id="blogLabelSurname">SOYAD</label>
+                        <input type="text" name="soyad" id="blogInputSurname" placeholder="Soyadınızı yazın" required>
                     </div>
-                    <div class="form-group">
-                        <div class="input-icon"><i class="fas fa-phone"></i></div>
-                        <div class="phone-input">
+                    <div class="blog-form-field">
+                        <label class="blog-form-field-label" id="blogLabelPhone">TELEFON</label>
+                        <div class="blog-phone-input">
                             <select class="phone-prefix-select" name="phone_code">
-                                <option value="+994" selected>🇦🇿 +994</option>
-                                <option value="+7">🇷🇺 +7</option>
+                                <option value="+994" selected>AZ +994</option>
+                                <option value="+7">RU +7</option>
                             </select>
-                            <input type="tel" name="telefon" id="blogInputPhone" placeholder="Tel" required>
+                            <input type="tel" name="telefon" id="blogInputPhone" placeholder="XX XXX XX XX" required>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-gold btn-full" id="blogSubmitBtn">Müraciət Göndər</button>
+                    <button type="submit" class="blog-form-submit" id="blogSubmitBtn">
+                        <span>Müraciət göndər</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
                 </form>
-                <div class="hero-form-features">
-                    <span><i class="fas fa-check-circle"></i> <span id="blogFeat1">Ödənişli müayinə/şəfalanma</span></span>
-                    <span><i class="fas fa-check-circle"></i> <span id="blogFeat2">24 saat ərzində geri zəng</span></span>
-                    <span><i class="fas fa-check-circle"></i> <span id="blogFeat3">Tam məxfilik</span></span>
+                <div class="blog-form-success" id="blogFormSuccess" style="display:none;">
+                    <div class="blog-form-success-icon"><i class="fas fa-check"></i></div>
+                    <h4>Müraciətiniz qəbul edildi</h4>
+                    <p>Tezliklə sizinlə əlaqə saxlanılacaq.</p>
+                </div>
+                <div class="blog-form-features">
+                    <span><span class="blog-feat-dot"></span> <span id="blogFeat1">Ödənişli müayinə</span></span>
+                    <span><span class="blog-feat-dot"></span> <span id="blogFeat2">24 saat cavab</span></span>
+                    <span><span class="blog-feat-dot"></span> <span id="blogFeat3">Tam məxfilik</span></span>
                 </div>
             </div>
         </aside>
@@ -1106,9 +1284,11 @@
         const CTA_TEXTS = {
             az: {
                 calLabel: 'SEANS TARİXİ', calTitle: 'Günü seçin', calDesc: 'Uyğun tarixi işarələyin, WhatsApp-da yazın.',
-                formTitle: 'Zəng Sifarişi', formDesc: 'Qısa zamanda əlaqə saxlamaq üçün nömrənizi yazın.',
-                name: 'Ad', surname: 'Soyad', phone: 'Tel', submit: 'Müraciət Göndər',
-                feat1: 'Ödənişli müayinə/şəfalanma', feat2: '24 saat ərzində geri zəng', feat3: 'Tam məxfilik',
+                formLabel: 'ƏLAQƏ FORMU', formTitle: 'Zəng sifarişi', formDesc: 'Nömrənizi yazın — 24 saat ərzində geri zəng edəcəyik.',
+                labelName: 'AD', labelSurname: 'SOYAD', labelPhone: 'TELEFON',
+                name: 'Adınızı yazın', surname: 'Soyadınızı yazın', phone: 'XX XXX XX XX', submit: 'Müraciət göndər',
+                feat1: 'Ödənişli müayinə', feat2: '24 saat cavab', feat3: 'Tam məxfilik',
+                successTitle: 'Müraciətiniz qəbul edildi', successDesc: 'Tezliklə sizinlə əlaqə saxlanılacaq.',
                 sending: 'Göndərilir...', sent: 'Göndərildi!', error: 'Xəta baş verdi, yenidən cəhd edin.',
                 weekdays: ['BE','ÇA','Ç','CA','C','Ş','B'],
                 months: ['Yanvar','Fevral','Mart','Aprel','May','İyun','İyul','Avqust','Sentyabr','Oktyabr','Noyabr','Dekabr'],
@@ -1116,9 +1296,11 @@
             },
             ru: {
                 calLabel: 'ДАТА СЕАНСА', calTitle: 'Выберите день', calDesc: 'Отметьте удобную дату, напишите в WhatsApp.',
-                formTitle: 'Заказать звонок', formDesc: 'Напишите ваш номер для быстрой связи.',
-                name: 'Имя', surname: 'Фамилия', phone: 'Тел', submit: 'Отправить заявку',
-                feat1: 'Платный осмотр/исцеление', feat2: 'Обратный звонок в течение 24 часов', feat3: 'Полная конфиденциальность',
+                formLabel: 'ФОРМА СВЯЗИ', formTitle: 'Заказать звонок', formDesc: 'Напишите номер — перезвоним в течение 24 часов.',
+                labelName: 'ИМЯ', labelSurname: 'ФАМИЛИЯ', labelPhone: 'ТЕЛЕФОН',
+                name: 'Введите имя', surname: 'Введите фамилию', phone: 'XX XXX XX XX', submit: 'Отправить заявку',
+                feat1: 'Платный осмотр', feat2: '24 часа ответ', feat3: 'Конфиденциальность',
+                successTitle: 'Заявка принята', successDesc: 'Скоро свяжемся с вами.',
                 sending: 'Отправляется...', sent: 'Отправлено!', error: 'Произошла ошибка, попробуйте снова.',
                 weekdays: ['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'],
                 months: ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
@@ -1132,12 +1314,17 @@
             document.getElementById('blogCalendarTitle').textContent = t.calTitle;
             document.getElementById('blogCalendarDesc').textContent = t.calDesc;
             document.querySelector('.blog-cal-date-num').textContent = new Date().getDate();
+            document.getElementById('blogFormLabel').textContent = t.formLabel;
             document.getElementById('blogFormTitle').textContent = t.formTitle;
             document.getElementById('blogFormDesc').textContent = t.formDesc;
+            document.getElementById('blogLabelName').textContent = t.labelName;
+            document.getElementById('blogLabelSurname').textContent = t.labelSurname;
+            document.getElementById('blogLabelPhone').textContent = t.labelPhone;
             document.getElementById('blogInputName').placeholder = t.name;
             document.getElementById('blogInputSurname').placeholder = t.surname;
             document.getElementById('blogInputPhone').placeholder = t.phone;
-            document.getElementById('blogSubmitBtn').textContent = t.submit;
+            const submitBtn = document.getElementById('blogSubmitBtn');
+            submitBtn.innerHTML = '<span>' + t.submit + '</span> <i class="fas fa-arrow-right"></i>';
             document.getElementById('blogFeat1').textContent = t.feat1;
             document.getElementById('blogFeat2').textContent = t.feat2;
             document.getElementById('blogFeat3').textContent = t.feat3;
@@ -1235,12 +1422,20 @@
                 const phoneCode = blogCallForm.querySelector('.phone-prefix-select') ? blogCallForm.querySelector('.phone-prefix-select').value : '+994';
                 const url = GOOGLE_SHEET_URL + '?ad=' + encodeURIComponent(ad) + '&soyad=' + encodeURIComponent(soyad) + '&telefon=' + encodeURIComponent(phoneCode + telefon);
                 fetch(url, { mode: 'no-cors' }).then(() => {
-                    btn.textContent = t.sent;
-                    btn.style.background = '#28a745';
                     blogCallForm.reset();
-                    setTimeout(() => { btn.textContent = originalText; btn.style.background = ''; btn.disabled = false; }, 3000);
+                    blogCallForm.style.display = 'none';
+                    const successEl = document.getElementById('blogFormSuccess');
+                    successEl.querySelector('h4').textContent = t.successTitle;
+                    successEl.querySelector('p').textContent = t.successDesc;
+                    successEl.style.display = 'block';
+                    setTimeout(() => {
+                        successEl.style.display = 'none';
+                        blogCallForm.style.display = '';
+                        btn.innerHTML = '<span>' + originalText + '</span> <i class="fas fa-arrow-right"></i>';
+                        btn.disabled = false;
+                    }, 4000);
                 }).catch(() => {
-                    btn.textContent = originalText;
+                    btn.innerHTML = '<span>' + originalText + '</span> <i class="fas fa-arrow-right"></i>';
                     btn.disabled = false;
                     alert(t.error);
                 });
