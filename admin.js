@@ -1357,6 +1357,20 @@ document.addEventListener("DOMContentLoaded", function() {
             startTx = coverTx; startTy = coverTy;
             e.preventDefault();
         }, {passive: false});
+        function getCoverMaxPan() {
+            // Calculate actual rendered size after object-fit:cover + zoom
+            var img = articleImagePreview;
+            var natW = img.naturalWidth || 1, natH = img.naturalHeight || 1;
+            var contW = 220, contH = 220;
+            var coverScale = Math.max(contW / natW, contH / natH);
+            var renderedW = natW * coverScale * coverZoom;
+            var renderedH = natH * coverScale * coverZoom;
+            // Max translate in pre-scale coords (divide by zoom since transform scales it back up)
+            return {
+                x: Math.max(0, (renderedW - contW) / (2 * coverZoom)),
+                y: Math.max(0, (renderedH - contH) / (2 * coverZoom))
+            };
+        }
         document.addEventListener('mousemove', function(e) {
             if (!dragging) return;
             var dx = e.clientX - startX, dy = e.clientY - startY;
@@ -1364,10 +1378,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 coverPosX = Math.max(0, Math.min(100, startPosX - dx * 0.3));
                 coverPosY = Math.max(0, Math.min(100, startPosY - dy * 0.3));
             } else {
-                // When zoomed, use translate — range scales with zoom
-                var maxPan = (coverZoom - 1) * 110 / coverZoom;
-                coverTx = Math.max(-maxPan, Math.min(maxPan, startTx + dx / coverZoom));
-                coverTy = Math.max(-maxPan, Math.min(maxPan, startTy + dy / coverZoom));
+                var mp = getCoverMaxPan();
+                coverTx = Math.max(-mp.x, Math.min(mp.x, startTx + dx / coverZoom));
+                coverTy = Math.max(-mp.y, Math.min(mp.y, startTy + dy / coverZoom));
             }
             applyCoverTransform();
             updateCoverLabel();
@@ -1379,9 +1392,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 coverPosX = Math.max(0, Math.min(100, startPosX - dx * 0.3));
                 coverPosY = Math.max(0, Math.min(100, startPosY - dy * 0.3));
             } else {
-                var maxPan = (coverZoom - 1) * 110 / coverZoom;
-                coverTx = Math.max(-maxPan, Math.min(maxPan, startTx + dx / coverZoom));
-                coverTy = Math.max(-maxPan, Math.min(maxPan, startTy + dy / coverZoom));
+                var mp = getCoverMaxPan();
+                coverTx = Math.max(-mp.x, Math.min(mp.x, startTx + dx / coverZoom));
+                coverTy = Math.max(-mp.y, Math.min(mp.y, startTy + dy / coverZoom));
             }
             applyCoverTransform();
             updateCoverLabel();
