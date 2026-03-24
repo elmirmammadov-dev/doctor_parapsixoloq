@@ -82,8 +82,9 @@
                                 <div style="text-align:right;font-size:0.72rem;color:#999;margin-top:2px;"><span id="metaDescCount">0</span>/160</div>
                             </div>
                             <div style="margin-bottom:10px;">
-                                <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">Açar söz <span style="font-size:0.72rem;color:#999;font-weight:400;">| Əsas mövzu sözü (məs: panik atak)</span></label>
-                                <input type="text" id="articleKeyword" placeholder="Məqalənin əsas açar sözü" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                                <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">Mövzular / Açar sözlər <span style="font-size:0.72rem;color:#999;font-weight:400;">| Vergüllə ayırın (məs: panik atak, nəfəs terapiyası, çakra)</span></label>
+                                <input type="text" id="articleKeyword" placeholder="panik atak, nəfəs terapiyası, çakra, mənəvi müalicə" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                                <div id="keywordTagsPreview" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;"></div>
                             </div>
                             <div>
                                 <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">Şəkil Alt Mətni <span style="font-size:0.72rem;color:#999;font-weight:400;">| Şəkil yüklənmədikdə görünəcək mətn (SEO üçün vacib)</span></label>
@@ -122,8 +123,8 @@
                                     <div style="text-align:right;font-size:0.72rem;color:#999;margin-top:2px;"><span id="metaDescCountRu">0</span>/160</div>
                                 </div>
                                 <div style="margin-bottom:8px;">
-                                    <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">Ключевое слово <span style="font-size:0.72rem;color:#999;font-weight:400;">| основное слово темы</span></label>
-                                    <input type="text" id="articleKeywordRu" placeholder="Напр: панические атаки" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='#7b68ee'" onblur="this.style.borderColor='#ddd'">
+                                    <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">Темы / Ключевые слова <span style="font-size:0.72rem;color:#999;font-weight:400;">| через запятую (напр: паническая атака, дыхательная терапия)</span></label>
+                                    <input type="text" id="articleKeywordRu" placeholder="паническая атака, дыхательная терапия, чакра" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='#7b68ee'" onblur="this.style.borderColor='#ddd'">
                                 </div>
                                 <div>
                                     <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">Альт текст изображения <span style="font-size:0.72rem;color:#999;font-weight:400;">| текст при незагруженном изображении (важно для SEO)</span></label>
@@ -389,5 +390,18 @@
         window.FIREBASE_REST = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
     </script>
     <script src="admin.js"></script>
+    <script>
+    // Keyword tag preview
+    (function(){
+        const kwInput = document.getElementById('articleKeyword');
+        const preview = document.getElementById('keywordTagsPreview');
+        if(kwInput && preview) {
+            kwInput.addEventListener('input', function(){
+                const tags = this.value.split(',').map(t=>t.trim()).filter(Boolean);
+                preview.innerHTML = tags.map(t=>'<span style="display:inline-block;padding:4px 12px;background:#f0faf5;border:1px solid #2d8157;border-radius:20px;font-size:0.75rem;color:#2d8157;font-weight:500;">'+t+'</span>').join('');
+            });
+        }
+    })();
+    </script>
 </body>
 </html>

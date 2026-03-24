@@ -193,6 +193,120 @@
         .blog-detail-body b, .blog-detail-body strong {
             color: var(--text-primary);
         }
+        /* Numbered headings with green accent */
+        .blog-detail-body h2 {
+            font-size: 1.3rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding-left: 16px;
+            border-left: 4px solid var(--gold, #1a8a5c);
+            margin-top: 2em;
+            margin-bottom: 0.8em;
+            line-height: 1.4;
+        }
+        .blog-detail-body h3 {
+            font-size: 1.1rem;
+            margin-top: 1.5em;
+            margin-bottom: 0.6em;
+        }
+        .blog-detail-body ul li,
+        .blog-detail-body ol li {
+            margin-bottom: 0.5em;
+            line-height: 1.7;
+        }
+        .blog-detail-body a {
+            color: var(--gold, #1a8a5c);
+            text-decoration: underline;
+        }
+        .blog-detail-body hr {
+            border: none;
+            border-top: 1px solid #e8e8e8;
+            margin: 2em 0;
+        }
+        /* Topics / Tags */
+        .blog-topics-section {
+            margin-top: 40px;
+            padding-top: 28px;
+            border-top: 1px solid #e8e8e8;
+        }
+        .blog-topics-label {
+            font-family: var(--font-display);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .blog-topics-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .blog-topic-tag {
+            display: inline-block;
+            padding: 7px 18px;
+            border: 1.5px solid #d4d4d4;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: #fff;
+            transition: all 0.3s;
+            text-decoration: none;
+            cursor: default;
+        }
+        .blog-topic-tag:hover {
+            border-color: var(--gold, #1a8a5c);
+            color: var(--gold, #1a8a5c);
+            background: #f0faf5;
+        }
+        /* Share section */
+        .blog-share-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e8e8e8;
+            padding-bottom: 10px;
+        }
+        .blog-share-label {
+            font-family: var(--font-display);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .blog-share-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .blog-share-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1.5px solid #d4d4d4;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .blog-share-btn:hover {
+            border-color: var(--gold, #1a8a5c);
+            color: var(--gold, #1a8a5c);
+            background: #f0faf5;
+        }
+        .blog-share-btn.copied {
+            border-color: var(--gold, #1a8a5c);
+            background: var(--gold, #1a8a5c);
+            color: #fff;
+        }
         .blog-detail-loading {
             text-align: center;
             padding: 80px 20px;
@@ -1081,8 +1195,8 @@
             tr: { about: 'Ana Sayfa', services: 'Hizmetler', problems: 'Faaliyetler', faq: 'SSS', contact: 'İletişim', session: 'Seans Al' }
         };
         const POST_TEXTS = {
-            az: { views: 'baxış', likes: 'bəyənmə', comments: 'şərh', like: 'Bəyən', dislike: 'Bəyənmə' },
-            ru: { views: 'просмотров', likes: 'нравится', comments: 'комментарий', like: 'Нравится', dislike: 'Не нравится' }
+            az: { views: 'baxış', likes: 'bəyənmə', comments: 'şərh', like: 'Bəyən', dislike: 'Bəyənmə', topics: 'MÖVZULAR', share: 'PAYLAŞ', copied: 'Kopyalandı!' },
+            ru: { views: 'просмотров', likes: 'нравится', comments: 'комментарий', like: 'Нравится', dislike: 'Не нравится', topics: 'ТЕМЫ', share: 'ПОДЕЛИТЬСЯ', copied: 'Скопировано!' }
         };
         const COMMENT_TEXTS = {
             az: { title: 'Şərhlər', name: 'Ad', email: 'E-poçt', comment: 'Şərh', placeholder: 'Şərhinizi yazın...', submit: 'Şərh göndər', success: 'Şərhiniz göndərildi!', noComments: 'Hələ şərh yoxdur. İlk şərhi siz yazın!', author: 'Müəllif', replyLabel: 'şərhinizə cavab yazdı', replyBtn: 'Cavab yaz', replies: 'cavab', showMore: 'Daha çox göstər', hideReplies: 'Cavabları gizlə', replyPlaceholder: 'Cavabınızı yazın...', sendReply: 'Göndər' },
@@ -1204,6 +1318,15 @@
                 let metaKw = document.querySelector('meta[name="keywords"]');
                 if (metaKw) { metaKw.setAttribute('content', seoKeyword + ', parapsixologiya, Şahsəddin İmanlı'); }
 
+                // Canonical URL
+                let canonical = document.querySelector('link[rel="canonical"]');
+                if (!canonical) {
+                    canonical = document.createElement('link');
+                    canonical.rel = 'canonical';
+                    document.head.appendChild(canonical);
+                }
+                canonical.href = window.location.href;
+
                 // Update Open Graph
                 const ogUpdates = { 'og:title': f.title + ' | Şahsəddin İmanlı', 'og:description': seoDesc, 'og:url': window.location.href };
                 Object.entries(ogUpdates).forEach(([prop, val]) => {
@@ -1254,12 +1377,27 @@
                     "description": seoDesc,
                     "image": imgUrl || '',
                     "datePublished": f.date || '',
-                    "author": { "@type": "Person", "name": "Şahsəddin İmanlı" },
-                    "publisher": { "@type": "Organization", "name": "Şahsəddin İmanlı", "url": "https://www.sahseddinimanli.com" },
+                    "author": { "@type": "Person", "name": "Şahsəddin İmanlı", "url": "https://www.sahseddinimanli.com" },
+                    "publisher": { "@type": "Organization", "name": "Şahsəddin İmanlı", "url": "https://www.sahseddinimanli.com", "logo": { "@type": "ImageObject", "url": "https://www.sahseddinimanli.com/logo.webp" } },
                     "mainEntityOfPage": { "@type": "WebPage", "@id": window.location.href },
-                    "keywords": seoKeyword
+                    "keywords": seoKeyword,
+                    "articleSection": seoKeyword ? seoKeyword.split(',')[0].trim() : "Parapsixologiya"
                 });
                 document.head.appendChild(articleSchema);
+
+                // JSON-LD BreadcrumbList Schema
+                const breadcrumbSchema = document.createElement('script');
+                breadcrumbSchema.type = 'application/ld+json';
+                breadcrumbSchema.textContent = JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "BreadcrumbList",
+                    "itemListElement": [
+                        { "@type": "ListItem", "position": 1, "name": "Ana Səhifə", "item": "https://www.sahseddinimanli.com" },
+                        { "@type": "ListItem", "position": 2, "name": "Bloq", "item": "https://www.sahseddinimanli.com/#about" },
+                        { "@type": "ListItem", "position": 3, "name": f.title, "item": window.location.href }
+                    ]
+                });
+                document.head.appendChild(breadcrumbSchema);
 
                 // Try Firebase raw HTML first (preserves alignment, colors etc.)
                 let bodyHtml = '';
@@ -1300,10 +1438,57 @@
                             <i class="fas fa-thumbs-down"></i> <span id="dislikeCount">0</span>
                         </button>
                     </div>
+                    <div id="blogTopicsSection" class="blog-topics-section" style="display:none;">
+                        <div class="blog-topics-label">${postTexts.topics}</div>
+                        <div class="blog-topics-tags" id="blogTopicsTags"></div>
+                    </div>
+                    <div class="blog-share-section">
+                        <div class="blog-share-label">${postTexts.share}</div>
+                        <div class="blog-share-buttons">
+                            <a class="blog-share-btn" id="shareWhatsApp" href="#" target="_blank" rel="noopener" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                            <a class="blog-share-btn" id="shareFacebook" href="#" target="_blank" rel="noopener" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <button class="blog-share-btn" id="shareCopyLink" title="Linki kopyala"><i class="fas fa-link"></i></button>
+                        </div>
+                    </div>
                 `;
                 // Track view and load reactions
                 trackView();
                 loadReactions();
+
+                // Populate topics from keywords
+                if (seoKeyword) {
+                    const tags = seoKeyword.split(',').map(t => t.trim()).filter(Boolean);
+                    if (tags.length > 0) {
+                        const topicsSection = document.getElementById('blogTopicsSection');
+                        const topicsTags = document.getElementById('blogTopicsTags');
+                        if (topicsSection && topicsTags) {
+                            topicsTags.innerHTML = tags.map(t => `<span class="blog-topic-tag">${t}</span>`).join('');
+                            topicsSection.style.display = '';
+                        }
+                    }
+                }
+
+                // Setup share buttons
+                const shareUrl = encodeURIComponent(window.location.href);
+                const shareTitle = encodeURIComponent(f.title);
+                const waBtn = document.getElementById('shareWhatsApp');
+                if (waBtn) waBtn.href = 'https://wa.me/?text=' + shareTitle + '%20' + shareUrl;
+                const fbBtn = document.getElementById('shareFacebook');
+                if (fbBtn) fbBtn.href = 'https://www.facebook.com/sharer/sharer.php?u=' + shareUrl;
+                const copyBtn = document.getElementById('shareCopyLink');
+                if (copyBtn) {
+                    copyBtn.addEventListener('click', function() {
+                        navigator.clipboard.writeText(window.location.href).then(() => {
+                            this.classList.add('copied');
+                            this.innerHTML = '<i class="fas fa-check"></i>';
+                            const copiedText = (POST_TEXTS[currentLang] || POST_TEXTS.az).copied;
+                            setTimeout(() => {
+                                this.classList.remove('copied');
+                                this.innerHTML = '<i class="fas fa-link"></i>';
+                            }, 2000);
+                        });
+                    });
+                }
             } catch (err) {
                 container.innerHTML = `<p style="text-align:center;color:#999;padding:80px 0;">${ui.error}</p>`;
             }
