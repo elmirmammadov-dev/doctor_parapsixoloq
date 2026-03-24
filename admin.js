@@ -2057,10 +2057,17 @@ document.addEventListener("DOMContentLoaded", function() {
         if (posLabel2) posLabel2.textContent = 'Pozisiya: 50.0% 50.0% | Zoom: 100%';
     };
 
-    // Clean editor HTML: convert <font> tags to <span>, <div> to <p>
+    // Clean editor HTML: convert <font> tags to <span>, <div> to <p>, remove editor artifacts
     function cleanEditorHtml(html) {
         const tmp = document.createElement('div');
         tmp.innerHTML = html;
+
+        // Remove editor delete buttons (image remove buttons)
+        tmp.querySelectorAll('button').forEach(btn => btn.remove());
+
+        // Remove Word artifacts: <o:p>, MsoNormal class
+        tmp.querySelectorAll('o\\:p').forEach(el => el.replaceWith(el.textContent));
+        tmp.querySelectorAll('[class*="Mso"]').forEach(el => el.removeAttribute('class'));
 
         // Convert <font> to <span> with proper styles
         const fontSizeMap = { '1': '0.625rem', '2': '0.8125rem', '3': '1rem', '4': '1.125rem', '5': '1.5rem', '6': '2rem', '7': '2.25rem' };
