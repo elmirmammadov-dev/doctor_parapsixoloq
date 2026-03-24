@@ -4985,6 +4985,17 @@ img {
     }
 }
 
+/* Article editor list styles — ensure bullets/numbers are visible */
+#articleContent ul, #articleContent ol,
+#articleContentRu ul, #articleContentRu ol {
+    padding-left: 24px;
+    margin: 4px 0;
+}
+#articleContent ul { list-style-type: disc; }
+#articleContent ol { list-style-type: decimal; }
+#articleContentRu ul { list-style-type: disc; }
+#articleContentRu ol { list-style-type: decimal; }
+
 /* === ADMIN PANEL MOBILE RESPONSIVE === */
 @media (max-width: 768px) {
     .admin-panel {
@@ -5069,6 +5080,10 @@ img {
         min-height: 150px !important;
         font-size: 0.88rem !important;
         padding: 10px !important;
+    }
+    #articleContent ul, #articleContent ol,
+    #articleContentRu ul, #articleContentRu ol {
+        padding-left: 20px !important;
     }
     /* Submit button */
     .admin-save-btn {
