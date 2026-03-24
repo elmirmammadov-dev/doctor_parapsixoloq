@@ -1597,10 +1597,74 @@ document.addEventListener("DOMContentLoaded", function() {
         btn.addEventListener('mousedown', e => e.preventDefault());
     });
 
+    // Force default paragraph separator to <p> instead of <div>
+    document.execCommand('defaultParagraphSeparator', false, 'p');
+
+    // Ensure editors always wrap text in <p> tags
+    function ensureParagraphWrapping(editor) {
+        // On focus: if empty, start with a <p>
+        editor.addEventListener('focus', function() {
+            if (!editor.innerHTML.trim() || editor.innerHTML.trim() === '<br>') {
+                editor.innerHTML = '<p><br></p>';
+                // Place cursor inside the <p>
+                const sel = window.getSelection();
+                const range = document.createRange();
+                range.setStart(editor.firstChild, 0);
+                range.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        });
+
+        // On input: convert any top-level naked text or <div> to <p>
+        editor.addEventListener('input', function() {
+            let changed = false;
+            Array.from(editor.childNodes).forEach(node => {
+                // Wrap naked text nodes (non-whitespace) in <p>
+                if (node.nodeType === 3 && node.textContent.trim()) {
+                    const p = document.createElement('p');
+                    editor.insertBefore(p, node);
+                    p.appendChild(node);
+                    changed = true;
+                }
+                // Convert <div> to <p>
+                if (node.nodeType === 1 && node.tagName === 'DIV' && !node.classList.contains('editor-img-wrap')) {
+                    const p = document.createElement('p');
+                    p.innerHTML = node.innerHTML;
+                    // Copy alignment style if present
+                    if (node.style.textAlign) p.style.textAlign = node.style.textAlign;
+                    editor.replaceChild(p, node);
+                    changed = true;
+                }
+            });
+            if (changed) saveSelection();
+        });
+
+        // On paste: clean up after a short delay
+        editor.addEventListener('paste', function() {
+            setTimeout(() => {
+                Array.from(editor.childNodes).forEach(node => {
+                    if (node.nodeType === 3 && node.textContent.trim()) {
+                        const p = document.createElement('p');
+                        editor.insertBefore(p, node);
+                        p.appendChild(node);
+                    }
+                    if (node.nodeType === 1 && node.tagName === 'DIV' && !node.classList.contains('editor-img-wrap')) {
+                        const p = document.createElement('p');
+                        p.innerHTML = node.innerHTML;
+                        if (node.style.textAlign) p.style.textAlign = node.style.textAlign;
+                        editor.replaceChild(p, node);
+                    }
+                });
+            }, 0);
+        });
+    }
+
     // Save selection when editors lose focus (before toolbar click)
     ['articleContent', 'articleContentRu'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
+            ensureParagraphWrapping(el);
             el.addEventListener('keyup', saveSelection);
             el.addEventListener('mouseup', saveSelection);
             el.addEventListener('blur', saveSelection);
@@ -1668,9 +1732,8 @@ document.addEventListener("DOMContentLoaded", function() {
         if (heading) {
             heading.addEventListener('change', () => {
                 restoreSelection();
-                if (heading.value) document.execCommand('formatBlock', false, heading.value);
-                else document.execCommand('formatBlock', false, 'p');
-                heading.value = '';
+                document.execCommand('formatBlock', false, heading.value || 'p');
+                heading.value = 'p';
                 saveSelection();
             });
         }
