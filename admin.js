@@ -1146,7 +1146,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <button type="button" onclick="resizeEditorImg(this,50)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">50%</button>
                     <button type="button" onclick="resizeEditorImg(this,75)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">75%</button>
                     <button type="button" onclick="resizeEditorImg(this,100)" style="padding:3px 8px;border:1px solid #2d8157;border-radius:4px;background:#e8f5e9;cursor:pointer;font-size:0.72rem;font-weight:600;">100%</button>
-                    <input type="number" min="1" max="100" value="${curWidth}" onchange="resizeEditorImg(this,this.value)" style="width:45px;padding:3px 4px;border:1px solid #ddd;border-radius:4px;font-size:0.72rem;text-align:center;" title="Xüsusi ölçü (%)">
+                    <input type="number" min="1" max="100" value="${curWidth}" onchange="resizeEditorImg(this,this.value)" style="width:54px;padding:4px 2px 4px 6px;border:1px solid #ddd;border-radius:4px;font-size:0.78rem;text-align:center;line-height:1;" title="Xüsusi ölçü (%)">
                     <span style="font-size:0.68rem;color:#999;">%</span>
                     <span style="color:#999;">|</span>
                     <span style="color:#2d8157;font-weight:600;">Hizalama:</span>
@@ -1381,7 +1381,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 + '<button type="button" onclick="resizeCoverImg(50)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">50%</button>'
                 + '<button type="button" onclick="resizeCoverImg(75)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">75%</button>'
                 + '<button type="button" onclick="resizeCoverImg(100)" style="padding:3px 8px;border:1px solid #2d8157;border-radius:4px;background:#e8f5e9;cursor:pointer;font-size:0.72rem;font-weight:600;">100%</button>'
-                + '<input type="number" min="1" max="100" value="' + curW + '" onchange="resizeCoverImg(this.value)" style="width:45px;padding:3px 4px;border:1px solid #ddd;border-radius:4px;font-size:0.72rem;text-align:center;" title="Xüsusi ölçü (%)">'
+                + '<input type="number" min="1" max="100" value="' + curW + '" onchange="resizeCoverImg(this.value)" style="width:54px;padding:4px 2px 4px 6px;border:1px solid #ddd;border-radius:4px;font-size:0.78rem;text-align:center;line-height:1;" title="Xüsusi ölçü (%)">'
                 + '<span style="font-size:0.68rem;color:#999;">%</span>'
                 + '<span style="color:#999;">|</span>'
                 + '<span style="color:#2d8157;font-weight:600;">Hizalama:</span>'
