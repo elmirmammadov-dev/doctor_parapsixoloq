@@ -1365,7 +1365,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 coverPosY = Math.max(0, Math.min(100, startPosY - dy * 0.3));
             } else {
                 // When zoomed, use translate — range scales with zoom
-                var maxPan = (coverZoom - 1) * 110;
+                var maxPan = (coverZoom - 1) * 110 / coverZoom;
                 coverTx = Math.max(-maxPan, Math.min(maxPan, startTx + dx / coverZoom));
                 coverTy = Math.max(-maxPan, Math.min(maxPan, startTy + dy / coverZoom));
             }
@@ -1379,7 +1379,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 coverPosX = Math.max(0, Math.min(100, startPosX - dx * 0.3));
                 coverPosY = Math.max(0, Math.min(100, startPosY - dy * 0.3));
             } else {
-                var maxPan = (coverZoom - 1) * 110;
+                var maxPan = (coverZoom - 1) * 110 / coverZoom;
                 coverTx = Math.max(-maxPan, Math.min(maxPan, startTx + dx / coverZoom));
                 coverTy = Math.max(-maxPan, Math.min(maxPan, startTy + dy / coverZoom));
             }
