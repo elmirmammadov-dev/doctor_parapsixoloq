@@ -2047,6 +2047,14 @@ document.addEventListener("DOMContentLoaded", function() {
         if (contentRuEl) contentRuEl.innerHTML = '';
         const articleImagePreviewEl = document.getElementById('articleImagePreview');
         if (articleImagePreviewEl) articleImagePreviewEl.style.display = 'none';
+        // Reset cover image preview
+        var coverWrap2 = document.getElementById('coverPreviewWrap');
+        var coverCard2 = document.getElementById('coverPreviewCard');
+        if (coverWrap2) coverWrap2.style.display = 'none';
+        if (coverCard2) { coverCard2.style.backgroundImage = ''; coverCard2.style.backgroundPosition = ''; coverCard2.style.backgroundSize = ''; }
+        coverPosX = 50; coverPosY = 50; coverZoom = 1;
+        var posLabel2 = document.getElementById('coverPosLabel');
+        if (posLabel2) posLabel2.textContent = 'Pozisiya: 50.0% 50.0% | Zoom: 100%';
     };
 
     const newArticleForm = document.getElementById('newArticleForm');
@@ -2182,6 +2190,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (keywordRuEl) keywordRuEl.value = '';
                     if (imageAltRuEl) imageAltRuEl.value = '';
                     articleImagePreview.style.display = 'none';
+                    // Reset cover image preview
+                    var coverWrap = document.getElementById('coverPreviewWrap');
+                    var coverCard = document.getElementById('coverPreviewCard');
+                    if (coverWrap) coverWrap.style.display = 'none';
+                    if (coverCard) { coverCard.style.backgroundImage = ''; coverCard.style.backgroundPosition = ''; coverCard.style.backgroundSize = ''; }
+                    coverPosX = 50; coverPosY = 50; coverZoom = 1;
+                    var posLabel = document.getElementById('coverPosLabel');
+                    if (posLabel) posLabel.textContent = 'Pozisiya: 50.0% 50.0% | Zoom: 100%';
                 }
 
                 // Refresh blog posts
