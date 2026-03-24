@@ -1301,7 +1301,15 @@ document.addEventListener("DOMContentLoaded", function() {
     const articleImagePreview = document.getElementById('articleImagePreview');
     const coverPreviewWrap = document.getElementById('coverPreviewWrap');
     const coverPreviewCard = document.getElementById('coverPreviewCard');
-    let coverPosX = 50, coverPosY = 50;
+    let coverPosX = 50, coverPosY = 50, coverZoom = 1;
+
+    function updateCoverLabel() {
+        var lbl = document.getElementById('coverPosLabel');
+        if (lbl) lbl.textContent = coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '% | Zoom: ' + (coverZoom * 100).toFixed(0) + '%';
+    }
+    function applyCoverZoom() {
+        if (articleImagePreview) articleImagePreview.style.transform = 'scale(' + coverZoom + ')';
+    }
 
     if (articleImageInput) {
         articleImageInput.addEventListener('change', (e) => {
@@ -1311,10 +1319,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 reader.onload = (ev) => {
                     articleImagePreview.src = ev.target.result;
                     if (coverPreviewWrap) coverPreviewWrap.style.display = 'block';
-                    coverPosX = 50; coverPosY = 50;
+                    coverPosX = 50; coverPosY = 50; coverZoom = 1;
                     articleImagePreview.style.objectPosition = '50% 50%';
-                    var lbl = document.getElementById('coverPosLabel');
-                    if (lbl) lbl.textContent = '50% 50%';
+                    articleImagePreview.style.transform = 'scale(1)';
+                    updateCoverLabel();
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -1343,8 +1351,7 @@ document.addEventListener("DOMContentLoaded", function() {
             coverPosX = Math.max(0, Math.min(100, startPosX - dx * 0.3));
             coverPosY = Math.max(0, Math.min(100, startPosY - dy * 0.3));
             articleImagePreview.style.objectPosition = coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%';
-            var lbl = document.getElementById('coverPosLabel');
-            if (lbl) lbl.textContent = coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%';
+            updateCoverLabel();
         });
         document.addEventListener('touchmove', function(e) {
             if (!dragging) return;
@@ -1352,18 +1359,28 @@ document.addEventListener("DOMContentLoaded", function() {
             coverPosX = Math.max(0, Math.min(100, startPosX - dx * 0.3));
             coverPosY = Math.max(0, Math.min(100, startPosY - dy * 0.3));
             articleImagePreview.style.objectPosition = coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%';
-            var lbl = document.getElementById('coverPosLabel');
-            if (lbl) lbl.textContent = coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%';
+            updateCoverLabel();
         }, {passive: false});
         document.addEventListener('mouseup', function() { dragging = false; coverPreviewCard.style.cursor = 'grab'; });
         document.addEventListener('touchend', function() { dragging = false; });
+
+        // Scroll to zoom
+        coverPreviewCard.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            var delta = e.deltaY > 0 ? -0.05 : 0.05;
+            coverZoom = Math.max(1, Math.min(3, coverZoom + delta));
+            applyCoverZoom();
+            updateCoverLabel();
+        }, {passive: false});
     }
 
     window.resetCoverPos = function() {
-        coverPosX = 50; coverPosY = 50;
-        if (articleImagePreview) articleImagePreview.style.objectPosition = '50% 50%';
-        var lbl = document.getElementById('coverPosLabel');
-        if (lbl) lbl.textContent = '50% 50%';
+        coverPosX = 50; coverPosY = 50; coverZoom = 1;
+        if (articleImagePreview) {
+            articleImagePreview.style.objectPosition = '50% 50%';
+            articleImagePreview.style.transform = 'scale(1)';
+        }
+        updateCoverLabel();
     };
 
     // Cover image resize controls
@@ -1407,16 +1424,15 @@ document.addEventListener("DOMContentLoaded", function() {
     };
     window.removeCoverImg = function() {
         var img = document.getElementById('articleImagePreview');
-        if (img) { img.style.display = 'none'; img.src = ''; img.style.maxWidth = ''; img.style.width = ''; img.style.objectPosition = '50% 50%'; }
+        if (img) { img.style.display = 'none'; img.src = ''; img.style.maxWidth = ''; img.style.width = ''; img.style.objectPosition = '50% 50%'; img.style.transform = 'scale(1)'; }
         var inp = document.getElementById('articleImage');
         if (inp) inp.value = '';
         var bar = document.getElementById('coverImgResizeBar');
         if (bar) bar.remove();
         var wrap = document.getElementById('coverPreviewWrap');
         if (wrap) wrap.style.display = 'none';
-        coverPosX = 50; coverPosY = 50;
-        var posLabel = document.getElementById('coverPosLabel');
-        if (posLabel) posLabel.textContent = '50% 50%';
+        coverPosX = 50; coverPosY = 50; coverZoom = 1;
+        updateCoverLabel();
     };
 
     // === Rich text toolbar helper: save/restore selection ===
@@ -1788,9 +1804,10 @@ document.addEventListener("DOMContentLoaded", function() {
                         var parts = seo.coverPos.split('%');
                         coverPosX = parseFloat(parts[0]) || 50;
                         coverPosY = parseFloat(parts[1]) || 50;
-                        var lbl = document.getElementById('coverPosLabel');
-                        if (lbl) lbl.textContent = seo.coverPos;
                     }
+                    coverZoom = seo.coverZoom || 1;
+                    previewEl.style.transform = 'scale(' + coverZoom + ')';
+                    updateCoverLabel();
                 }
             } catch(e) {}
 
@@ -1906,7 +1923,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         htmlData.ru = contentRuHtml;
                     }
                     await adminDb.ref('articleHtml/' + editingEntryId).set(htmlData);
-                    const seoObj = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%' };
+                    const seoObj = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%', coverZoom: coverZoom };
                     if (coverImageUrl) seoObj.coverImage = coverImageUrl;
                     if (metaDescRu) seoObj.metaDescRu = metaDescRu;
                     if (keywordRu) seoObj.keywordRu = keywordRu;
@@ -1936,7 +1953,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             htmlData.ru = contentRuHtml;
                         }
                         await adminDb.ref('articleHtml/' + newEntryId).set(htmlData);
-                        const seoObj2 = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%' };
+                        const seoObj2 = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%', coverZoom: coverZoom };
                         if (coverImageUrl) seoObj2.coverImage = coverImageUrl;
                         if (metaDescRu) seoObj2.metaDescRu = metaDescRu;
                         if (keywordRu) seoObj2.keywordRu = keywordRu;
