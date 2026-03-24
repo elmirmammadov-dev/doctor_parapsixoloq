@@ -1302,13 +1302,24 @@ document.addEventListener("DOMContentLoaded", function() {
     const coverPreviewWrap = document.getElementById('coverPreviewWrap');
     const coverPreviewCard = document.getElementById('coverPreviewCard');
     let coverPosX = 50, coverPosY = 50, coverZoom = 1;
+    // Translate offsets in px (for zoom pan)
+    let coverTx = 0, coverTy = 0;
 
     function updateCoverLabel() {
         var lbl = document.getElementById('coverPosLabel');
-        if (lbl) lbl.textContent = coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '% | Zoom: ' + (coverZoom * 100).toFixed(0) + '%';
+        if (lbl) lbl.textContent = 'Zoom: ' + (coverZoom * 100).toFixed(0) + '%';
     }
-    function applyCoverZoom() {
-        if (articleImagePreview) articleImagePreview.style.transform = 'scale(' + coverZoom + ')';
+    function applyCoverTransform() {
+        if (!articleImagePreview) return;
+        if (coverZoom <= 1) {
+            // No zoom: use classic object-position
+            articleImagePreview.style.transform = '';
+            articleImagePreview.style.objectPosition = coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%';
+        } else {
+            // Zoomed: use transform for full pan control
+            articleImagePreview.style.objectPosition = '50% 50%';
+            articleImagePreview.style.transform = 'scale(' + coverZoom + ') translate(' + coverTx.toFixed(1) + 'px, ' + coverTy.toFixed(1) + 'px)';
+        }
     }
 
     if (articleImageInput) {
@@ -1319,9 +1330,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 reader.onload = (ev) => {
                     articleImagePreview.src = ev.target.result;
                     if (coverPreviewWrap) coverPreviewWrap.style.display = 'block';
-                    coverPosX = 50; coverPosY = 50; coverZoom = 1;
-                    articleImagePreview.style.objectPosition = '50% 50%';
-                    articleImagePreview.style.transform = 'scale(1)';
+                    coverPosX = 50; coverPosY = 50; coverZoom = 1; coverTx = 0; coverTy = 0;
+                    applyCoverTransform();
                     updateCoverLabel();
                 };
                 reader.readAsDataURL(file);
@@ -1333,32 +1343,47 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Drag to reposition cover image
     if (coverPreviewCard) {
-        let dragging = false, startX, startY, startPosX, startPosY;
+        let dragging = false, startX, startY, startPosX, startPosY, startTx, startTy;
         coverPreviewCard.addEventListener('mousedown', function(e) {
             dragging = true; startX = e.clientX; startY = e.clientY;
             startPosX = coverPosX; startPosY = coverPosY;
+            startTx = coverTx; startTy = coverTy;
             coverPreviewCard.style.cursor = 'grabbing';
             e.preventDefault();
         });
         coverPreviewCard.addEventListener('touchstart', function(e) {
             dragging = true; startX = e.touches[0].clientX; startY = e.touches[0].clientY;
             startPosX = coverPosX; startPosY = coverPosY;
+            startTx = coverTx; startTy = coverTy;
             e.preventDefault();
         }, {passive: false});
         document.addEventListener('mousemove', function(e) {
             if (!dragging) return;
             var dx = e.clientX - startX, dy = e.clientY - startY;
-            coverPosX = Math.max(0, Math.min(100, startPosX - dx * 0.3));
-            coverPosY = Math.max(0, Math.min(100, startPosY - dy * 0.3));
-            articleImagePreview.style.objectPosition = coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%';
+            if (coverZoom <= 1) {
+                coverPosX = Math.max(0, Math.min(100, startPosX - dx * 0.3));
+                coverPosY = Math.max(0, Math.min(100, startPosY - dy * 0.3));
+            } else {
+                // When zoomed, use translate — range scales with zoom
+                var maxPan = (coverZoom - 1) * 110;
+                coverTx = Math.max(-maxPan, Math.min(maxPan, startTx + dx / coverZoom));
+                coverTy = Math.max(-maxPan, Math.min(maxPan, startTy + dy / coverZoom));
+            }
+            applyCoverTransform();
             updateCoverLabel();
         });
         document.addEventListener('touchmove', function(e) {
             if (!dragging) return;
             var dx = e.touches[0].clientX - startX, dy = e.touches[0].clientY - startY;
-            coverPosX = Math.max(0, Math.min(100, startPosX - dx * 0.3));
-            coverPosY = Math.max(0, Math.min(100, startPosY - dy * 0.3));
-            articleImagePreview.style.objectPosition = coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%';
+            if (coverZoom <= 1) {
+                coverPosX = Math.max(0, Math.min(100, startPosX - dx * 0.3));
+                coverPosY = Math.max(0, Math.min(100, startPosY - dy * 0.3));
+            } else {
+                var maxPan = (coverZoom - 1) * 110;
+                coverTx = Math.max(-maxPan, Math.min(maxPan, startTx + dx / coverZoom));
+                coverTy = Math.max(-maxPan, Math.min(maxPan, startTy + dy / coverZoom));
+            }
+            applyCoverTransform();
             updateCoverLabel();
         }, {passive: false});
         document.addEventListener('mouseup', function() { dragging = false; coverPreviewCard.style.cursor = 'grab'; });
@@ -1368,17 +1393,25 @@ document.addEventListener("DOMContentLoaded", function() {
         coverPreviewCard.addEventListener('wheel', function(e) {
             e.preventDefault();
             var delta = e.deltaY > 0 ? -0.05 : 0.05;
+            var oldZoom = coverZoom;
             coverZoom = Math.max(1, Math.min(3, coverZoom + delta));
-            applyCoverZoom();
+            // When zooming out to 1, reset translate
+            if (coverZoom <= 1) { coverTx = 0; coverTy = 0; }
+            // Scale existing translate when zoom changes
+            if (oldZoom > 1 && coverZoom > 1) {
+                coverTx = coverTx * (coverZoom / oldZoom);
+                coverTy = coverTy * (coverZoom / oldZoom);
+            }
+            applyCoverTransform();
             updateCoverLabel();
         }, {passive: false});
     }
 
     window.resetCoverPos = function() {
-        coverPosX = 50; coverPosY = 50; coverZoom = 1;
+        coverPosX = 50; coverPosY = 50; coverZoom = 1; coverTx = 0; coverTy = 0;
         if (articleImagePreview) {
             articleImagePreview.style.objectPosition = '50% 50%';
-            articleImagePreview.style.transform = 'scale(1)';
+            articleImagePreview.style.transform = '';
         }
         updateCoverLabel();
     };
@@ -1424,14 +1457,14 @@ document.addEventListener("DOMContentLoaded", function() {
     };
     window.removeCoverImg = function() {
         var img = document.getElementById('articleImagePreview');
-        if (img) { img.style.display = 'none'; img.src = ''; img.style.maxWidth = ''; img.style.width = ''; img.style.objectPosition = '50% 50%'; img.style.transform = 'scale(1)'; }
+        if (img) { img.style.display = 'none'; img.src = ''; img.style.maxWidth = ''; img.style.width = ''; img.style.objectPosition = '50% 50%'; img.style.transform = ''; }
         var inp = document.getElementById('articleImage');
         if (inp) inp.value = '';
         var bar = document.getElementById('coverImgResizeBar');
         if (bar) bar.remove();
         var wrap = document.getElementById('coverPreviewWrap');
         if (wrap) wrap.style.display = 'none';
-        coverPosX = 50; coverPosY = 50; coverZoom = 1;
+        coverPosX = 50; coverPosY = 50; coverZoom = 1; coverTx = 0; coverTy = 0;
         updateCoverLabel();
     };
 
@@ -1806,7 +1839,9 @@ document.addEventListener("DOMContentLoaded", function() {
                         coverPosY = parseFloat(parts[1]) || 50;
                     }
                     coverZoom = seo.coverZoom || 1;
-                    previewEl.style.transform = 'scale(' + coverZoom + ')';
+                    coverTx = seo.coverTx || 0;
+                    coverTy = seo.coverTy || 0;
+                    applyCoverTransform();
                     updateCoverLabel();
                 }
             } catch(e) {}
@@ -1923,7 +1958,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         htmlData.ru = contentRuHtml;
                     }
                     await adminDb.ref('articleHtml/' + editingEntryId).set(htmlData);
-                    const seoObj = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%', coverZoom: coverZoom };
+                    const seoObj = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%', coverZoom: coverZoom, coverTx: coverTx, coverTy: coverTy };
                     if (coverImageUrl) seoObj.coverImage = coverImageUrl;
                     if (metaDescRu) seoObj.metaDescRu = metaDescRu;
                     if (keywordRu) seoObj.keywordRu = keywordRu;
@@ -1953,7 +1988,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             htmlData.ru = contentRuHtml;
                         }
                         await adminDb.ref('articleHtml/' + newEntryId).set(htmlData);
-                        const seoObj2 = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%', coverZoom: coverZoom };
+                        const seoObj2 = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(0) + '% ' + coverPosY.toFixed(0) + '%', coverZoom: coverZoom, coverTx: coverTx, coverTy: coverTy };
                         if (coverImageUrl) seoObj2.coverImage = coverImageUrl;
                         if (metaDescRu) seoObj2.metaDescRu = metaDescRu;
                         if (keywordRu) seoObj2.keywordRu = keywordRu;
