@@ -2057,6 +2057,37 @@ document.addEventListener("DOMContentLoaded", function() {
         if (posLabel2) posLabel2.textContent = 'Pozisiya: 50.0% 50.0% | Zoom: 100%';
     };
 
+    // Clean editor HTML: convert <font> tags to <span>, <div> to <p>
+    function cleanEditorHtml(html) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html;
+
+        // Convert <font> to <span> with proper styles
+        const fontSizeMap = { '1': '0.625rem', '2': '0.8125rem', '3': '1rem', '4': '1.125rem', '5': '1.5rem', '6': '2rem', '7': '2.25rem' };
+        tmp.querySelectorAll('font').forEach(font => {
+            const span = document.createElement('span');
+            const styles = [];
+            if (font.size) styles.push('font-size:' + (fontSizeMap[font.size] || '1rem'));
+            if (font.color) styles.push('color:' + font.color);
+            if (font.face) styles.push('font-family:' + font.face);
+            if (styles.length) span.style.cssText = styles.join(';');
+            span.innerHTML = font.innerHTML;
+            font.replaceWith(span);
+        });
+
+        // Convert top-level <div> to <p> (skip image wrappers)
+        Array.from(tmp.children).forEach(node => {
+            if (node.tagName === 'DIV' && !node.classList.contains('editor-img-wrap')) {
+                const p = document.createElement('p');
+                p.innerHTML = node.innerHTML;
+                if (node.style.textAlign) p.style.textAlign = node.style.textAlign;
+                node.replaceWith(p);
+            }
+        });
+
+        return tmp.innerHTML;
+    }
+
     const newArticleForm = document.getElementById('newArticleForm');
     if (newArticleForm) {
         newArticleForm.addEventListener('submit', async (e) => {
@@ -2065,7 +2096,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const statusEl = document.getElementById('articleStatus');
             const title = document.getElementById('articleTitle').value.trim();
             const date = document.getElementById('articleDate').value.trim();
-            const contentHtml = document.getElementById('articleContent').innerHTML;
+            const contentHtml = cleanEditorHtml(document.getElementById('articleContent').innerHTML);
             const imageFile = document.getElementById('articleImage').files[0];
 
             // SEO fields
@@ -2090,7 +2121,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const contentRuEl = document.getElementById('articleContentRu');
             const titleRu = titleRuEl ? titleRuEl.value.trim() : '';
             const dateRu = dateRuEl ? dateRuEl.value.trim() : '';
-            const contentRuHtml = contentRuEl ? contentRuEl.innerHTML : '';
+            const contentRuHtml = contentRuEl ? cleanEditorHtml(contentRuEl.innerHTML) : '';
 
             if (!title || !date) {
                 statusEl.textContent = 'Başlıq və tarix doldurulmalıdır.';
