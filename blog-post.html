@@ -216,20 +216,82 @@
         }
         .blog-sidebar {
             background: #fff;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+            border-radius: 24px;
+            padding: 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
             position: sticky;
             top: 90px;
             align-self: start;
             max-height: calc(100vh - 100px);
-            overflow-y: auto;
+            overflow: hidden;
+        }
+        .blog-sidebar-left {
+            border-top: 3px solid var(--gold, #1a8a5c);
+        }
+        .blog-sidebar-left .blog-sidebar-sticky {
+            padding: 28px 24px 24px;
+        }
+        .blog-cal-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .blog-cal-date-badge {
+            flex-shrink: 0;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 138, 92, 0.06);
+            border-radius: 14px;
+        }
+        .blog-cal-date-badge .blog-cal-date-num {
+            font-family: var(--font-display, 'Montserrat', sans-serif);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold, #1a8a5c);
+            line-height: 1;
+        }
+        .blog-cal-header-text {
+            flex: 1;
+        }
+        .blog-cal-label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--gold, #1a8a5c);
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+        .blog-cal-title {
+            font-family: var(--font-display, 'Montserrat', sans-serif);
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin: 0 0 4px;
+        }
+        .blog-cal-desc {
+            font-size: 0.82rem;
+            color: #8a8a9a;
+            margin: 0;
+            line-height: 1.4;
         }
         .blog-sidebar .calendar-wrapper {
-            padding: 20px 12px !important;
+            padding: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .blog-sidebar .calendar-wrapper::before {
+            display: none;
         }
         .blog-sidebar .calendar-day {
             font-size: 0.85rem;
+        }
+        .blog-sidebar-right .blog-sidebar-sticky {
+            padding: 24px;
         }
         .blog-sidebar-sticky {
             /* No longer needed - sidebar itself is sticky */
@@ -636,8 +698,16 @@
         <!-- Left Sidebar: Calendar -->
         <aside class="blog-sidebar blog-sidebar-left">
             <div class="blog-sidebar-sticky">
-                <h3 class="hero-form-title" id="blogCalendarTitle">Seans üçün Gün Seçimi</h3>
-                <p class="hero-form-desc" id="blogCalendarDesc">Sizə uyğun günü seçin, WhatsApp vasitəsilə əlaqə qurun.</p>
+                <div class="blog-cal-header">
+                    <div class="blog-cal-date-badge" id="blogCalDateBadge">
+                        <span class="blog-cal-date-num"></span>
+                    </div>
+                    <div class="blog-cal-header-text">
+                        <span class="blog-cal-label" id="blogCalLabel">SEANS TARİXİ</span>
+                        <h3 class="blog-cal-title" id="blogCalendarTitle">Günü seçin</h3>
+                        <p class="blog-cal-desc" id="blogCalendarDesc">Uyğun tarixi işarələyin, WhatsApp-da yazın.</p>
+                    </div>
+                </div>
                 <div class="calendar-wrapper hero-calendar">
                     <div class="calendar-header">
                         <button class="calendar-nav" id="blogCalendarPrev"><i class="fas fa-chevron-left"></i></button>
@@ -1035,7 +1105,7 @@
 
         const CTA_TEXTS = {
             az: {
-                calTitle: 'Seans üçün Gün Seçimi', calDesc: 'Sizə uyğun günü seçin, WhatsApp vasitəsilə əlaqə qurun.',
+                calLabel: 'SEANS TARİXİ', calTitle: 'Günü seçin', calDesc: 'Uyğun tarixi işarələyin, WhatsApp-da yazın.',
                 formTitle: 'Zəng Sifarişi', formDesc: 'Qısa zamanda əlaqə saxlamaq üçün nömrənizi yazın.',
                 name: 'Ad', surname: 'Soyad', phone: 'Tel', submit: 'Müraciət Göndər',
                 feat1: 'Ödənişli müayinə/şəfalanma', feat2: '24 saat ərzində geri zəng', feat3: 'Tam məxfilik',
@@ -1045,7 +1115,7 @@
                 whatsapp: 'Salam, sizinlə {day} {month} {year} tarixində onlayn və ya canlı seansa qoşulmaq istəyirəm. Günün hansı saatında uyğundur?'
             },
             ru: {
-                calTitle: 'Выбор дня для сеанса', calDesc: 'Выберите удобный день и свяжитесь через WhatsApp.',
+                calLabel: 'ДАТА СЕАНСА', calTitle: 'Выберите день', calDesc: 'Отметьте удобную дату, напишите в WhatsApp.',
                 formTitle: 'Заказать звонок', formDesc: 'Напишите ваш номер для быстрой связи.',
                 name: 'Имя', surname: 'Фамилия', phone: 'Тел', submit: 'Отправить заявку',
                 feat1: 'Платный осмотр/исцеление', feat2: 'Обратный звонок в течение 24 часов', feat3: 'Полная конфиденциальность',
@@ -1058,8 +1128,10 @@
 
         function updateCtaUI() {
             const t = CTA_TEXTS[currentLang] || CTA_TEXTS.az;
+            document.getElementById('blogCalLabel').textContent = t.calLabel;
             document.getElementById('blogCalendarTitle').textContent = t.calTitle;
             document.getElementById('blogCalendarDesc').textContent = t.calDesc;
+            document.querySelector('.blog-cal-date-num').textContent = new Date().getDate();
             document.getElementById('blogFormTitle').textContent = t.formTitle;
             document.getElementById('blogFormDesc').textContent = t.formDesc;
             document.getElementById('blogInputName').placeholder = t.name;
@@ -1140,6 +1212,8 @@
             // Expose for lang switch
             window.renderBlogCalendar = renderBlogCalendar;
             renderBlogCalendar();
+            // Set date badge
+            document.querySelector('.blog-cal-date-num').textContent = today.getDate();
         })();
 
         // Blog Call Form
