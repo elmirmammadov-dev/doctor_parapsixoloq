@@ -1110,6 +1110,9 @@ document.addEventListener("DOMContentLoaded", function() {
         const editor = document.getElementById(editorId);
         if (!editor) return;
         editor.addEventListener('click', function(e) {
+            // If click is inside a resize bar or delete button, don't remove controls
+            if (e.target.closest('.img-resize-bar') || e.target.closest('.img-inline-delete')) return;
+
             // Remove any existing resize controls and delete buttons
             document.querySelectorAll('.img-resize-bar').forEach(b => b.remove());
             document.querySelectorAll('.img-inline-delete').forEach(b => b.remove());
@@ -1152,6 +1155,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     <span style="color:#999;">|</span>
                     <button type="button" onclick="removeEditorImg(this)" style="padding:3px 8px;border:1px solid #e74c3c;border-radius:4px;background:#ffeaea;cursor:pointer;font-size:0.72rem;color:#e74c3c;">Sil</button>
                 `;
+                bar.addEventListener('click', function(ev) { ev.stopPropagation(); });
+                bar.addEventListener('mousedown', function(ev) { ev.stopPropagation(); });
                 img.parentNode.insertBefore(bar, img.nextSibling);
             }
         });
