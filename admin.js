@@ -1137,7 +1137,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 const bar = document.createElement('div');
                 bar.className = 'img-resize-bar';
-                bar.style.cssText = 'display:flex;gap:4px;align-items:center;padding:6px 8px;background:#f0faf5;border:1px solid #2d8157;border-radius:8px;margin:4px 0;font-size:0.75rem;flex-wrap:wrap;';
+                bar.contentEditable = 'false';
+                bar.style.cssText = 'display:flex;gap:4px;align-items:center;padding:6px 8px;background:#f0faf5;border:1px solid #2d8157;border-radius:8px;margin:4px 0;font-size:0.75rem;flex-wrap:wrap;user-select:none;';
                 var curWidth = parseInt(img.style.width) || 100;
                 bar.innerHTML = `
                     <span style="color:#2d8157;font-weight:600;">Ölçü:</span>
@@ -1406,11 +1407,16 @@ document.addEventListener("DOMContentLoaded", function() {
     };
     window.removeCoverImg = function() {
         var img = document.getElementById('articleImagePreview');
-        if (img) { img.style.display = 'none'; img.src = ''; }
+        if (img) { img.style.display = 'none'; img.src = ''; img.style.maxWidth = ''; img.style.width = ''; img.style.objectPosition = '50% 50%'; }
         var inp = document.getElementById('articleImage');
         if (inp) inp.value = '';
         var bar = document.getElementById('coverImgResizeBar');
         if (bar) bar.remove();
+        var wrap = document.getElementById('coverPreviewWrap');
+        if (wrap) wrap.style.display = 'none';
+        coverPosX = 50; coverPosY = 50;
+        var posLabel = document.getElementById('coverPosLabel');
+        if (posLabel) posLabel.textContent = '50% 50%';
     };
 
     // === Rich text toolbar helper: save/restore selection ===
