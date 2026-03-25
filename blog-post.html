@@ -1795,9 +1795,75 @@
                         });
                     });
                 }
+
+                // Load AdSense ads from Firebase settings
+                loadAdSlots();
+
             } catch (err) {
                 container.innerHTML = `<p style="text-align:center;color:#999;padding:80px 0;">${ui.error}</p>`;
             }
+        }
+
+        // === ADSENSE AD SLOTS ===
+        async function loadAdSlots() {
+            try {
+                const snap = await db.ref('settings/adsense').once('value');
+                const settings = snap.val();
+                if (!settings || !settings.publisherId) return;
+
+                const pubId = settings.publisherId;
+
+                // Inject AdSense script if not already present
+                if (!document.querySelector('script[src*="adsbygoogle"]')) {
+                    const s = document.createElement('script');
+                    s.async = true;
+                    s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + pubId;
+                    s.crossOrigin = 'anonymous';
+                    document.head.appendChild(s);
+                }
+
+                const adBlockHtml = `<div class="adsense-slot" style="margin:24px 0;text-align:center;min-height:90px;background:#fafafa;border-radius:12px;overflow:hidden;">
+                    <ins class="adsbygoogle" style="display:block" data-ad-client="${pubId}" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                </div>`;
+
+                // Ad in article middle
+                if (settings.adMiddle) {
+                    const body = document.querySelector('.blog-detail-body');
+                    if (body) {
+                        const paragraphs = body.querySelectorAll('p, h2, h3');
+                        const midIdx = Math.floor(paragraphs.length / 2);
+                        if (paragraphs[midIdx]) {
+                            paragraphs[midIdx].insertAdjacentHTML('afterend', adBlockHtml);
+                        }
+                    }
+                }
+
+                // Ad after share (before comments)
+                if (settings.adAfterShare) {
+                    const shareSection = document.querySelector('.blog-share-section');
+                    if (shareSection) {
+                        shareSection.insertAdjacentHTML('afterend', adBlockHtml);
+                    }
+                }
+
+                // Ad in sidebar
+                if (settings.adSidebar) {
+                    const calendarSidebar = document.querySelector('.blog-right-sidebar .blog-sidebar-left');
+                    if (calendarSidebar) {
+                        calendarSidebar.insertAdjacentHTML('afterend', adBlockHtml);
+                    }
+                }
+
+                // Push ads
+                setTimeout(() => {
+                    document.querySelectorAll('.adsense-slot ins.adsbygoogle').forEach(ins => {
+                        if (!ins.dataset.adsbygoogleStatus) {
+                            try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+                        }
+                    });
+                }, 500);
+
+            } catch(e) {}
         }
 
         loadPost();

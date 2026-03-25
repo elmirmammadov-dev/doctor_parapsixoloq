@@ -101,6 +101,17 @@ document.addEventListener("DOMContentLoaded", function() {
             tabUsers: 'İstifadəçilər',
             tabStats: 'Statistika',
             tabReviews: 'Rəylər',
+            tabSettings: 'Ayarlar',
+            settingsAdsenseTitle: 'Google AdSense Reklamları',
+            settingsAdsenseDesc: 'Blog yazısı səhifəsində reklam yerlərini idarə edin.',
+            adSlotMiddle: 'Məqalənin ortası',
+            adSlotMiddleDesc: 'Mətn arasında reklam bloku',
+            adSlotAfterShare: 'Paylaşdan sonra',
+            adSlotAfterShareDesc: 'Şərhlərdən əvvəl reklam',
+            adSlotSidebar: 'Sidebar (Seans tarixindən sonra)',
+            adSlotSidebarDesc: 'Sağ paneldə reklam bloku',
+            saveSettings: 'Ayarları yadda saxla',
+            settingsSaved: 'Ayarlar yadda saxlandı!',
             labelTitle: 'Başlıq',
             labelDate: 'Tarix',
             labelImage: 'Şəkil',
@@ -214,6 +225,17 @@ document.addEventListener("DOMContentLoaded", function() {
             tabUsers: 'Пользователи',
             tabStats: 'Статистика',
             tabReviews: 'Отзывы',
+            tabSettings: 'Настройки',
+            settingsAdsenseTitle: 'Реклама Google AdSense',
+            settingsAdsenseDesc: 'Управляйте рекламными блоками на странице статьи.',
+            adSlotMiddle: 'Середина статьи',
+            adSlotMiddleDesc: 'Рекламный блок в тексте',
+            adSlotAfterShare: 'После кнопок «Поделиться»',
+            adSlotAfterShareDesc: 'Реклама перед комментариями',
+            adSlotSidebar: 'Боковая панель',
+            adSlotSidebarDesc: 'Рекламный блок в боковой панели',
+            saveSettings: 'Сохранить настройки',
+            settingsSaved: 'Настройки сохранены!',
             labelTitle: 'Заголовок',
             labelDate: 'Дата',
             labelImage: 'Изображение',
@@ -388,12 +410,14 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('tabUsers').style.display = tab === 'users' ? 'block' : 'none';
         document.getElementById('tabStats').style.display = tab === 'stats' ? 'block' : 'none';
         document.getElementById('tabReviews').style.display = tab === 'reviews' ? 'block' : 'none';
+        document.getElementById('tabSettings').style.display = tab === 'settings' ? 'block' : 'none';
 
         if (tab === 'articles') loadAdminArticles();
         if (tab === 'comments') loadAdminComments();
         if (tab === 'users') loadAdminUsers();
         if (tab === 'stats') loadAdminStats();
         if (tab === 'reviews') loadAdminReviews();
+        if (tab === 'settings') loadAdsenseSettings();
     }
 
     // === ADMIN REVIEWS ===
@@ -2834,5 +2858,37 @@ document.addEventListener("DOMContentLoaded", function() {
             metaDescCounterRu.style.color = this.value.length > 155 ? '#e74c3c' : '#999';
         });
     }
+
+    // === ADSENSE SETTINGS ===
+    function loadAdsenseSettings() {
+        adminDb.ref('settings/adsense').once('value').then(snap => {
+            const data = snap.val() || {};
+            document.getElementById('adsensePublisherId').value = data.publisherId || '';
+            document.getElementById('adToggleMiddle').checked = !!data.adMiddle;
+            document.getElementById('adToggleAfterShare').checked = !!data.adAfterShare;
+            document.getElementById('adToggleSidebar').checked = !!data.adSidebar;
+        });
+    }
+
+    document.getElementById('saveAdsenseSettings').addEventListener('click', function() {
+        const msg = document.getElementById('adsenseSettingsMsg');
+        const data = {
+            publisherId: document.getElementById('adsensePublisherId').value.trim(),
+            adMiddle: document.getElementById('adToggleMiddle').checked,
+            adAfterShare: document.getElementById('adToggleAfterShare').checked,
+            adSidebar: document.getElementById('adToggleSidebar').checked,
+            updatedAt: Date.now()
+        };
+        adminDb.ref('settings/adsense').set(data).then(() => {
+            msg.style.display = 'block';
+            msg.style.color = '#2d8157';
+            msg.textContent = 'Ayarlar yadda saxlandı!';
+            setTimeout(() => { msg.style.display = 'none'; }, 3000);
+        }).catch(err => {
+            msg.style.display = 'block';
+            msg.style.color = '#e74c3c';
+            msg.textContent = 'Xəta: ' + err.message;
+        });
+    });
 
 });
