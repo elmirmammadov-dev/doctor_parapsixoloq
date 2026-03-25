@@ -691,7 +691,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const badge = document.createElement('span');
                 badge.className = 'blog-most-read-badge';
                 badge.textContent = MOST_READ_LABELS[currentLang] || MOST_READ_LABELS.az;
-                card.prepend(badge);
+                // Place badge outside card, above it
+                card.parentNode.insertBefore(badge, card);
+                badge.style.position = 'relative';
             }
         });
     }

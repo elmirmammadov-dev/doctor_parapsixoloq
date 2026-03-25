@@ -1913,12 +1913,8 @@ img {
 .blog-sidebar .blog-week-best-badge {
     font-size: 0.65rem;
     padding: 4px 12px;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    position: absolute;
-    z-index: 5;
-    border-radius: 0 0 12px 12px;
+    border-radius: 20px 20px 0 0;
+    margin-bottom: -2px;
 }
 
 .about-image-col {
@@ -4049,10 +4045,9 @@ img {
         0 12px 24px rgba(0, 0, 0, 0.1);
 }
 .blog-most-read-badge {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
+    display: block;
+    margin: 0 auto 0;
+    width: fit-content;
     background: linear-gradient(135deg, #1a6b42 0%, #2d8157 40%, #1a6b42 60%, #145234 100%);
     background-size: 200% 100%;
     animation: shimmerBadge 2s ease-in-out infinite;
@@ -4060,17 +4055,15 @@ img {
     font-size: 0.7rem;
     font-weight: 700;
     padding: 6px 20px;
-    border-radius: 20px;
+    border-radius: 20px 20px 0 0;
     z-index: 3;
     letter-spacing: 1px;
     text-transform: uppercase;
     box-shadow:
-        0 4px 16px rgba(0, 0, 0, 0.4),
-        0 1px 3px rgba(0, 0, 0, 0.2);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        0 -4px 12px rgba(45, 129, 87, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     white-space: nowrap;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    margin-bottom: -2px;
 }
 .blog-most-read-badge::before {
     content: '★ ';
