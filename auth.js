@@ -287,7 +287,7 @@ function initAuth() {
             sessionStorage.setItem('adminAuth', 'true');
             closeAuthModal();
             // If on blog post page, set blog-only admin session
-            const isOnBlogPost = document.getElementById('blogDetail');
+            const isOnBlogPost = window.location.pathname.match(/\/blog\//) || document.getElementById('blogDetail');
             if (isOnBlogPost) {
                 sessionStorage.setItem('blogAdminAuth', 'true');
                 // Update comment form for admin
@@ -313,11 +313,7 @@ function initAuth() {
                 const authBtn = document.getElementById('userAuthBtn');
                 if (authBtn) {
                     authBtn.innerHTML = '<img src="/profil-sekli-1.webp" class="nav-user-avatar" alt="Şahsəddin İmanlı" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"> <span class="nav-user-name">Şahsəddin</span>';
-                    authBtn.removeAttribute('onclick');
-                    window.__blogAdminDropdown = true;
-                    // Reload to set up dropdown properly
-                    window.location.reload();
-                    return;
+                    authBtn.onclick = function() { window.location.href = '/admin.html'; };
                 }
             } else {
                 window.location.href = '/admin.html';
@@ -548,9 +544,6 @@ function updateNavbarAuth(user) {
 
     // Update anon label visibility
     if (typeof window.updateNavAnonLabel === 'function') window.updateNavAnonLabel();
-
-    // Don't override if blog admin dropdown is active
-    if (window.__blogAdminDropdown) return;
 
     if (user && !user.isAnonymous) {
         const name = user.displayName || user.email.split('@')[0];
