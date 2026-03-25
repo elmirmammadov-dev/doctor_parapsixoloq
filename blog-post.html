@@ -393,6 +393,42 @@
             padding: 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         }
+        .similar-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .similar-pagination button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1.5px solid #e0e0e0;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #999;
+            transition: all 0.2s;
+        }
+        .similar-pagination button:hover {
+            border-color: var(--gold, #1a8a5c);
+            color: var(--gold, #1a8a5c);
+        }
+        .similar-pagination button:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+        .similar-pagination span {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #999;
+        }
         .sidebar-similar-box h3 {
             font-family: var(--font-display);
             font-size: 0.85rem;
@@ -1292,6 +1328,11 @@
                 <div id="sidebarSimilarList">
                     <div style="text-align:center;padding:20px 0;color:#ccc;"><i class="fas fa-spinner fa-spin"></i></div>
                 </div>
+                <div class="similar-pagination" id="similarPagination" style="display:none;">
+                    <button id="similarPrev"><i class="fas fa-chevron-left"></i></button>
+                    <span id="similarPageInfo">1 / 1</span>
+                    <button id="similarNext"><i class="fas fa-chevron-right"></i></button>
+                </div>
             </div>
             <div class="sidebar-archive-box">
                 <h3 id="sidebarArchiveTitle">ARXİVLƏR</h3>
@@ -1851,36 +1892,19 @@
             }, 300);
         });
 
-        // Similar articles
-        async function loadSimilarArticles() {
-            const postId = await getPostId();
-            const articles = await fetchAllArticles();
-            const t = SIDEBAR_TEXTS[currentLang] || SIDEBAR_TEXTS.az;
-            const current = articles.find(a => a.id === postId);
-            const container = document.getElementById('sidebarSimilarList');
+        // Similar articles with pagination
+        let similarAll = [];
+        let similarPage = 0;
+        const SIMILAR_PER_PAGE = 5;
 
-            let similar = [];
-            if (current && current.keywords) {
-                const kws = current.keywords.split(/[,\s]+/).filter(Boolean);
-                similar = articles
-                    .filter(a => a.id !== postId)
-                    .map(a => {
-                        let score = 0;
-                        kws.forEach(kw => { if (a.keywords.includes(kw) || a.title.toLowerCase().includes(kw)) score++; });
-                        return { ...a, score };
-                    })
-                    .filter(a => a.score > 0)
-                    .sort((a, b) => b.score - a.score)
-                    .slice(0, 5);
-            }
-            if (similar.length === 0) {
-                similar = articles.filter(a => a.id !== postId).slice(0, 5);
-            }
-            if (similar.length === 0) {
-                container.innerHTML = `<div class="sidebar-no-results">${t.noSimilar}</div>`;
-                return;
-            }
-            container.innerHTML = similar.map(a => `
+        function renderSimilarPage() {
+            const container = document.getElementById('sidebarSimilarList');
+            const pagination = document.getElementById('similarPagination');
+            const totalPages = Math.ceil(similarAll.length / SIMILAR_PER_PAGE);
+            const start = similarPage * SIMILAR_PER_PAGE;
+            const pageItems = similarAll.slice(start, start + SIMILAR_PER_PAGE);
+
+            container.innerHTML = pageItems.map(a => `
                 <a class="similar-article" href="/${a.slug}">
                     ${a.image ? `<img class="similar-article-img" src="${a.image}" alt="${a.title}" loading="lazy">` : `<div class="similar-article-img" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-file-alt" style="color:#ccc;font-size:1.2rem;"></i></div>`}
                     <div class="similar-article-info">
@@ -1889,7 +1913,57 @@
                     </div>
                 </a>
             `).join('');
+
+            if (totalPages > 1) {
+                pagination.style.display = 'flex';
+                document.getElementById('similarPageInfo').textContent = (similarPage + 1) + ' / ' + totalPages;
+                document.getElementById('similarPrev').disabled = similarPage <= 0;
+                document.getElementById('similarNext').disabled = similarPage >= totalPages - 1;
+            } else {
+                pagination.style.display = 'none';
+            }
         }
+
+        async function loadSimilarArticles() {
+            const postId = await getPostId();
+            const articles = await fetchAllArticles();
+            const t = SIDEBAR_TEXTS[currentLang] || SIDEBAR_TEXTS.az;
+            const current = articles.find(a => a.id === postId);
+            const container = document.getElementById('sidebarSimilarList');
+
+            similarAll = [];
+            similarPage = 0;
+            if (current && current.keywords) {
+                const kws = current.keywords.split(/[,\s]+/).filter(Boolean);
+                similarAll = articles
+                    .filter(a => a.id !== postId)
+                    .map(a => {
+                        let score = 0;
+                        kws.forEach(kw => { if (a.keywords.includes(kw) || a.title.toLowerCase().includes(kw)) score++; });
+                        return { ...a, score };
+                    })
+                    .filter(a => a.score > 0)
+                    .sort((a, b) => b.score - a.score);
+            }
+            if (similarAll.length === 0) {
+                similarAll = articles.filter(a => a.id !== postId);
+            }
+            if (similarAll.length === 0) {
+                container.innerHTML = `<div class="sidebar-no-results">${t.noSimilar}</div>`;
+                document.getElementById('similarPagination').style.display = 'none';
+                return;
+            }
+            renderSimilarPage();
+        }
+
+        document.getElementById('similarPrev').addEventListener('click', function() {
+            if (similarPage > 0) { similarPage--; renderSimilarPage(); }
+        });
+        document.getElementById('similarNext').addEventListener('click', function() {
+            const totalPages = Math.ceil(similarAll.length / SIMILAR_PER_PAGE);
+            if (similarPage < totalPages - 1) { similarPage++; renderSimilarPage(); }
+        });
+
         loadSimilarArticles();
 
         // Archive section with year navigation
