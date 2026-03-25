@@ -976,11 +976,7 @@ img {
 }
 
 .blog-section-grid .blog-post-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.7) 35%, transparent 55%);
-    z-index: 1;
+    display: none;
 }
 
 .blog-section-grid .blog-post-card .blog-post-info {
@@ -988,11 +984,13 @@ img {
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 20px;
+    padding: 14px 16px;
     z-index: 2;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
+    background: rgba(0,0,0,0.85);
+    border-radius: 0 0 20px 20px;
 }
 
 .blog-section-grid .blog-post-card .blog-post-info h4 {
