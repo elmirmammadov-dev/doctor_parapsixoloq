@@ -688,10 +688,15 @@ document.addEventListener('DOMContentLoaded', () => {
         cards.forEach(card => {
             if (mostReadId && card.dataset.id === mostReadId) {
                 card.classList.add('most-read');
+                // Wrap card + badge together
+                const wrapper = document.createElement('div');
+                wrapper.className = 'most-read-wrapper';
+                card.parentNode.insertBefore(wrapper, card);
+                wrapper.appendChild(card);
                 const badge = document.createElement('span');
                 badge.className = 'blog-most-read-badge';
                 badge.textContent = MOST_READ_LABELS[currentLang] || MOST_READ_LABELS.az;
-                card.appendChild(badge);
+                wrapper.appendChild(badge);
             }
         });
     }

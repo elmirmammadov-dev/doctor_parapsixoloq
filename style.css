@@ -4015,6 +4015,11 @@ img {
     transition: transform 0.3s, box-shadow 0.3s;
     cursor: default;
 }
+.most-read-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .blog-post-card.most-read {
     transform: translateY(-18px) scale(1.03);
     box-shadow:
@@ -4024,14 +4029,8 @@ img {
     border: none;
     position: relative;
     z-index: 1;
-    overflow: visible;
-}
-.blog-section-grid .blog-post-card.most-read .blog-post-cover,
-.blog-section-grid .blog-post-card.most-read .blog-post-info {
     overflow: hidden;
-}
-.blog-section-grid .blog-post-card.most-read .blog-post-cover {
-    border-radius: 20px;
+    width: 100%;
 }
 .blog-post-card.most-read::before {
     display: none;
@@ -4050,10 +4049,9 @@ img {
         0 12px 24px rgba(0, 0, 0, 0.1);
 }
 .blog-most-read-badge {
-    position: absolute;
-    bottom: -14px;
-    left: 50%;
-    transform: translateX(-50%);
+    display: block;
+    margin-top: -18px;
+    transform: translateY(-2px) scale(1.03);
     background: linear-gradient(135deg, #1a6b42 0%, #2d8157 40%, #1a6b42 60%, #145234 100%);
     background-size: 200% 100%;
     animation: shimmerBadge 2s ease-in-out infinite;
