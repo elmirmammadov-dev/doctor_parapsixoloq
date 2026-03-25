@@ -1767,10 +1767,10 @@
         let currentPage = 1;
         let replyVisibleCounts = {};
 
-        let resolvedPostId = null;
+        let resolvedPostId = window.__POST_ID__ || null;
         async function getPostId() {
             if (resolvedPostId) return resolvedPostId;
-            // Resolve slug from URL: /panik-atak-nedir
+            // Fallback: resolve slug from Firebase
             const slugMatch = window.location.pathname.match(/^\/([a-z0-9][a-z0-9-]+[a-z0-9])$/);
             if (slugMatch) {
                 try {

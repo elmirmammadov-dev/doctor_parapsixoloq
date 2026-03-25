@@ -130,6 +130,7 @@ module.exports = async (req, res) => {
 
         const headInject = `
     <link rel="canonical" href="${pageUrl}">
+    <script>window.__POST_ID__ = "${postId}";</script>
     <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
 
         html = html.replace('</head>', headInject + '\n</head>');
