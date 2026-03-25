@@ -967,7 +967,9 @@ img {
     height: 100%;
     object-fit: cover;
     background-repeat: no-repeat;
-    transition: transform 0.5s ease;
+    transition: filter 0.5s ease;
+    border-radius: inherit;
+    overflow: hidden;
 }
 
 .blog-section-grid .blog-post-card:hover img,
@@ -4030,7 +4032,7 @@ img {
     border: none;
     position: relative;
     z-index: 1;
-    overflow: hidden;
+    overflow: visible;
 }
 .blog-post-card.most-read::before {
     display: none;
@@ -4050,7 +4052,7 @@ img {
 }
 .blog-most-read-badge {
     position: absolute;
-    top: 10px;
+    top: -12px;
     left: 50%;
     transform: translateX(-50%);
     background: linear-gradient(135deg, #1a6b42 0%, #2d8157 40%, #1a6b42 60%, #145234 100%);
