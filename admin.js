@@ -101,6 +101,20 @@ document.addEventListener("DOMContentLoaded", function() {
             tabUsers: 'İstifadəçilər',
             tabStats: 'Statistika',
             tabReviews: 'Rəylər',
+            tabAnnouncements: 'Elanlar',
+            annAddNew: 'Yeni elan əlavə et',
+            annTitle: 'Başlıq',
+            annDesc: 'Açıqlama',
+            annLink: 'Link (ixtiyari)',
+            annImage: 'Şəkil',
+            annChooseImg: 'Şəkil seç',
+            annSave: 'Elanı saxla',
+            annExisting: 'Mövcud elanlar:',
+            annSaved: 'Elan yadda saxlandı!',
+            annDeleted: 'Elan silindi!',
+            annUploading: 'Şəkil yüklənir...',
+            annSaving: 'Saxlanılır...',
+            annDeleteConfirm: 'Bu elanı silmək istəyirsiniz?',
             labelTitle: 'Başlıq',
             labelDate: 'Tarix',
             labelImage: 'Şəkil',
@@ -214,6 +228,20 @@ document.addEventListener("DOMContentLoaded", function() {
             tabUsers: 'Пользователи',
             tabStats: 'Статистика',
             tabReviews: 'Отзывы',
+            tabAnnouncements: 'Объявления',
+            annAddNew: 'Добавить объявление',
+            annTitle: 'Заголовок',
+            annDesc: 'Описание',
+            annLink: 'Ссылка (необязательно)',
+            annImage: 'Изображение',
+            annChooseImg: 'Выбрать фото',
+            annSave: 'Сохранить',
+            annExisting: 'Существующие объявления:',
+            annSaved: 'Объявление сохранено!',
+            annDeleted: 'Объявление удалено!',
+            annUploading: 'Загрузка изображения...',
+            annSaving: 'Сохранение...',
+            annDeleteConfirm: 'Удалить это объявление?',
             labelTitle: 'Заголовок',
             labelDate: 'Дата',
             labelImage: 'Изображение',
@@ -388,12 +416,14 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('tabUsers').style.display = tab === 'users' ? 'block' : 'none';
         document.getElementById('tabStats').style.display = tab === 'stats' ? 'block' : 'none';
         document.getElementById('tabReviews').style.display = tab === 'reviews' ? 'block' : 'none';
+        document.getElementById('tabAnnouncements').style.display = tab === 'announcements' ? 'block' : 'none';
 
         if (tab === 'articles') loadAdminArticles();
         if (tab === 'comments') loadAdminComments();
         if (tab === 'users') loadAdminUsers();
         if (tab === 'stats') loadAdminStats();
         if (tab === 'reviews') loadAdminReviews();
+        if (tab === 'announcements') loadAdminAnnouncements();
     }
 
     // === ADMIN REVIEWS ===
@@ -2834,5 +2864,149 @@ document.addEventListener("DOMContentLoaded", function() {
             metaDescCounterRu.style.color = this.value.length > 155 ? '#e74c3c' : '#999';
         });
     }
+
+    // === ANNOUNCEMENTS / CAMPAIGNS ===
+    const annImageFile = document.getElementById('annImageFile');
+    const annImagePreview = document.getElementById('annImagePreview');
+    const annImageName = document.getElementById('annImageName');
+    let annEditId = null;
+
+    if (annImageFile) {
+        annImageFile.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                annImageName.textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    annImagePreview.src = e.target.result;
+                    annImagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    async function uploadAnnImage(file) {
+        const formData = new FormData();
+        formData.append('image', file);
+        const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API_KEY, { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) return data.data.url;
+        throw new Error('Image upload failed');
+    }
+
+    document.getElementById('annSaveBtn').addEventListener('click', async function() {
+        const title = document.getElementById('annTitle').value.trim();
+        const desc = document.getElementById('annDesc').value.trim();
+        const link = document.getElementById('annLink').value.trim();
+        const msg = document.getElementById('annMsg');
+        const file = annImageFile.files[0];
+
+        if (!title) { msg.style.display = 'block'; msg.style.color = '#e74c3c'; msg.textContent = 'Başlıq yazın!'; return; }
+
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (adminT('annSaving') || 'Saxlanılır...');
+
+        try {
+            let imageUrl = '';
+            if (file) {
+                msg.style.display = 'block'; msg.style.color = '#999'; msg.textContent = adminT('annUploading') || 'Şəkil yüklənir...';
+                imageUrl = await uploadAnnImage(file);
+            } else if (annEditId) {
+                // Keep existing image when editing without new file
+                const snap = await adminDb.ref('announcements/' + annEditId + '/image').once('value');
+                imageUrl = snap.val() || '';
+            }
+
+            const annData = {
+                title: title,
+                desc: desc,
+                link: link,
+                image: imageUrl,
+                date: new Date().toLocaleDateString('az-AZ', { day: 'numeric', month: 'long', year: 'numeric' }),
+                timestamp: Date.now(),
+                active: true
+            };
+
+            if (annEditId) {
+                await adminDb.ref('announcements/' + annEditId).update(annData);
+            } else {
+                await adminDb.ref('announcements').push(annData);
+            }
+
+            msg.style.display = 'block'; msg.style.color = '#2d8157'; msg.textContent = adminT('annSaved') || 'Elan yadda saxlandı!';
+            // Reset form
+            document.getElementById('annTitle').value = '';
+            document.getElementById('annDesc').value = '';
+            document.getElementById('annLink').value = '';
+            annImageFile.value = '';
+            annImagePreview.style.display = 'none';
+            annImageName.textContent = 'Seçilməyib';
+            annEditId = null;
+            setTimeout(() => { msg.style.display = 'none'; }, 3000);
+            loadAdminAnnouncements();
+        } catch(err) {
+            msg.style.display = 'block'; msg.style.color = '#e74c3c'; msg.textContent = 'Xəta: ' + err.message;
+        }
+        this.disabled = false;
+        this.innerHTML = '<i class="fas fa-save"></i> ' + (adminT('annSave') || 'Elanı saxla');
+    });
+
+    function loadAdminAnnouncements() {
+        const list = document.getElementById('annList');
+        const countEl = document.getElementById('annCount');
+        list.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i></p>';
+
+        adminDb.ref('announcements').orderByChild('timestamp').once('value').then(snap => {
+            const data = snap.val();
+            if (!data) { list.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;">Elan yoxdur</p>'; countEl.textContent = '0'; return; }
+            const items = Object.entries(data).map(([id, v]) => ({ id, ...v })).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            countEl.textContent = items.length;
+
+            list.innerHTML = items.map(item => `
+                <div style="display:flex;gap:12px;padding:12px;background:#fff;border:1.5px solid #e8e8e8;border-radius:12px;margin-bottom:8px;align-items:center;">
+                    ${item.image ? `<img src="${item.image}" style="width:56px;height:56px;border-radius:10px;object-fit:cover;flex-shrink:0;">` : `<div style="width:56px;height:56px;border-radius:10px;background:#f0f7f3;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-bullhorn" style="color:#ccc;"></i></div>`}
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-weight:600;font-size:0.9rem;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.title}</div>
+                        <div style="font-size:0.78rem;color:#999;margin-top:2px;">${item.date || ''}</div>
+                        ${item.desc ? `<div style="font-size:0.8rem;color:#666;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${item.desc}</div>` : ''}
+                    </div>
+                    <div style="display:flex;gap:6px;flex-shrink:0;">
+                        <button onclick="editAnnouncement('${item.id}')" style="width:32px;height:32px;border:1.5px solid #e0e0e0;border-radius:8px;background:#fff;cursor:pointer;color:#666;font-size:0.8rem;" title="Redaktə"><i class="fas fa-pen"></i></button>
+                        <button onclick="toggleAnnouncement('${item.id}', ${!item.active})" style="width:32px;height:32px;border:1.5px solid ${item.active ? '#2d8157' : '#e0e0e0'};border-radius:8px;background:${item.active ? '#f0faf5' : '#fff'};cursor:pointer;color:${item.active ? '#2d8157' : '#999'};font-size:0.8rem;" title="${item.active ? 'Deaktiv et' : 'Aktiv et'}"><i class="fas fa-${item.active ? 'eye' : 'eye-slash'}"></i></button>
+                        <button onclick="deleteAnnouncement('${item.id}')" style="width:32px;height:32px;border:1.5px solid #e74c3c;border-radius:8px;background:#fff;cursor:pointer;color:#e74c3c;font-size:0.8rem;" title="Sil"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        });
+    }
+
+    window.editAnnouncement = function(id) {
+        adminDb.ref('announcements/' + id).once('value').then(snap => {
+            const item = snap.val();
+            if (!item) return;
+            annEditId = id;
+            document.getElementById('annTitle').value = item.title || '';
+            document.getElementById('annDesc').value = item.desc || '';
+            document.getElementById('annLink').value = item.link || '';
+            if (item.image) {
+                annImagePreview.src = item.image;
+                annImagePreview.style.display = 'block';
+                annImageName.textContent = 'Mövcud şəkil';
+            }
+            document.querySelector('#tabAnnouncements').scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    };
+
+    window.toggleAnnouncement = function(id, active) {
+        adminDb.ref('announcements/' + id + '/active').set(active).then(() => loadAdminAnnouncements());
+    };
+
+    window.deleteAnnouncement = function(id) {
+        if (!confirm(adminT('annDeleteConfirm') || 'Bu elanı silmək istəyirsiniz?')) return;
+        adminDb.ref('announcements/' + id).remove().then(() => {
+            loadAdminAnnouncements();
+        });
+    };
 
 });

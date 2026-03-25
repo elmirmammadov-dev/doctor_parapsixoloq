@@ -628,6 +628,111 @@
             color: var(--gold, #1a8a5c);
             margin-top: 2px;
         }
+        /* Announcements & Campaigns */
+        .sidebar-announcements-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-top: 4px solid #f59e0b;
+        }
+        .sidebar-announcements-box h3 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: #f59e0b;
+            text-transform: uppercase;
+            margin: 0 0 14px 0;
+        }
+        .ann-item {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+            margin-bottom: 10px;
+            transition: box-shadow 0.2s;
+        }
+        .ann-item:last-child {
+            margin-bottom: 0;
+        }
+        .ann-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .ann-item-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+        .ann-item-body {
+            padding: 10px 12px;
+        }
+        .ann-item-title {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        .ann-item-desc {
+            font-size: 0.78rem;
+            color: #777;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .ann-item-date {
+            font-size: 0.7rem;
+            color: #bbb;
+            margin-top: 6px;
+        }
+        .ann-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .ann-pagination button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1.5px solid #e0e0e0;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #999;
+            transition: all 0.2s;
+        }
+        .ann-pagination button:hover {
+            border-color: #f59e0b;
+            color: #f59e0b;
+        }
+        .ann-pagination button:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+        .ann-pagination span {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #999;
+        }
+        .ann-empty {
+            text-align: center;
+            padding: 16px 0;
+            color: #ccc;
+            font-size: 0.85rem;
+        }
         @media (max-width: 900px) {
             .blog-post-layout {
                 flex-direction: column;
@@ -1422,6 +1527,18 @@
                     </div>
                 </div>
             </div>
+            <!-- Announcements & Campaigns -->
+            <div class="sidebar-announcements-box">
+                <h3 id="sidebarAnnTitle">ELANLAR VƏ KAMPANİYALAR</h3>
+                <div id="sidebarAnnList">
+                    <div style="text-align:center;padding:20px 0;color:#ccc;"><i class="fas fa-spinner fa-spin"></i></div>
+                </div>
+                <div class="ann-pagination" id="annPagination" style="display:none;">
+                    <button id="annPrevPage"><i class="fas fa-chevron-left"></i></button>
+                    <span id="annPageInfo">1 / 1</span>
+                    <button id="annNextPage"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
         </aside>
     </div>
 
@@ -1595,6 +1712,7 @@
                 allArticlesCache = null;
                 if (typeof loadSimilarArticles === 'function') loadSimilarArticles();
                 if (typeof loadArchive === 'function') loadArchive();
+                if (typeof loadAnnouncements === 'function') loadAnnouncements();
                 if (typeof updateCtaUI === 'function') updateCtaUI();
                 if (typeof renderBlogCalendar === 'function') renderBlogCalendar();
                 updateCommentUI();
@@ -2075,6 +2193,78 @@
             initArchive();
         }
         initArchive();
+
+        // === ANNOUNCEMENTS & CAMPAIGNS ===
+        const ANN_TEXTS = {
+            az: { title: 'ELANLAR VƏ KAMPANİYALAR', empty: 'Hazırda elan yoxdur' },
+            ru: { title: 'ОБЪЯВЛЕНИЯ И АКЦИИ', empty: 'Нет объявлений' }
+        };
+
+        let annAll = [];
+        let annPage = 0;
+        const ANN_PER_PAGE = 5;
+
+        function renderAnnPage() {
+            const container = document.getElementById('sidebarAnnList');
+            const pagination = document.getElementById('annPagination');
+            const t = ANN_TEXTS[currentLang] || ANN_TEXTS.az;
+            const totalPages = Math.ceil(annAll.length / ANN_PER_PAGE);
+            const start = annPage * ANN_PER_PAGE;
+            const pageItems = annAll.slice(start, start + ANN_PER_PAGE);
+
+            if (annAll.length === 0) {
+                container.innerHTML = `<div class="ann-empty"><i class="fas fa-bullhorn" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>${t.empty}</div>`;
+                pagination.style.display = 'none';
+                return;
+            }
+
+            container.innerHTML = pageItems.map(a => {
+                const tag = a.link ? 'a' : 'div';
+                const href = a.link ? ` href="${a.link}" target="_blank" rel="noopener"` : '';
+                return `<${tag} class="ann-item"${href}>
+                    ${a.image ? `<img class="ann-item-img" src="${a.image}" alt="${a.title}" loading="lazy">` : ''}
+                    <div class="ann-item-body">
+                        <div class="ann-item-title">${a.title}</div>
+                        ${a.desc ? `<div class="ann-item-desc">${a.desc}</div>` : ''}
+                        <div class="ann-item-date">${a.date || ''}</div>
+                    </div>
+                </${tag}>`;
+            }).join('');
+
+            if (totalPages > 1) {
+                pagination.style.display = 'flex';
+                document.getElementById('annPageInfo').textContent = (annPage + 1) + ' / ' + totalPages;
+                document.getElementById('annPrevPage').disabled = annPage <= 0;
+                document.getElementById('annNextPage').disabled = annPage >= totalPages - 1;
+            } else {
+                pagination.style.display = 'none';
+            }
+        }
+
+        async function loadAnnouncements() {
+            const t = ANN_TEXTS[currentLang] || ANN_TEXTS.az;
+            document.getElementById('sidebarAnnTitle').textContent = t.title;
+            try {
+                const snap = await db.ref('announcements').orderByChild('timestamp').once('value');
+                const data = snap.val();
+                if (!data) { annAll = []; renderAnnPage(); return; }
+                annAll = Object.values(data)
+                    .filter(a => a.active !== false)
+                    .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                annPage = 0;
+                renderAnnPage();
+            } catch(e) { annAll = []; renderAnnPage(); }
+        }
+
+        document.getElementById('annPrevPage').addEventListener('click', function() {
+            if (annPage > 0) { annPage--; renderAnnPage(); }
+        });
+        document.getElementById('annNextPage').addEventListener('click', function() {
+            const totalPages = Math.ceil(annAll.length / ANN_PER_PAGE);
+            if (annPage < totalPages - 1) { annPage++; renderAnnPage(); }
+        });
+
+        loadAnnouncements();
 
         // === BLOG CTA: Calendar + Call Form ===
         const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw869YoQXmQIJDknvOoLkBjetn7dT3BF8W7GXOgHhlk8FbAGclnCbDHDKIgX5S-UHr1/exec';
