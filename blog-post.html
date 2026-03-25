@@ -1981,8 +1981,10 @@
         }
 
         // Submit comment
-        document.getElementById('commentForm').addEventListener('submit', async function(e) {
+        var commentFormEl = document.getElementById('commentForm');
+        if (commentFormEl) commentFormEl.addEventListener('submit', async function(e) {
             e.preventDefault();
+            e.stopPropagation();
             const postId = await getPostId();
             if (!postId) return;
 
@@ -2024,15 +2026,17 @@
             }
             if (user && user.uid) commentData.uid = user.uid;
 
-            db.ref('comments/' + postId).push(commentData).then(() => {
+            try {
+                await db.ref('comments/' + postId).push(commentData);
                 document.getElementById('commentText').value = '';
                 btn.disabled = false;
                 const successEl = document.getElementById('commentSuccess');
                 successEl.style.display = 'block';
                 setTimeout(() => { successEl.style.display = 'none'; }, 3000);
-            }).catch(() => {
+            } catch(err) {
                 btn.disabled = false;
-            });
+                alert('Şərh göndərilə bilmədi: ' + err.message);
+            }
         });
 
         loadComments();
