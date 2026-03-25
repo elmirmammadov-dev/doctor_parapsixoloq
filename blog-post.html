@@ -464,22 +464,94 @@
             margin: 0 0 16px 0;
         }
         .sidebar-archive-list {
-            list-style: disc;
-            padding-left: 20px;
+            list-style: none;
+            padding: 0;
             margin: 0;
         }
         .sidebar-archive-list li {
-            padding: 6px 0;
+            border-bottom: 1px solid #f0f0f0;
         }
-        .sidebar-archive-list li a {
+        .sidebar-archive-list li:last-child {
+            border-bottom: none;
+        }
+        .archive-month-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             text-decoration: none;
             color: var(--text-primary);
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 600;
+            padding: 10px 4px;
             transition: color 0.2s;
+            cursor: pointer;
         }
-        .sidebar-archive-list li a:hover {
+        .archive-month-link:hover {
             color: var(--gold, #1a8a5c);
+        }
+        .archive-month-link .archive-count {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #999;
+            background: #f5f5f5;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .archive-month-link .archive-arrow {
+            font-size: 0.7rem;
+            color: #bbb;
+            transition: transform 0.3s;
+            margin-left: 6px;
+        }
+        .archive-month-link.open .archive-arrow {
+            transform: rotate(90deg);
+        }
+        .archive-month-articles {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .archive-month-articles.open {
+            max-height: 1000px;
+        }
+        .archive-article-item {
+            display: flex;
+            gap: 10px;
+            padding: 8px 4px 8px 12px;
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.2s;
+            border-radius: 8px;
+        }
+        .archive-article-item:hover {
+            background: #f0faf5;
+        }
+        .archive-article-img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #f5f5f5;
+        }
+        .archive-article-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .archive-article-title {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .archive-article-date {
+            font-size: 0.73rem;
+            color: var(--gold, #1a8a5c);
+            margin-top: 2px;
         }
         @media (max-width: 900px) {
             .blog-post-layout {
@@ -1784,7 +1856,6 @@
             const monthMap = {};
             articles.forEach(a => {
                 if (!a.date) return;
-                // Parse date - try common formats
                 const d = new Date(a.date);
                 if (isNaN(d.getTime())) return;
                 const key = d.getFullYear() + '-' + String(d.getMonth()).padStart(2, '0');
@@ -1793,29 +1864,40 @@
                 monthMap[key].articles.push(a);
             });
             const sorted = Object.values(monthMap).sort((a, b) => b.year - a.year || b.month - a.month);
-            if (sorted.length === 0) {
-                container.innerHTML = '';
-                return;
-            }
-            container.innerHTML = sorted.map(m => {
+            if (sorted.length === 0) { container.innerHTML = ''; return; }
+
+            container.innerHTML = sorted.map((m, i) => {
                 const monthName = t.months[m.month];
-                const slugs = m.articles.map(a => a.slug);
-                return `<li><a href="/#about" class="archive-month-link" data-slugs='${JSON.stringify(slugs)}'>${monthName} ${m.year}</a></li>`;
+                const articlesHtml = m.articles.map(a => `
+                    <a class="archive-article-item" href="/${a.slug}">
+                        ${a.image ? `<img class="archive-article-img" src="${a.image}" alt="${a.title}" loading="lazy">` : `<div class="archive-article-img" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-file-alt" style="color:#ccc;"></i></div>`}
+                        <div class="archive-article-info">
+                            <div class="archive-article-title">${a.title}</div>
+                            <div class="archive-article-date">${a.date}</div>
+                        </div>
+                    </a>
+                `).join('');
+                return `<li>
+                    <div class="archive-month-link" data-index="${i}">
+                        <span>${monthName} ${m.year} <span class="archive-count">${m.count}</span></span>
+                        <i class="fas fa-chevron-right archive-arrow"></i>
+                    </div>
+                    <div class="archive-month-articles" data-index="${i}">${articlesHtml}</div>
+                </li>`;
             }).join('');
 
-            // Click handler - show articles of that month in search results
             container.querySelectorAll('.archive-month-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const slugs = JSON.parse(this.dataset.slugs);
-                    const matched = articles.filter(a => slugs.includes(a.slug));
-                    const searchResults = document.getElementById('sidebarSearchResults');
-                    searchResults.innerHTML = matched.map(a =>
-                        `<a class="sidebar-search-item" href="/${a.slug}">${a.title}<span class="search-item-date">${a.date}</span></a>`
-                    ).join('');
-                    // Scroll to search
-                    document.getElementById('sidebarSearchInput').value = this.textContent;
-                    document.querySelector('.sidebar-search-box').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                link.addEventListener('click', function() {
+                    const idx = this.dataset.index;
+                    const panel = container.querySelector(`.archive-month-articles[data-index="${idx}"]`);
+                    const isOpen = panel.classList.contains('open');
+                    // Close all
+                    container.querySelectorAll('.archive-month-articles').forEach(p => p.classList.remove('open'));
+                    container.querySelectorAll('.archive-month-link').forEach(l => l.classList.remove('open'));
+                    if (!isOpen) {
+                        panel.classList.add('open');
+                        this.classList.add('open');
+                    }
                 });
             });
         }
