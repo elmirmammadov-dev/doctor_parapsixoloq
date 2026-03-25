@@ -595,6 +595,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
             }
 
+            // Fetch cover images from Firebase SEO
+            let seoData = {};
+            try {
+                const seoSnap = await adminDb.ref('articleSeo').once('value');
+                seoData = seoSnap.val() || {};
+            } catch(e) {}
+
             listEl.innerHTML = '';
             adminSelectedArticles.clear();
             updateArticleSelectedCount();
@@ -602,7 +609,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 const f = item.fields;
                 const id = item.sys.id;
                 const imgId = f.image && f.image.sys ? f.image.sys.id : null;
-                const imgUrl = imgId ? assets[imgId] : null;
+                let imgUrl = imgId ? assets[imgId] : null;
+                // Prefer ImgBB cover image
+                if (seoData[id] && seoData[id].coverImage) imgUrl = seoData[id].coverImage;
 
                 const card = document.createElement('div');
                 card.dataset.articleId = id;
