@@ -1027,10 +1027,10 @@
         </aside>
 
         <!-- Center: Comments -->
-        <div class="comments-section" id="commentsSection">
+        <div class="comments-section" id="commentsSection" style="display:none;">
             <h3 id="commentsTitle">Şərhlər</h3>
             <div class="comments-divider"></div>
-            <form class="comment-form" id="commentForm" onsubmit="event.preventDefault();"
+            <form class="comment-form" id="commentForm">
                 <div>
                     <label id="labelName">Ad</label> <span id="adminBadgeLabel" class="comment-reply-badge" style="display:none;">Müəllif</span>
                     <input type="text" id="commentName" placeholder="Ad" required>
@@ -1086,6 +1086,20 @@
                     <div class="blog-form-success-icon"><i class="fas fa-check"></i></div>
                     <h4>Müraciətiniz qəbul edildi</h4>
                     <p>Tezliklə sizinlə əlaqə saxlanılacaq.</p>
+                </div>
+                <div class="blog-form-features">
+                    <div class="blog-feat-item">
+                        <div class="blog-feat-icon"><i class="fas fa-hand-sparkles"></i></div>
+                        <div class="blog-feat-text"><strong id="blogFeat1">Enerji müayinəsi</strong><small id="blogFeatSub1">Qeyri-ənənəvi tibb yanaşması</small></div>
+                    </div>
+                    <div class="blog-feat-item">
+                        <div class="blog-feat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="blog-feat-text"><strong id="blogFeat2">24 saat cavab</strong><small id="blogFeatSub2">Sürətli geri dönüş</small></div>
+                    </div>
+                    <div class="blog-feat-item">
+                        <div class="blog-feat-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="blog-feat-text"><strong id="blogFeat3">Tam məxfilik</strong><small id="blogFeatSub3">Məlumatlarınız qorunur</small></div>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -1981,10 +1995,8 @@
         }
 
         // Submit comment
-        var commentFormEl = document.getElementById('commentForm');
-        if (commentFormEl) commentFormEl.addEventListener('submit', async function(e) {
+        document.getElementById('commentForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            e.stopPropagation();
             const postId = await getPostId();
             if (!postId) return;
 
@@ -2026,17 +2038,15 @@
             }
             if (user && user.uid) commentData.uid = user.uid;
 
-            try {
-                await db.ref('comments/' + postId).push(commentData);
+            db.ref('comments/' + postId).push(commentData).then(() => {
                 document.getElementById('commentText').value = '';
                 btn.disabled = false;
                 const successEl = document.getElementById('commentSuccess');
                 successEl.style.display = 'block';
                 setTimeout(() => { successEl.style.display = 'none'; }, 3000);
-            } catch(err) {
+            }).catch(() => {
                 btn.disabled = false;
-                alert('Şərh göndərilə bilmədi: ' + err.message);
-            }
+            });
         });
 
         loadComments();
