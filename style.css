@@ -972,7 +972,7 @@ img {
 
 .blog-section-grid .blog-post-card:hover img,
 .blog-section-grid .blog-post-card:hover .blog-post-cover {
-    transform: scale(1.05);
+    filter: brightness(1.05);
 }
 
 .blog-section-grid .blog-post-card::after {
