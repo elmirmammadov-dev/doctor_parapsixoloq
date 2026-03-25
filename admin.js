@@ -1991,6 +1991,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (mdEl) { mdEl.value = seo.metaDesc || ''; document.getElementById('metaDescCount').textContent = (seo.metaDesc || '').length; }
                 if (kwEl) kwEl.value = seo.keyword || '';
                 if (iaEl) iaEl.value = seo.imageAlt || '';
+                const slEl = document.getElementById('articleSlug');
+                if (slEl) { slEl.value = seo.slug || ''; slugManuallyEdited = true; }
                 const mdRuEl = document.getElementById('articleMetaDescRu');
                 const kwRuEl = document.getElementById('articleKeywordRu');
                 if (mdRuEl) { mdRuEl.value = seo.metaDescRu || ''; const ctr = document.getElementById('metaDescCountRu'); if(ctr) ctr.textContent = (seo.metaDescRu || '').length; }
@@ -2095,6 +2097,26 @@ document.addEventListener("DOMContentLoaded", function() {
         return tmp.innerHTML;
     }
 
+    // Auto-generate slug from title
+    function generateSlug(text) {
+        const azMap = {'ə':'e','ı':'i','ö':'o','ü':'u','ş':'s','ç':'c','ğ':'g','Ə':'e','I':'i','İ':'i','Ö':'o','Ü':'u','Ş':'s','Ç':'c','Ğ':'g'};
+        return text.toLowerCase().replace(/[əıöüşçğƏIİÖÜŞÇĞ]/g, c => azMap[c] || c)
+            .replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    }
+    const articleTitleEl = document.getElementById('articleTitle');
+    const articleSlugEl = document.getElementById('articleSlug');
+    let slugManuallyEdited = false;
+    if (articleSlugEl) {
+        articleSlugEl.addEventListener('input', function() { slugManuallyEdited = true; });
+    }
+    if (articleTitleEl && articleSlugEl) {
+        articleTitleEl.addEventListener('input', function() {
+            if (!slugManuallyEdited && !editingEntryId) {
+                articleSlugEl.value = generateSlug(articleTitleEl.value);
+            }
+        });
+    }
+
     const newArticleForm = document.getElementById('newArticleForm');
     if (newArticleForm) {
         newArticleForm.addEventListener('submit', async (e) => {
@@ -2110,9 +2132,11 @@ document.addEventListener("DOMContentLoaded", function() {
             const metaDescEl = document.getElementById('articleMetaDesc');
             const keywordEl = document.getElementById('articleKeyword');
             const imageAltEl = document.getElementById('articleImageAlt');
+            const slugEl = document.getElementById('articleSlug');
             const metaDesc = metaDescEl ? metaDescEl.value.trim() : '';
             const keyword = keywordEl ? keywordEl.value.trim() : '';
             const imageAlt = imageAltEl ? imageAltEl.value.trim() : '';
+            const articleSlug = slugEl ? slugEl.value.trim() : '';
 
             // Russian SEO fields
             const metaDescRuEl = document.getElementById('articleMetaDescRu');
@@ -2178,10 +2202,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     await adminDb.ref('articleHtml/' + editingEntryId).set(htmlData);
                     const seoObj = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(1) + '% ' + coverPosY.toFixed(1) + '%', coverZoom: coverZoom };
                     if (coverImageUrl) seoObj.coverImage = coverImageUrl;
+                    if (articleSlug) seoObj.slug = articleSlug;
                     if (metaDescRu) seoObj.metaDescRu = metaDescRu;
                     if (keywordRu) seoObj.keywordRu = keywordRu;
                     if (imageAltRu) seoObj.imageAltRu = imageAltRu;
                     await adminDb.ref('articleSeo/' + editingEntryId).update(seoObj);
+                    // Update slug mapping
+                    if (articleSlug) await adminDb.ref('articleSlugs/' + articleSlug).set(editingEntryId);
 
                     statusEl.textContent = 'Məqalə uğurla yeniləndi!';
                     statusEl.style.color = '#27ae60';
@@ -2208,10 +2235,13 @@ document.addEventListener("DOMContentLoaded", function() {
                         await adminDb.ref('articleHtml/' + newEntryId).set(htmlData);
                         const seoObj2 = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(1) + '% ' + coverPosY.toFixed(1) + '%', coverZoom: coverZoom };
                         if (coverImageUrl) seoObj2.coverImage = coverImageUrl;
+                        if (articleSlug) seoObj2.slug = articleSlug;
                         if (metaDescRu) seoObj2.metaDescRu = metaDescRu;
                         if (keywordRu) seoObj2.keywordRu = keywordRu;
                         if (imageAltRu) seoObj2.imageAltRu = imageAltRu;
                         await adminDb.ref('articleSeo/' + newEntryId).set(seoObj2);
+                        // Save slug mapping
+                        if (articleSlug) await adminDb.ref('articleSlugs/' + articleSlug).set(newEntryId);
                     }
 
                     statusEl.textContent = 'Məqalə uğurla dərc edildi!';
@@ -2227,6 +2257,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (metaDescRuEl) { metaDescRuEl.value = ''; const ctr = document.getElementById('metaDescCountRu'); if(ctr) ctr.textContent = '0'; }
                     if (keywordRuEl) keywordRuEl.value = '';
                     if (imageAltRuEl) imageAltRuEl.value = '';
+                    if (slugEl) slugEl.value = '';
+                    slugManuallyEdited = false;
                     articleImagePreview.style.display = 'none';
                     // Reset cover image preview
                     var coverWrap = document.getElementById('coverPreviewWrap');

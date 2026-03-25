@@ -7,7 +7,18 @@ const CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
 const FIREBASE_DB_URL = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
 
 module.exports = async (req, res) => {
-    const postId = req.query.id;
+    let postId = req.query.id;
+    const slug = req.query.slug;
+
+    // If slug provided, resolve to ID from Firebase
+    if (!postId && slug) {
+        try {
+            const slugRes = await fetch(`${FIREBASE_DB_URL}/articleSlugs/${slug}.json`);
+            const resolvedId = await slugRes.json();
+            if (resolvedId) postId = resolvedId;
+        } catch (e) {}
+    }
+
     if (!postId) {
         res.status(400).send('Missing article ID');
         return;
@@ -51,7 +62,7 @@ module.exports = async (req, res) => {
         const keyword = seoData.keyword || 'parapsixologiya, Şahsəddin İmanlı';
         const imageAlt = seoData.imageAlt || title;
         const siteUrl = 'https://www.sahseddinimanli.com';
-        const pageUrl = `${siteUrl}/blog/${postId}`;
+        const pageUrl = seoData.slug ? `${siteUrl}/${seoData.slug}` : `${siteUrl}/blog/${postId}`;
 
         // Read the blog-post.html template
         const templatePath = path.join(process.cwd(), 'blog-post.html');

@@ -1277,7 +1277,7 @@
         async function loadPost() {
             const container = document.getElementById('blogDetail');
             const ui = UI_TEXTS[currentLang] || UI_TEXTS.az;
-            const postId = getPostId();
+            const postId = await getPostId();
             if (!postId) {
                 container.innerHTML = `<p style="text-align:center;color:#999;padding:80px 0;">${ui.notFound}</p>`;
                 return;
@@ -1675,8 +1675,8 @@
         }
 
         // ===== VIEW COUNT & REACTIONS =====
-        function trackView() {
-            const postId = getPostId();
+        async function trackView() {
+            const postId = await getPostId();
             if (!postId) return;
             const viewKey = 'viewed_' + postId;
             const ref = db.ref('postStats/' + postId + '/views');
@@ -1693,8 +1693,8 @@
             });
         }
 
-        function loadReactions() {
-            const postId = getPostId();
+        async function loadReactions() {
+            const postId = await getPostId();
             if (!postId) return;
             const ref = db.ref('postStats/' + postId);
             ref.on('value', snap => {
@@ -1719,8 +1719,8 @@
             }
         }
 
-        window.toggleReaction = function(type) {
-            const postId = getPostId();
+        window.toggleReaction = async function(type) {
+            const postId = await getPostId();
             if (!postId) return;
             const storageKey = 'reaction_' + postId;
             const current = localStorage.getItem(storageKey);
@@ -1767,11 +1767,25 @@
         let currentPage = 1;
         let replyVisibleCounts = {};
 
-        function getPostId() {
-            // Support both /blog/ID and ?id=ID formats
+        let resolvedPostId = null;
+        async function getPostId() {
+            if (resolvedPostId) return resolvedPostId;
+            // Support /blog/ID format
             const pathMatch = window.location.pathname.match(/\/blog\/([^\/]+)/);
-            if (pathMatch) return pathMatch[1];
-            return new URLSearchParams(window.location.search).get('id');
+            if (pathMatch) { resolvedPostId = pathMatch[1]; return resolvedPostId; }
+            // Support ?id=ID format
+            const qid = new URLSearchParams(window.location.search).get('id');
+            if (qid) { resolvedPostId = qid; return resolvedPostId; }
+            // Support slug format: /panik-atak-nedir
+            const slugMatch = window.location.pathname.match(/^\/([a-z0-9][a-z0-9-]+[a-z0-9])$/);
+            if (slugMatch) {
+                try {
+                    const snap = await db.ref('articleSlugs/' + slugMatch[1]).once('value');
+                    const id = snap.val();
+                    if (id) { resolvedPostId = id; return resolvedPostId; }
+                } catch(e) {}
+            }
+            return null;
         }
 
         function updateCommentTitle() {
@@ -1863,7 +1877,7 @@
         };
 
         window.submitReplyToReply = async function(commentKey, replyId, replyToName) {
-            const postId = getPostId();
+            const postId = await getPostId();
             if (!postId) return;
             const formEl = document.getElementById('replyForm_' + replyId);
             const textarea = formEl.querySelector('textarea');
@@ -1916,7 +1930,7 @@
         };
 
         window.submitReply = async function(commentKey) {
-            const postId = getPostId();
+            const postId = await getPostId();
             if (!postId) return;
             const formEl = document.getElementById('replyForm_' + commentKey);
             const textarea = formEl.querySelector('textarea');
@@ -2045,8 +2059,8 @@
             pagEl.style.display = 'flex';
         }
 
-        function loadComments() {
-            const postId = getPostId();
+        async function loadComments() {
+            const postId = await getPostId();
             if (!postId) return;
             document.getElementById('commentsSection').style.display = 'block';
             updateCommentUI();
@@ -2067,7 +2081,7 @@
         // Submit comment
         document.getElementById('commentForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const postId = getPostId();
+            const postId = await getPostId();
             if (!postId) return;
 
             const name = document.getElementById('commentName').value.trim();

@@ -748,10 +748,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 // Use background-image for zoom+position support
                 const bgSize = coverZoom > 1 ? (coverZoom * 100) + '%' : 'cover';
+                const blogUrl = (seoData[id] && seoData[id].slug) ? '/' + seoData[id].slug : '/blog/' + id;
                 return {
                     id: id,
                     html: `
-                    <a href="/blog/${id}" class="blog-post-card" style="text-decoration:none;color:inherit;cursor:pointer;">
+                    <a href="${blogUrl}" class="blog-post-card" style="text-decoration:none;color:inherit;cursor:pointer;">
                         ${imgUrl ? `<div class="blog-post-cover" role="img" aria-label="${f.title}" style="background-image:url(${imgUrl});background-size:${bgSize};background-position:${coverPos};background-repeat:no-repeat;"></div>` : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`}
                         <div class="blog-post-info">
                             <h4>${f.title}</h4>

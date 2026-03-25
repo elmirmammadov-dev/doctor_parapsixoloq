@@ -3,6 +3,7 @@ const fetch = require('node-fetch');
 const CONTENTFUL_SPACE = 'q3fe87ca4p3k';
 const CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
 const SITE_URL = 'https://www.sahseddinimanli.com';
+const FIREBASE_DB_URL = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
 
 module.exports = async (req, res) => {
     try {
@@ -12,6 +13,13 @@ module.exports = async (req, res) => {
         );
         const data = await contentfulRes.json();
         const articles = data.items || [];
+
+        // Fetch SEO data (slugs) from Firebase
+        let seoData = {};
+        try {
+            const seoRes = await fetch(`${FIREBASE_DB_URL}/articleSeo.json`);
+            seoData = await seoRes.json() || {};
+        } catch(e) {}
 
         let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -50,9 +58,11 @@ module.exports = async (req, res) => {
         for (const article of articles) {
             const id = article.sys.id;
             const updated = article.sys.updatedAt ? article.sys.updatedAt.split('T')[0] : '';
+            const slug = seoData[id] && seoData[id].slug ? seoData[id].slug : null;
+            const blogUrl = slug ? `${SITE_URL}/${slug}` : `${SITE_URL}/blog/${id}`;
             xml += `
     <url>
-        <loc>${SITE_URL}/blog/${id}</loc>
+        <loc>${blogUrl}</loc>
         ${updated ? `<lastmod>${updated}</lastmod>` : ''}
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
