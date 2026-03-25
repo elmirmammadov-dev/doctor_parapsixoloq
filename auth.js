@@ -630,11 +630,10 @@ function updateCommentFormAuth(user) {
             emailInput.value = 'anonim@user.com';
             emailInput.readOnly = true;
             emailInput.style.background = '#f5f5f5';
-        } else {
-            nameInput.value = '';
+        } else if (!nameInput.value) {
+            // Only clear if not already filled (avoid wiping anon name on auth state flicker)
             nameInput.readOnly = false;
             nameInput.style.background = '';
-            emailInput.value = '';
             emailInput.readOnly = false;
             emailInput.style.background = '';
         }
