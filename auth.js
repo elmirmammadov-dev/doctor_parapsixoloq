@@ -523,7 +523,7 @@ async function loginAnonymous() {
     // Close modal immediately - don't wait for Firebase
     closeAuthModal();
     const authBtn = document.getElementById('userAuthBtn');
-    if (authBtn) authBtn.innerHTML = '<i class="fas fa-user-secret"></i> <span class="nav-user-name">Anonim</span>';
+    if (authBtn) authBtn.innerHTML = '<img src="/anonim.webp" class="nav-user-avatar" alt="Anonim" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"> <span class="nav-user-name">Anonim</span>';
     try {
         await firebase.auth().signInAnonymously();
         if (typeof window.siteLogActivity === 'function') window.siteLogActivity('auth', 'Anonim olaraq daxil oldu');
@@ -556,7 +556,7 @@ function updateNavbarAuth(user) {
         showUserDropdown(user);
     } else if (user && user.isAnonymous) {
         const t = getAuthText();
-        authBtn.innerHTML = `<i class="fas fa-user-secret"></i> <span class="nav-user-name">${t.anonymous}</span>`;
+        authBtn.innerHTML = `<img src="/anonim.webp" class="nav-user-avatar" alt="Anonim" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"> <span class="nav-user-name">${t.anonymous}</span>`;
         authBtn.onclick = toggleUserDropdown;
         showUserDropdown(user);
     } else {

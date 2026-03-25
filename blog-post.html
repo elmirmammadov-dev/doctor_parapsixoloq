@@ -1734,7 +1734,7 @@
                 return `
                     <div class="reply-item">
                         <div class="comment-header">
-                            ${r.photoURL ? `<img src="${r.photoURL}" class="comment-avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:top center;" alt="${escapeHtml(r.name)}">` : `<div class="comment-avatar">${escapeHtml(initial)}</div>`}
+                            ${r.photoURL ? `<img src="${r.photoURL}" class="comment-avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:top center;" alt="${escapeHtml(r.name)}">` : `<img src="/anonim.webp" class="comment-avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;" alt="${escapeHtml(r.name)}">`}
                             <div>
                                 <div class="comment-author">${escapeHtml(r.name)}${isAuthor ? ` <span class="comment-reply-badge">${ct.author}</span>` : ''}</div>
                                 <div class="comment-date">${formatDate(r.timestamp)}</div>
@@ -1912,7 +1912,7 @@
                 return `
                     <div class="comment-item">
                         <div class="comment-header">
-                            ${c.photoURL ? `<img src="${c.photoURL}" class="comment-avatar" style="width:42px;height:42px;border-radius:50%;object-fit:cover;object-position:top center;" alt="${escapeHtml(c.name)}">` : `<div class="comment-avatar">${escapeHtml(initial)}</div>`}
+                            ${c.photoURL ? `<img src="${c.photoURL}" class="comment-avatar" style="width:42px;height:42px;border-radius:50%;object-fit:cover;object-position:top center;" alt="${escapeHtml(c.name)}">` : `<img src="/anonim.webp" class="comment-avatar" style="width:42px;height:42px;border-radius:50%;object-fit:cover;" alt="${escapeHtml(c.name)}">`}
                             <div>
                                 <div class="comment-author">${escapeHtml(c.name)}${c.isAuthor ? ` <span class="comment-reply-badge">${ct.author}</span>` : ''}</div>
                                 <div class="comment-date">${date}</div>
