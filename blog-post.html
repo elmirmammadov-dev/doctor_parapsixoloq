@@ -1770,13 +1770,7 @@
         let resolvedPostId = null;
         async function getPostId() {
             if (resolvedPostId) return resolvedPostId;
-            // Support /blog/ID format
-            const pathMatch = window.location.pathname.match(/\/blog\/([^\/]+)/);
-            if (pathMatch) { resolvedPostId = pathMatch[1]; return resolvedPostId; }
-            // Support ?id=ID format
-            const qid = new URLSearchParams(window.location.search).get('id');
-            if (qid) { resolvedPostId = qid; return resolvedPostId; }
-            // Support slug format: /panik-atak-nedir
+            // Resolve slug from URL: /panik-atak-nedir
             const slugMatch = window.location.pathname.match(/^\/([a-z0-9][a-z0-9-]+[a-z0-9])$/);
             if (slugMatch) {
                 try {

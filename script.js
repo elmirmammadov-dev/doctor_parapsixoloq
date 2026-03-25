@@ -748,7 +748,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 // Use background-image for zoom+position support
                 const bgSize = coverZoom > 1 ? (coverZoom * 100) + '%' : 'cover';
-                const blogUrl = (seoData[id] && seoData[id].slug) ? '/' + seoData[id].slug : '/blog/' + id;
+                const blogUrl = (seoData[id] && seoData[id].slug) ? '/' + seoData[id].slug : '#';
                 return {
                     id: id,
                     html: `

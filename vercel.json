@@ -13,10 +13,6 @@
       "destination": "/api/render-lang?lang=tr"
     },
     {
-      "source": "/blog/:id",
-      "destination": "/api/render-blog?id=:id"
-    },
-    {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
     },
@@ -25,14 +21,7 @@
       "destination": "/api/render-blog?slug=:slug"
     }
   ],
-  "redirects": [
-    {
-      "source": "/blog-post.html",
-      "has": [{ "type": "query", "key": "id", "value": "(?<id>.*)" }],
-      "destination": "/blog/:id",
-      "permanent": true
-    }
-  ],
+  "redirects": [],
   "headers": [
     {
       "source": "/(.*)",

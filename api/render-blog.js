@@ -7,11 +7,11 @@ const CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
 const FIREBASE_DB_URL = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
 
 module.exports = async (req, res) => {
-    let postId = req.query.id;
+    let postId = null;
     const slug = req.query.slug;
 
-    // If slug provided, resolve to ID from Firebase
-    if (!postId && slug) {
+    // Resolve slug to article ID from Firebase
+    if (slug) {
         try {
             const slugRes = await fetch(`${FIREBASE_DB_URL}/articleSlugs/${slug}.json`);
             const resolvedId = await slugRes.json();
@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
     }
 
     if (!postId) {
-        res.status(400).send('Missing article ID');
+        res.status(404).send('Məqalə tapılmadı');
         return;
     }
 
