@@ -979,13 +979,13 @@ img {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 40%, transparent 100%);
+    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.1) 100%);
     z-index: 1;
     transition: all 0.5s ease;
 }
 
 .blog-section-grid .blog-post-card:hover::after {
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.3) 100%);
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.3) 100%);
 }
 
 .blog-section-grid .blog-post-card .blog-post-info {
@@ -1011,19 +1011,22 @@ img {
     overflow: hidden;
     color: #fff !important;
     font-weight: 700;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
 
 .blog-section-grid .blog-post-card .blog-post-info .blog-post-date {
     font-size: 0.75rem;
-    color: rgba(255,255,255,0.7) !important;
+    color: rgba(255,255,255,0.9) !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 .blog-section-grid .blog-post-card .blog-post-info span {
-    color: rgba(255,255,255,0.6) !important;
+    color: rgba(255,255,255,0.85) !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 .blog-section-grid .blog-post-card .blog-post-info span i {
-    color: rgba(255,255,255,0.5) !important;
+    color: rgba(255,255,255,0.8) !important;
 }
 
 .blog-section-grid .blog-post-card .blog-post-placeholder {
