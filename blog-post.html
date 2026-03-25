@@ -628,38 +628,103 @@
             color: var(--gold, #1a8a5c);
             margin-top: 2px;
         }
-        /* Announcements & Campaigns */
+        /* Announcements & Campaigns — Premium */
         .sidebar-announcements-box {
-            background: #fff;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            border-top: 4px solid #e74c3c;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .sidebar-announcements-box::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(231,76,60,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .sidebar-announcements-box::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(231,76,60,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .ann-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        .ann-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ann-header-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: rgba(231,76,60,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ann-header-icon i {
+            color: #e74c3c;
+            font-size: 0.85rem;
         }
         .sidebar-announcements-box h3 {
             font-family: var(--font-display);
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             font-weight: 700;
-            letter-spacing: 0.06em;
-            color: #e74c3c;
+            letter-spacing: 0.08em;
+            color: #fff;
             text-transform: uppercase;
             margin: 0;
+        }
+        .ann-all-link {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.5);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+            position: relative;
+            z-index: 1;
+        }
+        .ann-all-link:hover {
+            color: #e74c3c;
         }
         .ann-item {
             display: block;
             text-decoration: none;
             color: inherit;
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
-            border: 1px solid #f0f0f0;
-            margin-bottom: 10px;
-            transition: box-shadow 0.2s;
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(4px);
+            margin-bottom: 12px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.08);
+            position: relative;
+            z-index: 1;
         }
         .ann-item:last-child {
             margin-bottom: 0;
         }
         .ann-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
         .ann-item-img {
             width: 100%;
@@ -669,66 +734,83 @@
             background-repeat: no-repeat;
         }
         .ann-item-body {
-            padding: 10px 12px;
+            padding: 14px 14px 12px;
         }
         .ann-item-title {
-            font-size: 0.88rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            line-height: 1.3;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+            line-height: 1.35;
         }
         .ann-item-desc {
             font-size: 0.78rem;
-            color: #777;
-            line-height: 1.5;
+            color: rgba(255,255,255,0.55);
+            line-height: 1.55;
         }
         .ann-item-date {
-            font-size: 0.7rem;
-            color: #bbb;
-            margin-top: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.68rem;
+            color: #e74c3c;
+            margin-top: 8px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+        }
+        .ann-item-date::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #e74c3c;
         }
         .ann-pagination {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
-            margin-top: 14px;
-            padding-top: 12px;
-            border-top: 1px solid #f0f0f0;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            position: relative;
+            z-index: 1;
         }
         .ann-pagination button {
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            border: 1.5px solid #e0e0e0;
-            background: #fff;
+            border: 1.5px solid rgba(255,255,255,0.15);
+            background: transparent;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.7rem;
-            color: #999;
+            color: rgba(255,255,255,0.5);
             transition: all 0.2s;
         }
         .ann-pagination button:hover {
             border-color: #e74c3c;
             color: #e74c3c;
+            background: rgba(231,76,60,0.1);
         }
         .ann-pagination button:disabled {
-            opacity: 0.3;
+            opacity: 0.2;
             cursor: default;
         }
         .ann-pagination span {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 600;
-            color: #999;
+            color: rgba(255,255,255,0.4);
         }
         .ann-empty {
             text-align: center;
-            padding: 16px 0;
-            color: #ccc;
+            padding: 20px 0;
+            color: rgba(255,255,255,0.3);
             font-size: 0.85rem;
+            position: relative;
+            z-index: 1;
         }
         @media (max-width: 900px) {
             .blog-post-layout {
@@ -1526,9 +1608,12 @@
             </div>
             <!-- Announcements & Campaigns -->
             <div class="sidebar-announcements-box">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-                    <h3 id="sidebarAnnTitle" style="margin:0;">ELANLAR VƏ KAMPANİYALAR</h3>
-                    <a href="/elanlar" style="font-size:0.72rem;color:#e74c3c;font-weight:600;text-decoration:none;" id="sidebarAnnAllLink">Hamısı &rarr;</a>
+                <div class="ann-header">
+                    <div class="ann-header-left">
+                        <div class="ann-header-icon"><i class="fas fa-bullhorn"></i></div>
+                        <h3 id="sidebarAnnTitle">ELANLAR VƏ KAMPANİYALAR</h3>
+                    </div>
+                    <a href="/elanlar" class="ann-all-link" id="sidebarAnnAllLink">Hamısı &rarr;</a>
                 </div>
                 <div id="sidebarAnnList">
                     <div style="text-align:center;padding:20px 0;color:#ccc;"><i class="fas fa-spinner fa-spin"></i></div>
