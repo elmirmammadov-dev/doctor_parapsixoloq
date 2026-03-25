@@ -3292,18 +3292,18 @@ img {
     gap: 8px;
     margin-top: 28px;
     padding: 12px 28px;
-    background: var(--gold, #1a8a5c);
-    color: #fff;
+    background: #c5e84d;
+    color: #1a3c2a;
     font-size: 0.88rem;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
     border-radius: 50px;
     transition: all 0.3s;
-    box-shadow: 0 4px 16px rgba(26,138,92,0.25);
+    box-shadow: 0 4px 16px rgba(197,232,77,0.3);
 }
 .ann-section-view-all:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(26,138,92,0.35);
+    box-shadow: 0 6px 24px rgba(197,232,77,0.45);
 }
 @media (max-width: 1024px) {
     .ann-section-grid { grid-template-columns: repeat(2, 1fr); }
