@@ -1767,9 +1767,11 @@
         let currentPage = 1;
         let replyVisibleCounts = {};
 
-        let resolvedPostId = window.__POST_ID__ || null;
+        let resolvedPostId = null;
         async function getPostId() {
             if (resolvedPostId) return resolvedPostId;
+            // Use server-injected ID if available
+            if (window.__POST_ID__) { resolvedPostId = window.__POST_ID__; return resolvedPostId; }
             // Fallback: resolve slug from Firebase
             const slugMatch = window.location.pathname.match(/^\/([a-z0-9][a-z0-9-]+[a-z0-9])$/);
             if (slugMatch) {
