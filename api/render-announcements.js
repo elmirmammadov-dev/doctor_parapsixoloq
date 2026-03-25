@@ -60,17 +60,21 @@ module.exports = async (req, res) => {
         // Build announcement cards HTML for SSR
         const annCardsHtml = announcements.length === 0
             ? '<p style="text-align:center;color:#999;padding:40px 0;">Hazırda elan yoxdur.</p>'
-            : announcements.map(a => `
+            : announcements.map(a => {
+                const pos = a.coverPos || '50% 50%';
+                const zoom = a.coverZoom || 1;
+                const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
+                return `
                 <article class="ann-card" itemscope itemtype="https://schema.org/Event">
-                    ${a.image ? `<img class="ann-card-img" src="${escapeHtml(a.image)}" alt="${escapeHtml(a.title)}" itemprop="image" loading="lazy">` : ''}
+                    ${a.image ? `<div class="ann-card-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};" role="img" aria-label="${escapeHtml(a.title)}" itemprop="image"><span class="ann-badge">YENİ</span></div>` : ''}
                     <div class="ann-card-body">
                         <h2 class="ann-card-title" itemprop="name">${escapeHtml(a.title)}</h2>
                         ${a.desc ? `<p class="ann-card-desc" itemprop="description">${escapeHtml(a.desc)}</p>` : ''}
-                        <time class="ann-card-date" itemprop="startDate">${escapeHtml(a.date || '')}</time>
+                        <time class="ann-card-date" itemprop="startDate"><i class="fas fa-calendar-alt"></i> ${escapeHtml(a.date || '')}</time>
                         ${a.link ? `<a href="${escapeHtml(a.link)}" class="ann-card-link" target="_blank" rel="noopener" itemprop="url">Ətraflı bax &rarr;</a>` : ''}
                     </div>
-                </article>
-            `).join('');
+                </article>`;
+            }).join('');
 
         const html = `<!DOCTYPE html>
 <html lang="az">
@@ -106,18 +110,20 @@ module.exports = async (req, res) => {
         .ann-page-back { display: inline-flex; align-items: center; gap: 8px; color: var(--gold, #1a8a5c); font-weight: 600; font-size: 0.95rem; text-decoration: none; margin-bottom: 24px; }
         .ann-page-back:hover { opacity: 0.8; }
         .ann-cards { display: flex; flex-direction: column; gap: 20px; }
-        .ann-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; transition: box-shadow 0.3s; }
-        .ann-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
-        .ann-card-img { width: 100%; height: 250px; object-fit: cover; display: block; }
+        .ann-card { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.07); border: 1.5px solid #f0f0f0; transition: all 0.3s; position: relative; }
+        .ann-card:hover { border-color: #e74c3c; transform: translateY(-3px); box-shadow: 0 8px 32px rgba(231,76,60,0.12); }
+        .ann-card-img { width: 100%; aspect-ratio: 16/9; background-size: cover; background-position: center; background-repeat: no-repeat; position: relative; }
+        .ann-badge { position: absolute; top: 12px; left: 12px; background: #e74c3c; color: #fff; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em; padding: 4px 10px; border-radius: 8px; box-shadow: 0 2px 8px rgba(231,76,60,0.4); }
         .ann-card-body { padding: 20px 24px; }
-        .ann-card-title { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #1a1a2e; margin: 0 0 8px; }
-        .ann-card-desc { font-size: 0.95rem; color: #555; line-height: 1.6; margin: 0 0 12px; }
-        .ann-card-date { font-size: 0.82rem; color: #999; display: block; margin-bottom: 8px; }
+        .ann-card-title { font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 700; color: #1a1a2e; margin: 0 0 10px; }
+        .ann-card-desc { font-size: 0.95rem; color: #555; line-height: 1.65; margin: 0 0 14px; }
+        .ann-card-date { font-size: 0.82rem; color: #e74c3c; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+        .ann-card-date i { font-size: 0.75rem; }
         .ann-card-link { display: inline-flex; align-items: center; gap: 4px; color: var(--gold, #1a8a5c); font-weight: 600; font-size: 0.9rem; text-decoration: none; }
         .ann-card-link:hover { opacity: 0.8; }
         @media (max-width: 600px) {
             .ann-page-header h1 { font-size: 1.5rem; }
-            .ann-card-img { height: 180px; }
+            .ann-card-img { aspect-ratio: 4/3; }
         }
     </style>
 </head>
