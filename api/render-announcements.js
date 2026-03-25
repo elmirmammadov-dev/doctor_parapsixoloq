@@ -121,6 +121,7 @@ module.exports = async (req, res) => {
         .ann-card-date i { font-size: 0.75rem; }
         .ann-card-link { display: inline-flex; align-items: center; gap: 4px; color: var(--gold, #1a8a5c); font-weight: 600; font-size: 0.9rem; text-decoration: none; }
         .ann-card-link:hover { opacity: 0.8; }
+        .navbar-menu { margin: 0 auto; }
         @media (max-width: 600px) {
             .ann-page-header h1 { font-size: 1.5rem; }
             .ann-card-img { aspect-ratio: 4/3; }
@@ -159,6 +160,13 @@ module.exports = async (req, res) => {
             ${annCardsHtml}
         </div>
     </div>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.link/wcams9" target="_blank" class="whatsapp-float" aria-label="WhatsApp ilə əlaqə">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-pulse"></span>
+        <span class="whatsapp-pulse delay"></span>
+    </a>
 
     <footer class="footer">
         <div class="container">
