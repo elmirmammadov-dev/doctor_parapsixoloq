@@ -4050,25 +4050,27 @@ img {
 }
 .blog-most-read-badge {
     position: absolute;
-    top: -10px;
+    top: 10px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, #2d8157 0%, #5ec489 40%, #2d8157 60%, #1f5e3d 100%);
+    background: linear-gradient(135deg, #1a6b42 0%, #2d8157 40%, #1a6b42 60%, #145234 100%);
     background-size: 200% 100%;
     animation: shimmerBadge 2s ease-in-out infinite;
     color: #fff;
     font-size: 0.7rem;
     font-weight: 700;
-    padding: 5px 18px;
+    padding: 6px 20px;
     border-radius: 20px;
     z-index: 3;
     letter-spacing: 1px;
     text-transform: uppercase;
     box-shadow:
-        0 4px 12px rgba(45, 129, 87, 0.5),
-        0 1px 3px rgba(0, 0, 0, 0.15);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        0 4px 16px rgba(0, 0, 0, 0.4),
+        0 1px 3px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
     white-space: nowrap;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 .blog-most-read-badge::before {
     content: '★ ';
