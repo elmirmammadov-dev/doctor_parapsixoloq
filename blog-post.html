@@ -1529,7 +1529,10 @@
             </div>
             <!-- Announcements & Campaigns -->
             <div class="sidebar-announcements-box">
-                <h3 id="sidebarAnnTitle">ELANLAR VƏ KAMPANİYALAR</h3>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                    <h3 id="sidebarAnnTitle" style="margin:0;">ELANLAR VƏ KAMPANİYALAR</h3>
+                    <a href="/elanlar" style="font-size:0.72rem;color:#f59e0b;font-weight:600;text-decoration:none;" id="sidebarAnnAllLink">Hamısı &rarr;</a>
+                </div>
                 <div id="sidebarAnnList">
                     <div style="text-align:center;padding:20px 0;color:#ccc;"><i class="fas fa-spinner fa-spin"></i></div>
                 </div>
@@ -2221,12 +2224,12 @@
             container.innerHTML = pageItems.map(a => {
                 const tag = a.link ? 'a' : 'div';
                 const href = a.link ? ` href="${a.link}" target="_blank" rel="noopener"` : '';
-                return `<${tag} class="ann-item"${href}>
-                    ${a.image ? `<img class="ann-item-img" src="${a.image}" alt="${a.title}" loading="lazy">` : ''}
+                return `<${tag} class="ann-item"${href} itemscope itemtype="https://schema.org/Event">
+                    ${a.image ? `<img class="ann-item-img" src="${a.image}" alt="${a.title}" loading="lazy" itemprop="image">` : ''}
                     <div class="ann-item-body">
-                        <div class="ann-item-title">${a.title}</div>
-                        ${a.desc ? `<div class="ann-item-desc">${a.desc}</div>` : ''}
-                        <div class="ann-item-date">${a.date || ''}</div>
+                        <div class="ann-item-title" itemprop="name">${a.title}</div>
+                        ${a.desc ? `<div class="ann-item-desc" itemprop="description">${a.desc}</div>` : ''}
+                        <time class="ann-item-date" itemprop="startDate">${a.date || ''}</time>
                     </div>
                 </${tag}>`;
             }).join('');

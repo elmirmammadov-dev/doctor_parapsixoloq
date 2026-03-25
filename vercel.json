@@ -17,6 +17,10 @@
       "destination": "/api/redirect-blog?id=:id"
     },
     {
+      "source": "/elanlar",
+      "destination": "/api/render-announcements"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
     },

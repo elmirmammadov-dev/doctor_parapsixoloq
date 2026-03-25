@@ -51,19 +51,22 @@ module.exports = async (req, res) => {
             }
         }
 
-        // Fetch SEO data and article HTML from Firebase in parallel
+        // Fetch SEO data, article HTML and announcements from Firebase in parallel
         let seoData = {};
         let articleHtmlAz = '';
         let articleHtmlRu = '';
+        let announcementsData = {};
         try {
-            const [seoRes, htmlRes] = await Promise.all([
+            const [seoRes, htmlRes, annRes] = await Promise.all([
                 fetch(`${FIREBASE_DB_URL}/articleSeo/${postId}.json`),
-                fetch(`${FIREBASE_DB_URL}/articleHtml/${postId}.json`)
+                fetch(`${FIREBASE_DB_URL}/articleHtml/${postId}.json`),
+                fetch(`${FIREBASE_DB_URL}/announcements.json`)
             ]);
             seoData = await seoRes.json() || {};
             const htmlData = await htmlRes.json() || {};
             articleHtmlAz = htmlData.az || '';
             articleHtmlRu = htmlData.ru || '';
+            announcementsData = await annRes.json() || {};
         } catch (e) {}
 
         // Prefer ImgBB cover image from SEO data
@@ -163,6 +166,21 @@ window.__POST_DATA__ = ${JSON.stringify(JSON.stringify(preloadData))};</script>
     <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
 
         html = html.replace('</head>', headInject + '\n</head>');
+
+        // Inject SSR announcements as noscript/hidden content for SEO
+        const activeAnns = Object.values(announcementsData)
+            .filter(a => a.active !== false)
+            .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
+            .slice(0, 10);
+        if (activeAnns.length > 0) {
+            const annSeoHtml = activeAnns.map(a =>
+                `<div itemscope itemtype="https://schema.org/Event"><meta itemprop="name" content="${escapeHtml(a.title)}"><meta itemprop="description" content="${escapeHtml(a.desc || '')}">` +
+                (a.image ? `<meta itemprop="image" content="${escapeHtml(a.image)}">` : '') +
+                (a.date ? `<meta itemprop="startDate" content="${escapeHtml(a.date)}">` : '') +
+                `<meta itemprop="organizer" content="Şahsəddin İmanlı"></div>`
+            ).join('');
+            html = html.replace('</body>', `<div style="display:none" aria-hidden="true">${annSeoHtml}</div>\n</body>`);
+        }
 
         // Set cache headers
         res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');

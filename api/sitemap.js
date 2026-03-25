@@ -44,6 +44,11 @@ module.exports = async (req, res) => {
         <priority>0.9</priority>
     </url>
     <url>
+        <loc>${SITE_URL}/elanlar</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
         <loc>${SITE_URL}/privacy-policy.html</loc>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
