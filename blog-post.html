@@ -1670,6 +1670,17 @@
                 trackView();
                 loadReactions();
 
+                // Handle broken images in blog body
+                document.querySelectorAll('.blog-detail-body img').forEach(img => {
+                    img.addEventListener('error', function() {
+                        this.style.display = 'none';
+                    });
+                    // Also check if already failed (cached error)
+                    if (img.complete && img.naturalWidth === 0) {
+                        img.style.display = 'none';
+                    }
+                });
+
                 // Populate topics from keywords
                 if (seoKeyword) {
                     const tags = seoKeyword.split(',').map(t => t.trim()).filter(Boolean);
