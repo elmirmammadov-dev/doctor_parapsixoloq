@@ -2939,7 +2939,7 @@ document.addEventListener("DOMContentLoaded", function() {
         annCoverCard.addEventListener('wheel', function(e) {
             e.preventDefault();
             var delta = e.deltaY < 0 ? 0.1 : -0.1;
-            annZoom = Math.max(1, Math.min(3, annZoom + delta));
+            annZoom = Math.max(0.3, Math.min(3, annZoom + delta));
             applyAnnCoverView();
         }, { passive: false });
     }
