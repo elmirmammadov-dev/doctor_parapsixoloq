@@ -418,14 +418,23 @@
                             </div>
                             <div>
                                 <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;" data-admin-i18n="annImage">Şəkil</label>
-                                <div style="display:flex;align-items:center;gap:10px;">
+                                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
                                     <label style="padding:8px 16px;background:var(--gold);color:#fff;border-radius:10px;font-size:0.82rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
                                         <i class="fas fa-image"></i> <span data-admin-i18n="annChooseImg">Şəkil seç</span>
                                         <input type="file" id="annImageFile" accept="image/*" style="display:none;">
                                     </label>
                                     <span id="annImageName" style="font-size:0.8rem;color:#999;">Seçilməyib</span>
                                 </div>
-                                <img id="annImagePreview" style="display:none;max-width:100%;max-height:150px;border-radius:10px;margin-top:8px;object-fit:cover;">
+                                <img id="annImagePreview" style="display:none;">
+                                <!-- Cover preview with drag & zoom -->
+                                <div id="annCoverPreviewWrap" style="display:none;margin-top:8px;">
+                                    <p style="font-size:0.75rem;color:#999;margin:0 0 6px;">Sürükləyib tənzimləyin, scroll ilə zoom edin:</p>
+                                    <div id="annCoverPreviewCard" style="width:100%;height:160px;border-radius:12px;background-size:cover;background-position:50% 50%;background-repeat:no-repeat;cursor:grab;border:2px solid #e0e0e0;overflow:hidden;"></div>
+                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
+                                        <span id="annCoverPosLabel" style="font-size:0.72rem;color:#999;">50% 50% | Zoom: 100%</span>
+                                        <button type="button" id="annCoverReset" style="font-size:0.72rem;color:var(--gold);background:none;border:none;cursor:pointer;font-weight:600;">Sıfırla</button>
+                                    </div>
+                                </div>
                             </div>
                             <button id="annSaveBtn" style="padding:12px;background:var(--gold);color:#fff;border:none;border-radius:12px;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.background='#15744d'" onmouseout="this.style.background='var(--gold)'">
                                 <i class="fas fa-save"></i> <span data-admin-i18n="annSave">Elanı saxla</span>

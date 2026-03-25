@@ -634,16 +634,16 @@
             border-radius: 16px;
             padding: 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            border-top: 4px solid #f59e0b;
+            border-top: 4px solid #e74c3c;
         }
         .sidebar-announcements-box h3 {
             font-family: var(--font-display);
             font-size: 0.85rem;
             font-weight: 700;
             letter-spacing: 0.06em;
-            color: #f59e0b;
+            color: #e74c3c;
             text-transform: uppercase;
-            margin: 0 0 14px 0;
+            margin: 0;
         }
         .ann-item {
             display: block;
@@ -664,8 +664,9 @@
         .ann-item-img {
             width: 100%;
             height: 120px;
-            object-fit: cover;
-            display: block;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         .ann-item-body {
             padding: 10px 12px;
@@ -715,8 +716,8 @@
             transition: all 0.2s;
         }
         .ann-pagination button:hover {
-            border-color: #f59e0b;
-            color: #f59e0b;
+            border-color: #e74c3c;
+            color: #e74c3c;
         }
         .ann-pagination button:disabled {
             opacity: 0.3;
@@ -1531,7 +1532,7 @@
             <div class="sidebar-announcements-box">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
                     <h3 id="sidebarAnnTitle" style="margin:0;">ELANLAR VƏ KAMPANİYALAR</h3>
-                    <a href="/elanlar" style="font-size:0.72rem;color:#f59e0b;font-weight:600;text-decoration:none;" id="sidebarAnnAllLink">Hamısı &rarr;</a>
+                    <a href="/elanlar" style="font-size:0.72rem;color:#e74c3c;font-weight:600;text-decoration:none;" id="sidebarAnnAllLink">Hamısı &rarr;</a>
                 </div>
                 <div id="sidebarAnnList">
                     <div style="text-align:center;padding:20px 0;color:#ccc;"><i class="fas fa-spinner fa-spin"></i></div>
@@ -2224,8 +2225,10 @@
             container.innerHTML = pageItems.map(a => {
                 const tag = a.link ? 'a' : 'div';
                 const href = a.link ? ` href="${a.link}" target="_blank" rel="noopener"` : '';
+                const pos = a.coverPos || '50% 50%';
+                const zoom = a.coverZoom || 1;
                 return `<${tag} class="ann-item"${href} itemscope itemtype="https://schema.org/Event">
-                    ${a.image ? `<img class="ann-item-img" src="${a.image}" alt="${a.title}" loading="lazy" itemprop="image">` : ''}
+                    ${a.image ? `<div class="ann-item-img" style="background-image:url(${a.image});background-position:${pos};background-size:${zoom * 100}%;" role="img" aria-label="${a.title}" itemprop="image"></div>` : ''}
                     <div class="ann-item-body">
                         <div class="ann-item-title" itemprop="name">${a.title}</div>
                         ${a.desc ? `<div class="ann-item-desc" itemprop="description">${a.desc}</div>` : ''}

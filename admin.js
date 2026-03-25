@@ -2871,6 +2871,22 @@ document.addEventListener("DOMContentLoaded", function() {
     const annImageName = document.getElementById('annImageName');
     let annEditId = null;
 
+    const annCoverWrap = document.getElementById('annCoverPreviewWrap');
+    const annCoverCard = document.getElementById('annCoverPreviewCard');
+    let annPosX = 50, annPosY = 50, annZoom = 1;
+    let annDragging = false, annStartX, annStartY, annStartPosX, annStartPosY;
+
+    function updateAnnCoverLabel() {
+        var lbl = document.getElementById('annCoverPosLabel');
+        if (lbl) lbl.textContent = annPosX.toFixed(0) + '% ' + annPosY.toFixed(0) + '% | Zoom: ' + (annZoom * 100).toFixed(0) + '%';
+    }
+    function applyAnnCoverView() {
+        if (!annCoverCard) return;
+        annCoverCard.style.backgroundSize = (annZoom * 100) + '%';
+        annCoverCard.style.backgroundPosition = annPosX.toFixed(1) + '% ' + annPosY.toFixed(1) + '%';
+        updateAnnCoverLabel();
+    }
+
     if (annImageFile) {
         annImageFile.addEventListener('change', function() {
             const file = this.files[0];
@@ -2879,10 +2895,61 @@ document.addEventListener("DOMContentLoaded", function() {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     annImagePreview.src = e.target.result;
-                    annImagePreview.style.display = 'block';
+                    annCoverCard.style.backgroundImage = 'url(' + e.target.result + ')';
+                    annPosX = 50; annPosY = 50; annZoom = 1;
+                    applyAnnCoverView();
+                    annCoverWrap.style.display = 'block';
                 };
                 reader.readAsDataURL(file);
             }
+        });
+    }
+
+    // Drag
+    if (annCoverCard) {
+        annCoverCard.addEventListener('mousedown', function(e) {
+            annDragging = true; annStartX = e.clientX; annStartY = e.clientY;
+            annStartPosX = annPosX; annStartPosY = annPosY;
+            this.style.cursor = 'grabbing'; e.preventDefault();
+        });
+        annCoverCard.addEventListener('touchstart', function(e) {
+            annDragging = true; annStartX = e.touches[0].clientX; annStartY = e.touches[0].clientY;
+            annStartPosX = annPosX; annStartPosY = annPosY;
+        }, { passive: true });
+        document.addEventListener('mousemove', function(e) {
+            if (!annDragging) return;
+            var dx = e.clientX - annStartX, dy = e.clientY - annStartY;
+            var sens = 0.3 / annZoom;
+            annPosX = Math.max(0, Math.min(100, annStartPosX - dx * sens));
+            annPosY = Math.max(0, Math.min(100, annStartPosY - dy * sens));
+            applyAnnCoverView();
+        });
+        document.addEventListener('touchmove', function(e) {
+            if (!annDragging) return;
+            var dx = e.touches[0].clientX - annStartX, dy = e.touches[0].clientY - annStartY;
+            var sens = 0.3 / annZoom;
+            annPosX = Math.max(0, Math.min(100, annStartPosX - dx * sens));
+            annPosY = Math.max(0, Math.min(100, annStartPosY - dy * sens));
+            applyAnnCoverView();
+        }, { passive: true });
+        document.addEventListener('mouseup', function() { annDragging = false; if (annCoverCard) annCoverCard.style.cursor = 'grab'; });
+        document.addEventListener('touchend', function() { annDragging = false; });
+
+        // Zoom with scroll
+        annCoverCard.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            var delta = e.deltaY < 0 ? 0.1 : -0.1;
+            annZoom = Math.max(1, Math.min(3, annZoom + delta));
+            applyAnnCoverView();
+        }, { passive: false });
+    }
+
+    // Reset
+    var annResetBtn = document.getElementById('annCoverReset');
+    if (annResetBtn) {
+        annResetBtn.addEventListener('click', function() {
+            annPosX = 50; annPosY = 50; annZoom = 1;
+            applyAnnCoverView();
         });
     }
 
@@ -2923,6 +2990,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 desc: desc,
                 link: link,
                 image: imageUrl,
+                coverPos: annPosX.toFixed(1) + '% ' + annPosY.toFixed(1) + '%',
+                coverZoom: annZoom,
                 date: new Date().toLocaleDateString('az-AZ', { day: 'numeric', month: 'long', year: 'numeric' }),
                 timestamp: Date.now(),
                 active: true
@@ -2991,7 +3060,15 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('annLink').value = item.link || '';
             if (item.image) {
                 annImagePreview.src = item.image;
-                annImagePreview.style.display = 'block';
+                annCoverCard.style.backgroundImage = 'url(' + item.image + ')';
+                // Restore position & zoom
+                if (item.coverPos) {
+                    var parts = item.coverPos.split('%').map(s => parseFloat(s.trim()));
+                    if (parts.length >= 2) { annPosX = parts[0]; annPosY = parts[1]; }
+                }
+                annZoom = item.coverZoom || 1;
+                applyAnnCoverView();
+                annCoverWrap.style.display = 'block';
                 annImageName.textContent = 'Mövcud şəkil';
             }
             document.querySelector('#tabAnnouncements').scrollTo({ top: 0, behavior: 'smooth' });
