@@ -51,11 +51,19 @@ module.exports = async (req, res) => {
             }
         }
 
-        // Fetch SEO data from Firebase
+        // Fetch SEO data and article HTML from Firebase in parallel
         let seoData = {};
+        let articleHtmlAz = '';
+        let articleHtmlRu = '';
         try {
-            const seoRes = await fetch(`${FIREBASE_DB_URL}/articleSeo/${postId}.json`);
+            const [seoRes, htmlRes] = await Promise.all([
+                fetch(`${FIREBASE_DB_URL}/articleSeo/${postId}.json`),
+                fetch(`${FIREBASE_DB_URL}/articleHtml/${postId}.json`)
+            ]);
             seoData = await seoRes.json() || {};
+            const htmlData = await htmlRes.json() || {};
+            articleHtmlAz = htmlData.az || '';
+            articleHtmlRu = htmlData.ru || '';
         } catch (e) {}
 
         const metaDesc = seoData.metaDesc || title + ' - Şahsəddin İmanlı tərəfindən yazılmış məqalə.';
@@ -134,10 +142,21 @@ module.exports = async (req, res) => {
         // Remove undefined values
         Object.keys(jsonLd).forEach(k => jsonLd[k] === undefined && delete jsonLd[k]);
 
+        // Pre-load all data so client doesn't need extra fetches
+        const preloadData = {
+            postId: postId,
+            fields: article.fields,
+            seo: seoData,
+            imageUrl: imageUrl,
+            htmlAz: articleHtmlAz,
+            htmlRu: articleHtmlRu
+        };
+
         const headInject = `
     <link rel="canonical" href="${pageUrl}">
     <meta property="og:url" content="${pageUrl}">
-    <script>window.__POST_ID__ = "${postId}";</script>
+    <script>window.__POST_ID__ = "${postId}";
+window.__POST_DATA__ = ${JSON.stringify(JSON.stringify(preloadData))};</script>
     <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
 
         html = html.replace('</head>', headInject + '\n</head>');
