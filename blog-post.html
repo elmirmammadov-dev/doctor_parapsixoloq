@@ -1141,6 +1141,7 @@
         // Restore admin session if previously logged in (blog-only session)
         if (sessionStorage.getItem('blogAdminAuth') === 'true') {
             window.isAdminLoggedIn = true;
+            window.__blogAdminDropdown = true;
             // Run immediately (DOM is ready since script is at end of body)
             const nameInput = document.getElementById('commentName');
             const emailInput = document.getElementById('commentEmail');
@@ -1176,8 +1177,9 @@
 
                 let clickCount = 0;
                 let clickTimer = null;
-                authBtn.onclick = function(e) {
+                authBtn.addEventListener('click', function(e) {
                     e.preventDefault();
+                    e.stopImmediatePropagation();
                     clickCount++;
                     if (clickCount === 1) {
                         clickTimer = setTimeout(function() {
@@ -1190,7 +1192,7 @@
                         dropdown.style.display = 'none';
                         window.location.href = '/admin.html';
                     }
-                };
+                }, true);
 
                 dropdown.querySelector('#adminLogoutBtn').onclick = function() {
                     sessionStorage.removeItem('blogAdminAuth');

@@ -313,8 +313,8 @@ function initAuth() {
                 const authBtn = document.getElementById('userAuthBtn');
                 if (authBtn) {
                     authBtn.innerHTML = '<img src="/profil-sekli-1.webp" class="nav-user-avatar" alt="Şahsəddin İmanlı" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"> <span class="nav-user-name">Şahsəddin</span>';
-                    // Don't override onclick if blog page already set up dropdown
-                    if (!document.getElementById('adminDropdown')) {
+                    // Don't override onclick if blog page has admin dropdown
+                    if (!window.__blogAdminDropdown) {
                         authBtn.onclick = function() { window.location.href = '/admin.html'; };
                     }
                 }
@@ -549,7 +549,7 @@ function updateNavbarAuth(user) {
     if (typeof window.updateNavAnonLabel === 'function') window.updateNavAnonLabel();
 
     // Don't override if blog admin dropdown is active
-    if (document.getElementById('adminDropdown')) return;
+    if (window.__blogAdminDropdown) return;
 
     if (user && !user.isAnonymous) {
         const name = user.displayName || user.email.split('@')[0];
