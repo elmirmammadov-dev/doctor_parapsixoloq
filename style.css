@@ -4033,9 +4033,6 @@ img {
 .blog-post-card.most-read::before {
     display: none;
 }
-.blog-post-card.most-read::after {
-    display: none;
-}
 @keyframes shimmerBorder {
     0%, 100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
