@@ -607,15 +607,11 @@
             .blog-detail-title { font-size: 1.5rem; }
         }
 
-        /* 3-Column Layout: Calendar | Comments | Form */
-        .blog-comments-layout {
-            display: grid;
-            grid-template-columns: 300px 1fr 300px;
-            gap: 24px;
-            max-width: 1600px;
+        /* Comments wrapper under article */
+        .blog-comments-wrapper {
+            max-width: 860px;
             margin: 0 auto 60px;
-            padding: 0 24px;
-            align-items: start;
+            padding: 0 10px;
         }
         .blog-sidebar {
             background: #fff;
@@ -892,20 +888,10 @@
         .blog-sidebar-sticky {
             /* No longer needed - sidebar itself is sticky */
         }
-        @media (max-width: 1200px) {
-            .blog-comments-layout {
-                grid-template-columns: 1fr;
-                max-width: 800px;
-            }
-            .blog-sidebar {
-                order: 1;
-            }
-            .comments-section {
-                order: 0;
-            }
-            .blog-sidebar-sticky {
-                position: static;
-            }
+        .blog-right-sidebar .blog-sidebar {
+            border-radius: 16px;
+            position: static;
+            max-height: none;
         }
 
         /* Comments Section */
@@ -1312,39 +1298,88 @@
                     <li style="text-align:center;padding:10px 0;color:#ccc;list-style:none;"><i class="fas fa-spinner fa-spin"></i></li>
                 </ul>
             </div>
-        </aside>
-    </div>
-
-    <!-- Comments + Sidebars Layout -->
-    <div class="blog-comments-layout">
-        <!-- Left Sidebar: Calendar -->
-        <aside class="blog-sidebar blog-sidebar-left">
-            <div class="blog-sidebar-sticky">
-                <div class="blog-cal-header">
-                    <div class="blog-cal-date-badge" id="blogCalDateBadge">
-                        <span class="blog-cal-date-num"></span>
+            <!-- Sidebar: Call Form -->
+            <div class="blog-sidebar blog-sidebar-right" style="border-radius:16px;position:static;max-height:none;">
+                <div class="blog-sidebar-sticky">
+                    <span class="blog-form-label" id="blogFormLabel">ƏLAQƏ FORMU</span>
+                    <h3 class="blog-form-title" id="blogFormTitle">Zəng sifarişi</h3>
+                    <p class="blog-form-desc" id="blogFormDesc">Nömrənizi yazın — 24 saat ərzində geri zəng edəcəyik.</p>
+                    <form class="blog-call-form" id="blogCallForm">
+                        <div class="blog-form-field">
+                            <label class="blog-form-field-label" id="blogLabelName">AD</label>
+                            <input type="text" name="ad" id="blogInputName" placeholder="Adınızı yazın" required>
+                        </div>
+                        <div class="blog-form-field">
+                            <label class="blog-form-field-label" id="blogLabelSurname">SOYAD</label>
+                            <input type="text" name="soyad" id="blogInputSurname" placeholder="Soyadınızı yazın" required>
+                        </div>
+                        <div class="blog-form-field">
+                            <label class="blog-form-field-label" id="blogLabelPhone">TELEFON</label>
+                            <div class="blog-phone-input">
+                                <select class="phone-prefix-select" name="phone_code">
+                                    <option value="+994" selected>AZ +994</option>
+                                    <option value="+7">RU +7</option>
+                                </select>
+                                <input type="tel" name="telefon" id="blogInputPhone" placeholder="XX XXX XX XX" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="blog-form-submit" id="blogSubmitBtn">
+                            <span>Müraciət göndər</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </form>
+                    <div class="blog-form-success" id="blogFormSuccess" style="display:none;">
+                        <div class="blog-form-success-icon"><i class="fas fa-check"></i></div>
+                        <h4>Müraciətiniz qəbul edildi</h4>
+                        <p>Tezliklə sizinlə əlaqə saxlanılacaq.</p>
                     </div>
-                    <div class="blog-cal-header-text">
-                        <span class="blog-cal-label" id="blogCalLabel">SEANS TARİXİ</span>
-                        <h3 class="blog-cal-title" id="blogCalendarTitle">Günü seçin</h3>
-                        <p class="blog-cal-desc" id="blogCalendarDesc">Uyğun tarixi işarələyin, WhatsApp-da yazın.</p>
+                    <div class="blog-form-features">
+                        <div class="blog-feat-item">
+                            <div class="blog-feat-icon"><i class="fas fa-hand-sparkles"></i></div>
+                            <div class="blog-feat-text"><strong id="blogFeat1">Enerji müayinəsi</strong><small id="blogFeatSub1">Qeyri-ənənəvi tibb yanaşması</small></div>
+                        </div>
+                        <div class="blog-feat-item">
+                            <div class="blog-feat-icon"><i class="fas fa-clock"></i></div>
+                            <div class="blog-feat-text"><strong id="blogFeat2">24 saat cavab</strong><small id="blogFeatSub2">Sürətli geri dönüş</small></div>
+                        </div>
+                        <div class="blog-feat-item">
+                            <div class="blog-feat-icon"><i class="fas fa-shield-alt"></i></div>
+                            <div class="blog-feat-text"><strong id="blogFeat3">Tam məxfilik</strong><small id="blogFeatSub3">Məlumatlarınız qorunur</small></div>
+                        </div>
                     </div>
                 </div>
-                <div class="calendar-wrapper hero-calendar">
-                    <div class="calendar-header">
-                        <button class="calendar-nav" id="blogCalendarPrev"><i class="fas fa-chevron-left"></i></button>
-                        <h3 class="calendar-month" id="blogCalendarMonth"></h3>
-                        <button class="calendar-nav" id="blogCalendarNext"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <!-- Sidebar: Calendar -->
+            <div class="blog-sidebar blog-sidebar-left" style="border-radius:16px;position:static;max-height:none;">
+                <div class="blog-sidebar-sticky">
+                    <div class="blog-cal-header">
+                        <div class="blog-cal-date-badge" id="blogCalDateBadge">
+                            <span class="blog-cal-date-num"></span>
+                        </div>
+                        <div class="blog-cal-header-text">
+                            <span class="blog-cal-label" id="blogCalLabel">SEANS TARİXİ</span>
+                            <h3 class="blog-cal-title" id="blogCalendarTitle">Günü seçin</h3>
+                            <p class="blog-cal-desc" id="blogCalendarDesc">Uyğun tarixi işarələyin, WhatsApp-da yazın.</p>
+                        </div>
                     </div>
-                    <div class="calendar-weekdays" id="blogCalendarWeekdays">
-                        <span>BE</span><span>ÇA</span><span>Ç</span><span>CA</span><span>C</span><span>Ş</span><span>B</span>
+                    <div class="calendar-wrapper hero-calendar">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" id="blogCalendarPrev"><i class="fas fa-chevron-left"></i></button>
+                            <h3 class="calendar-month" id="blogCalendarMonth"></h3>
+                            <button class="calendar-nav" id="blogCalendarNext"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="calendar-weekdays" id="blogCalendarWeekdays">
+                            <span>BE</span><span>ÇA</span><span>Ç</span><span>CA</span><span>C</span><span>Ş</span><span>B</span>
+                        </div>
+                        <div class="calendar-days" id="blogCalendarDays"></div>
                     </div>
-                    <div class="calendar-days" id="blogCalendarDays"></div>
                 </div>
             </div>
         </aside>
+    </div>
 
-        <!-- Center: Comments -->
+    <!-- Comments Section -->
+    <div class="blog-comments-wrapper">
         <div class="comments-section" id="commentsSection" style="display:none;">
             <h3 id="commentsTitle">Şərhlər</h3>
             <div class="comments-divider"></div>
@@ -1369,58 +1404,6 @@
             <div class="comments-list" id="commentsList"></div>
             <div class="comments-pagination" id="commentsPagination" style="display:none;"></div>
         </div>
-
-        <!-- Right Sidebar: Call Form -->
-        <aside class="blog-sidebar blog-sidebar-right">
-            <div class="blog-sidebar-sticky">
-                <span class="blog-form-label" id="blogFormLabel">ƏLAQƏ FORMU</span>
-                <h3 class="blog-form-title" id="blogFormTitle">Zəng sifarişi</h3>
-                <p class="blog-form-desc" id="blogFormDesc">Nömrənizi yazın — 24 saat ərzində geri zəng edəcəyik.</p>
-                <form class="blog-call-form" id="blogCallForm">
-                    <div class="blog-form-field">
-                        <label class="blog-form-field-label" id="blogLabelName">AD</label>
-                        <input type="text" name="ad" id="blogInputName" placeholder="Adınızı yazın" required>
-                    </div>
-                    <div class="blog-form-field">
-                        <label class="blog-form-field-label" id="blogLabelSurname">SOYAD</label>
-                        <input type="text" name="soyad" id="blogInputSurname" placeholder="Soyadınızı yazın" required>
-                    </div>
-                    <div class="blog-form-field">
-                        <label class="blog-form-field-label" id="blogLabelPhone">TELEFON</label>
-                        <div class="blog-phone-input">
-                            <select class="phone-prefix-select" name="phone_code">
-                                <option value="+994" selected>AZ +994</option>
-                                <option value="+7">RU +7</option>
-                            </select>
-                            <input type="tel" name="telefon" id="blogInputPhone" placeholder="XX XXX XX XX" required>
-                        </div>
-                    </div>
-                    <button type="submit" class="blog-form-submit" id="blogSubmitBtn">
-                        <span>Müraciət göndər</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </form>
-                <div class="blog-form-success" id="blogFormSuccess" style="display:none;">
-                    <div class="blog-form-success-icon"><i class="fas fa-check"></i></div>
-                    <h4>Müraciətiniz qəbul edildi</h4>
-                    <p>Tezliklə sizinlə əlaqə saxlanılacaq.</p>
-                </div>
-                <div class="blog-form-features">
-                    <div class="blog-feat-item">
-                        <div class="blog-feat-icon"><i class="fas fa-hand-sparkles"></i></div>
-                        <div class="blog-feat-text"><strong id="blogFeat1">Enerji müayinəsi</strong><small id="blogFeatSub1">Qeyri-ənənəvi tibb yanaşması</small></div>
-                    </div>
-                    <div class="blog-feat-item">
-                        <div class="blog-feat-icon"><i class="fas fa-clock"></i></div>
-                        <div class="blog-feat-text"><strong id="blogFeat2">24 saat cavab</strong><small id="blogFeatSub2">Sürətli geri dönüş</small></div>
-                    </div>
-                    <div class="blog-feat-item">
-                        <div class="blog-feat-icon"><i class="fas fa-shield-alt"></i></div>
-                        <div class="blog-feat-text"><strong id="blogFeat3">Tam məxfilik</strong><small id="blogFeatSub3">Məlumatlarınız qorunur</small></div>
-                    </div>
-                </div>
-            </div>
-        </aside>
     </div>
 
     <!-- Floating WhatsApp Button -->
