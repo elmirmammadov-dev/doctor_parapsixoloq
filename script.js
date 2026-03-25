@@ -756,6 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const blogUrl = (seoData[id] && seoData[id].slug) ? '/' + seoData[id].slug : '#';
                 return {
                     id: id,
+                    date: f.date || '',
                     html: `
                     <a href="${blogUrl}" class="blog-post-card" data-id="${id}" style="text-decoration:none;color:inherit;cursor:pointer;">
                         ${imgUrl ? `<div class="blog-post-cover" role="img" aria-label="${f.title}" style="background-image:url(${imgUrl});background-size:cover;background-position:${coverPos};background-repeat:no-repeat;${scaleStyle}"></div>` : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`}
@@ -771,6 +772,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     </a>
                     `
                 };
+            });
+            // Sort by date (newest first)
+            allBlogCards.sort((a, b) => {
+                const da = new Date(a.date);
+                const db = new Date(b.date);
+                if (isNaN(da.getTime()) && isNaN(db.getTime())) return 0;
+                if (isNaN(da.getTime())) return 1;
+                if (isNaN(db.getTime())) return -1;
+                return db - da;
             });
             renderBlogPage(1);
         } catch (err) {
