@@ -461,7 +461,46 @@
             font-size: 0.95rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin: 0 0 16px 0;
+            margin: 0 0 12px 0;
+        }
+        .archive-year-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .archive-year-nav button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1.5px solid #e0e0e0;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #999;
+            transition: all 0.2s;
+        }
+        .archive-year-nav button:hover {
+            border-color: var(--gold, #1a8a5c);
+            color: var(--gold, #1a8a5c);
+        }
+        .archive-year-nav button:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+        .archive-year-label {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            min-width: 50px;
+            text-align: center;
         }
         .sidebar-archive-list {
             list-style: none;
@@ -1264,6 +1303,11 @@
             </div>
             <div class="sidebar-archive-box">
                 <h3 id="sidebarArchiveTitle">ARXİVLƏR</h3>
+                <div class="archive-year-nav">
+                    <button id="archivePrevYear" title="Əvvəlki il"><i class="fas fa-chevron-left"></i></button>
+                    <span class="archive-year-label" id="archiveYearLabel">2026</span>
+                    <button id="archiveNextYear" title="Növbəti il"><i class="fas fa-chevron-right"></i></button>
+                </div>
                 <ul class="sidebar-archive-list" id="sidebarArchiveList">
                     <li style="text-align:center;padding:10px 0;color:#ccc;list-style:none;"><i class="fas fa-spinner fa-spin"></i></li>
                 </ul>
@@ -1859,25 +1903,53 @@
         }
         loadSimilarArticles();
 
-        // Archive section
-        async function loadArchive() {
+        // Archive section with year navigation
+        let archiveData = {}; // { year: [ {month, count, articles} ] }
+        let archiveYears = [];
+        let archiveCurrentYearIdx = 0;
+
+        async function initArchive() {
             const articles = await fetchAllArticles();
-            const t = SIDEBAR_TEXTS[currentLang] || SIDEBAR_TEXTS.az;
-            const container = document.getElementById('sidebarArchiveList');
             const monthMap = {};
             articles.forEach(a => {
                 if (!a.date) return;
                 const d = new Date(a.date);
                 if (isNaN(d.getTime())) return;
-                const key = d.getFullYear() + '-' + String(d.getMonth()).padStart(2, '0');
-                if (!monthMap[key]) monthMap[key] = { year: d.getFullYear(), month: d.getMonth(), count: 0, articles: [] };
+                const year = d.getFullYear();
+                const month = d.getMonth();
+                const key = year + '-' + month;
+                if (!monthMap[key]) monthMap[key] = { year, month, count: 0, articles: [] };
                 monthMap[key].count++;
                 monthMap[key].articles.push(a);
             });
-            const sorted = Object.values(monthMap).sort((a, b) => b.year - a.year || b.month - a.month);
-            if (sorted.length === 0) { container.innerHTML = ''; return; }
+            // Group by year
+            archiveData = {};
+            Object.values(monthMap).forEach(m => {
+                if (!archiveData[m.year]) archiveData[m.year] = [];
+                archiveData[m.year].push(m);
+            });
+            // Sort months within each year (newest first)
+            Object.keys(archiveData).forEach(y => {
+                archiveData[y].sort((a, b) => b.month - a.month);
+            });
+            // Sort years newest first
+            archiveYears = Object.keys(archiveData).map(Number).sort((a, b) => b - a);
+            archiveCurrentYearIdx = 0;
+            renderArchiveYear();
+            updateArchiveNav();
+        }
 
-            container.innerHTML = sorted.map((m, i) => {
+        function renderArchiveYear() {
+            const t = SIDEBAR_TEXTS[currentLang] || SIDEBAR_TEXTS.az;
+            const container = document.getElementById('sidebarArchiveList');
+            const yearLabel = document.getElementById('archiveYearLabel');
+            if (archiveYears.length === 0) { container.innerHTML = ''; yearLabel.textContent = '—'; return; }
+
+            const year = archiveYears[archiveCurrentYearIdx];
+            yearLabel.textContent = year;
+            const months = archiveData[year] || [];
+
+            container.innerHTML = months.map((m, i) => {
                 const monthName = t.months[m.month];
                 const articlesHtml = m.articles.map(a => `
                     <a class="archive-article-item" href="/${a.slug}">
@@ -1890,7 +1962,7 @@
                 `).join('');
                 return `<li>
                     <div class="archive-month-link" data-index="${i}">
-                        <span>${monthName} ${m.year} <span class="archive-count">${m.count}</span></span>
+                        <span>${monthName} <span class="archive-count">${m.count}</span></span>
                         <i class="fas fa-chevron-right archive-arrow"></i>
                     </div>
                     <div class="archive-month-articles" data-index="${i}">${articlesHtml}</div>
@@ -1902,7 +1974,6 @@
                     const idx = this.dataset.index;
                     const panel = container.querySelector(`.archive-month-articles[data-index="${idx}"]`);
                     const isOpen = panel.classList.contains('open');
-                    // Close all
                     container.querySelectorAll('.archive-month-articles').forEach(p => p.classList.remove('open'));
                     container.querySelectorAll('.archive-month-link').forEach(l => l.classList.remove('open'));
                     if (!isOpen) {
@@ -1912,7 +1983,35 @@
                 });
             });
         }
-        loadArchive();
+
+        function updateArchiveNav() {
+            document.getElementById('archivePrevYear').disabled = archiveCurrentYearIdx >= archiveYears.length - 1;
+            document.getElementById('archiveNextYear').disabled = archiveCurrentYearIdx <= 0;
+        }
+
+        document.getElementById('archivePrevYear').addEventListener('click', function() {
+            if (archiveCurrentYearIdx < archiveYears.length - 1) {
+                archiveCurrentYearIdx++;
+                renderArchiveYear();
+                updateArchiveNav();
+            }
+        });
+        document.getElementById('archiveNextYear').addEventListener('click', function() {
+            if (archiveCurrentYearIdx > 0) {
+                archiveCurrentYearIdx--;
+                renderArchiveYear();
+                updateArchiveNav();
+            }
+        });
+
+        function loadArchive() {
+            archiveData = {};
+            archiveYears = [];
+            archiveCurrentYearIdx = 0;
+            allArticlesCache = null;
+            initArchive();
+        }
+        initArchive();
 
         // === BLOG CTA: Calendar + Call Form ===
         const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw869YoQXmQIJDknvOoLkBjetn7dT3BF8W7GXOgHhlk8FbAGclnCbDHDKIgX5S-UHr1/exec';
