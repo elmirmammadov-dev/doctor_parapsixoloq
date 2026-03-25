@@ -1132,27 +1132,6 @@
             return null;
         }
 
-        // Blog admin logout function
-        function blogAdminLogout() {
-            sessionStorage.removeItem('blogAdminAuth');
-            window.isAdminLoggedIn = false;
-            const authBtn = document.getElementById('userAuthBtn');
-            if (authBtn) {
-                const lang = localStorage.getItem('lang') || 'az';
-                const loginText = lang === 'ru' ? 'Войти' : 'Giriş';
-                authBtn.innerHTML = '<i class="fas fa-user"></i> <span class="nav-user-name">' + loginText + '</span>';
-                authBtn.onclick = function() { openAuthModal(); };
-            }
-            const logoutBtn = document.getElementById('blogAdminLogoutBtn');
-            if (logoutBtn) logoutBtn.remove();
-            const nameInput = document.getElementById('commentName');
-            const emailInput = document.getElementById('commentEmail');
-            if (nameInput) { nameInput.value = ''; nameInput.readOnly = false; nameInput.style.background = ''; }
-            if (emailInput) { emailInput.value = ''; emailInput.readOnly = false; emailInput.style.background = ''; }
-            const badgeEl = document.getElementById('adminBadgeLabel');
-            if (badgeEl) badgeEl.style.display = 'none';
-        }
-
         // Clear blog admin session when leaving this page
         window.addEventListener('beforeunload', function() {
             // Only clear if navigating away (not refreshing same blog post)
@@ -1185,18 +1164,6 @@
                 if (authBtn) {
                     authBtn.innerHTML = '<img src="/profil-sekli-1.webp" class="nav-user-avatar" alt="Şahsəddin İmanlı" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"> <span class="nav-user-name">Şahsəddin</span>';
                     authBtn.onclick = function() { window.location.href = '/admin.html'; };
-                    // Add red X logout button next to auth button
-                    if (!document.getElementById('blogAdminLogoutBtn')) {
-                        const xBtn = document.createElement('button');
-                        xBtn.id = 'blogAdminLogoutBtn';
-                        xBtn.innerHTML = '&times;';
-                        xBtn.title = localStorage.getItem('lang') === 'ru' ? 'Выйти' : 'Çıxış';
-                        xBtn.style.cssText = 'background:transparent;border:none;color:#e53935;font-size:1.3rem;font-weight:700;cursor:pointer;padding:2px 6px;margin-left:4px;line-height:1;border-radius:50%;transition:background 0.2s;';
-                        xBtn.onmouseenter = function() { this.style.background = 'rgba(229,57,53,0.1)'; };
-                        xBtn.onmouseleave = function() { this.style.background = 'transparent'; };
-                        xBtn.onclick = function(e) { e.stopPropagation(); blogAdminLogout(); };
-                        authBtn.parentNode.appendChild(xBtn);
-                    }
                 }
             });
         }
