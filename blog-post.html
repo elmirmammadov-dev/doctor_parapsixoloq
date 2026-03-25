@@ -1140,6 +1140,22 @@
     <script src="/auth.js"></script>
     <script src="/tracker.js"></script>
     <script>
+        // Post ID (injected by server for slug URLs)
+        let resolvedPostId = window.__POST_ID__ || null;
+        async function getPostId() {
+            if (resolvedPostId) return resolvedPostId;
+            // Fallback: resolve slug from Firebase
+            const slugMatch = window.location.pathname.match(/^\/([a-z0-9][a-z0-9-]+[a-z0-9])$/);
+            if (slugMatch) {
+                try {
+                    const snap = await db.ref('articleSlugs/' + slugMatch[1]).once('value');
+                    const id = snap.val();
+                    if (id) { resolvedPostId = id; return resolvedPostId; }
+                } catch(e) {}
+            }
+            return null;
+        }
+
         // Clear blog admin session when leaving this page
         window.addEventListener('beforeunload', function() {
             // Only clear if navigating away (not refreshing same blog post)
@@ -1766,23 +1782,6 @@
         let allComments = [];
         let currentPage = 1;
         let replyVisibleCounts = {};
-
-        let resolvedPostId = null;
-        async function getPostId() {
-            if (resolvedPostId) return resolvedPostId;
-            // Use server-injected ID if available
-            if (window.__POST_ID__) { resolvedPostId = window.__POST_ID__; return resolvedPostId; }
-            // Fallback: resolve slug from Firebase
-            const slugMatch = window.location.pathname.match(/^\/([a-z0-9][a-z0-9-]+[a-z0-9])$/);
-            if (slugMatch) {
-                try {
-                    const snap = await db.ref('articleSlugs/' + slugMatch[1]).once('value');
-                    const id = snap.val();
-                    if (id) { resolvedPostId = id; return resolvedPostId; }
-                } catch(e) {}
-            }
-            return null;
-        }
 
         function updateCommentTitle() {
             const ct = COMMENT_TEXTS[currentLang] || COMMENT_TEXTS.az;
