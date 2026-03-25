@@ -66,6 +66,9 @@ module.exports = async (req, res) => {
             articleHtmlRu = htmlData.ru || '';
         } catch (e) {}
 
+        // Prefer ImgBB cover image from SEO data
+        if (seoData.coverImage) imageUrl = seoData.coverImage;
+
         const metaDesc = seoData.metaDesc || title + ' - Şahsəddin İmanlı tərəfindən yazılmış məqalə.';
         const keyword = seoData.keyword || 'parapsixologiya, Şahsəddin İmanlı';
         const imageAlt = seoData.imageAlt || title;
