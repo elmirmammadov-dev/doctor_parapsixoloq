@@ -966,8 +966,6 @@ img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    background-size: cover;
-    background-position: center;
     background-repeat: no-repeat;
     transition: transform 0.5s ease;
 }
@@ -1862,8 +1860,6 @@ img {
     width: 100%;
     height: 160px;
     object-fit: cover;
-    background-size: cover;
-    background-position: center;
     background-repeat: no-repeat;
 }
 
@@ -4184,8 +4180,6 @@ img {
     height: 180px;
     object-fit: cover;
     display: block;
-    background-size: cover;
-    background-position: center;
     background-repeat: no-repeat;
 }
 .blog-post-card .blog-post-info {
