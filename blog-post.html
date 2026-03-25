@@ -1030,7 +1030,7 @@
         <div class="comments-section" id="commentsSection">
             <h3 id="commentsTitle">Şərhlər</h3>
             <div class="comments-divider"></div>
-            <form class="comment-form" id="commentForm">
+            <form class="comment-form" id="commentForm" onsubmit="event.preventDefault();"
                 <div>
                     <label id="labelName">Ad</label> <span id="adminBadgeLabel" class="comment-reply-badge" style="display:none;">Müəllif</span>
                     <input type="text" id="commentName" placeholder="Ad" required>
