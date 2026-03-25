@@ -638,12 +638,7 @@
         }
         .ann-header {
             background: linear-gradient(135deg, #c0392b, #e74c3c);
-            padding: 14px 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .ann-header-left {
+            padding: 12px 18px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -674,17 +669,26 @@
             color: #fff;
             text-transform: uppercase;
             margin: 0;
-        }
-        .ann-all-link {
-            font-size: 0.68rem;
-            color: rgba(255,255,255,0.7);
-            font-weight: 600;
-            text-decoration: none;
-            transition: color 0.2s;
             white-space: nowrap;
         }
-        .ann-all-link:hover {
+        .ann-view-all {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 10px;
+            padding: 9px;
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
             color: #fff;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+        .ann-view-all:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
         .ann-list-wrap {
             padding: 14px;
@@ -1597,21 +1601,19 @@
             <!-- Announcements & Campaigns -->
             <div class="sidebar-announcements-box">
                 <div class="ann-header">
-                    <div class="ann-header-left">
-                        <div class="ann-header-icon"><i class="fas fa-bullhorn"></i></div>
-                        <h3 id="sidebarAnnTitle">ELANLAR VƏ KAMPANİYALAR</h3>
-                    </div>
-                    <a href="/elanlar" class="ann-all-link" id="sidebarAnnAllLink">Hamısı &rarr;</a>
+                    <div class="ann-header-icon"><i class="fas fa-bullhorn"></i></div>
+                    <h3 id="sidebarAnnTitle">ELANLAR VƏ KAMPANİYALAR</h3>
                 </div>
                 <div class="ann-list-wrap">
                     <div id="sidebarAnnList">
                         <div style="text-align:center;padding:20px 0;color:#ccc;"><i class="fas fa-spinner fa-spin"></i></div>
                     </div>
-                </div>
-                <div class="ann-pagination" id="annPagination" style="display:none;">
-                    <button id="annPrevPage"><i class="fas fa-chevron-left"></i></button>
-                    <span id="annPageInfo">1 / 1</span>
-                    <button id="annNextPage"><i class="fas fa-chevron-right"></i></button>
+                    <div class="ann-pagination" id="annPagination" style="display:none;">
+                        <button id="annPrevPage"><i class="fas fa-chevron-left"></i></button>
+                        <span id="annPageInfo">1 / 1</span>
+                        <button id="annNextPage"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <a href="/elanlar" class="ann-view-all" id="sidebarAnnAllLink"><i class="fas fa-th-list"></i> <span id="sidebarAnnAllText">Hamısına bax</span></a>
                 </div>
             </div>
         </aside>
