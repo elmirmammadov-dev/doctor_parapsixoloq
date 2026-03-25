@@ -275,7 +275,7 @@
             border-color: transparent;
         }
         .blog-share-twitter:hover {
-            background: #1da1f2;
+            background: #000;
         }
         .blog-share-facebook:hover {
             background: #3b5998;
@@ -1369,7 +1369,7 @@
                     <div class="blog-share-section">
                         <div class="blog-share-label">${postTexts.share}</div>
                         <div class="blog-share-buttons">
-                            <a class="blog-share-btn blog-share-twitter" id="shareTwitter" href="#" target="_blank" rel="noopener" title="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a class="blog-share-btn blog-share-twitter" id="shareTwitter" href="#" target="_blank" rel="noopener" title="X"><i class="fab fa-x-twitter"></i></a>
                             <a class="blog-share-btn blog-share-facebook" id="shareFacebook" href="#" target="_blank" rel="noopener" title="Facebook"><i class="fab fa-facebook-f"></i></a>
                             <a class="blog-share-btn blog-share-linkedin" id="shareLinkedIn" href="#" target="_blank" rel="noopener" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                             <a class="blog-share-btn blog-share-email" id="shareEmail" href="#" target="_blank" rel="noopener" title="Email"><i class="fas fa-envelope"></i></a>
@@ -1399,7 +1399,7 @@
                 const shareUrl = encodeURIComponent(window.location.href);
                 const shareTitle = encodeURIComponent(f.title);
                 const twBtn = document.getElementById('shareTwitter');
-                if (twBtn) twBtn.href = 'https://twitter.com/intent/tweet?text=' + shareTitle + '&url=' + shareUrl;
+                if (twBtn) twBtn.href = 'https://x.com/intent/tweet?text=' + shareTitle + '&url=' + shareUrl;
                 const fbBtn = document.getElementById('shareFacebook');
                 if (fbBtn) fbBtn.href = 'https://www.facebook.com/sharer/sharer.php?u=' + shareUrl;
                 const liBtn = document.getElementById('shareLinkedIn');
