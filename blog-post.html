@@ -1112,6 +1112,10 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        // Set flag before auth.js loads so it knows not to override admin button
+        if (sessionStorage.getItem('blogAdminAuth') === 'true') {
+            window.__blogAdminDropdown = true;
+        }
     </script>
     <script src="/auth.js"></script>
     <script src="/tracker.js"></script>
