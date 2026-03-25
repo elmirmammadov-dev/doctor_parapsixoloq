@@ -3401,6 +3401,12 @@ img {
     font-family: var(--font-display);
     font-size: 1.1rem;
     color: #ffffff;
+    margin-bottom: 10px;
+}
+.footer-social-desc {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.82rem;
+    line-height: 1.6;
     margin-bottom: 16px;
 }
 
