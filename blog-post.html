@@ -1163,6 +1163,7 @@
                 const authBtn = document.getElementById('userAuthBtn');
                 if (authBtn) {
                     authBtn.innerHTML = '<img src="/profil-sekli-1.webp" class="nav-user-avatar" alt="Şahsəddin İmanlı" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"> <span class="nav-user-name">Şahsəddin</span>';
+                    authBtn.removeAttribute('onclick');
                     authBtn.style.position = 'relative';
                     // Create dropdown
                     const dropdown = document.createElement('div');
