@@ -27,10 +27,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/style.css">
     <style>
-        .blog-detail {
+        .blog-post-layout {
+            display: flex;
             max-width: 1200px;
             margin: 10px auto 60px;
             padding: 0 10px;
+            gap: 30px;
+        }
+        .blog-detail {
+            flex: 1;
+            min-width: 0;
             overflow-wrap: break-word;
             word-wrap: break-word;
             word-break: break-word;
@@ -310,6 +316,148 @@
             padding: 80px 20px;
             color: var(--text-muted);
             font-size: 1rem;
+        }
+        /* Blog Right Sidebar */
+        .blog-right-sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .sidebar-search-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        .sidebar-search-box h3 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: #999;
+            text-transform: uppercase;
+            margin: 0 0 12px 0;
+        }
+        .sidebar-search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.3s;
+            background: #fafafa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23999' viewBox='0 0 512 512'%3E%3Cpath d='M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z'/%3E%3C/svg%3E") no-repeat 12px center;
+            background-size: 14px;
+            box-sizing: border-box;
+        }
+        .sidebar-search-input:focus {
+            border-color: var(--gold, #1a8a5c);
+        }
+        .sidebar-search-results {
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .sidebar-search-results:empty {
+            display: none;
+        }
+        .sidebar-search-item {
+            display: block;
+            padding: 10px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: background 0.2s;
+            line-height: 1.4;
+        }
+        .sidebar-search-item:hover {
+            background: #f0faf5;
+        }
+        .sidebar-search-item .search-item-date {
+            display: block;
+            font-size: 0.75rem;
+            color: #999;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+        .sidebar-similar-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        .sidebar-similar-box h3 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: #999;
+            text-transform: uppercase;
+            margin: 0 0 14px 0;
+        }
+        .similar-article {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            text-decoration: none;
+            color: inherit;
+            transition: opacity 0.2s;
+        }
+        .similar-article:last-child {
+            border-bottom: none;
+        }
+        .similar-article:hover {
+            opacity: 0.8;
+        }
+        .similar-article-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #f5f5f5;
+        }
+        .similar-article-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .similar-article-title {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .similar-article-date {
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 4px;
+        }
+        .sidebar-no-results {
+            font-size: 0.85rem;
+            color: #999;
+            padding: 8px 0;
+        }
+        @media (max-width: 900px) {
+            .blog-post-layout {
+                flex-direction: column;
+            }
+            .blog-right-sidebar {
+                width: 100%;
+                position: static;
+                order: -1;
+            }
         }
         @media (max-width: 600px) {
             .blog-detail { margin-top: 10px; }
@@ -992,10 +1140,25 @@
         </div>
     </nav>
 
-    <div class="blog-detail" id="blogDetail">
-        <div class="blog-detail-loading">
-            <i class="fas fa-spinner fa-spin"></i> Yüklənir...
+    <div class="blog-post-layout">
+        <div class="blog-detail" id="blogDetail">
+            <div class="blog-detail-loading">
+                <i class="fas fa-spinner fa-spin"></i> Yüklənir...
+            </div>
         </div>
+        <aside class="blog-right-sidebar">
+            <div class="sidebar-search-box">
+                <h3 id="sidebarSearchTitle">AXTARIŞ</h3>
+                <input type="text" class="sidebar-search-input" id="sidebarSearchInput" placeholder="Məqalə axtar...">
+                <div class="sidebar-search-results" id="sidebarSearchResults"></div>
+            </div>
+            <div class="sidebar-similar-box">
+                <h3 id="sidebarSimilarTitle">OXŞAR MƏQALƏLƏR</h3>
+                <div id="sidebarSimilarList">
+                    <div style="text-align:center;padding:20px 0;color:#ccc;"><i class="fas fa-spinner fa-spin"></i></div>
+                </div>
+            </div>
+        </aside>
     </div>
 
     <!-- Comments + Sidebars Layout -->
@@ -1244,6 +1407,9 @@
                 localStorage.setItem('lang', currentLang);
                 updatePageLang();
                 loadPost();
+                if (typeof updateSidebarTexts === 'function') updateSidebarTexts();
+                allArticlesCache = null;
+                if (typeof loadSimilarArticles === 'function') loadSimilarArticles();
                 if (typeof updateCtaUI === 'function') updateCtaUI();
                 if (typeof renderBlogCalendar === 'function') renderBlogCalendar();
                 updateCommentUI();
@@ -1439,6 +1605,134 @@
         }
 
         loadPost();
+
+        // === SIDEBAR: Search + Similar Articles ===
+        const SIDEBAR_TEXTS = {
+            az: { search: 'AXTARIŞ', searchPlaceholder: 'Məqalə axtar...', similar: 'OXŞAR MƏQALƏLƏR', noResults: 'Nəticə tapılmadı', noSimilar: 'Oxşar məqalə yoxdur' },
+            ru: { search: 'ПОИСК', searchPlaceholder: 'Найти статью...', similar: 'ПОХОЖИЕ СТАТЬИ', noResults: 'Ничего не найдено', noSimilar: 'Нет похожих статей' }
+        };
+
+        let allArticlesCache = null;
+
+        async function fetchAllArticles() {
+            if (allArticlesCache) return allArticlesCache;
+            try {
+                const res = await fetch(
+                    `https://cdn.contentful.com/spaces/${CONTENTFUL_SPACE}/entries?access_token=${CONTENTFUL_TOKEN}&content_type=blogPost&include=1&order=-sys.createdAt&locale=${locale}&limit=100`
+                );
+                const data = await res.json();
+                const assetMap = {};
+                if (data.includes && data.includes.Asset) {
+                    data.includes.Asset.forEach(a => {
+                        if (a.fields && a.fields.file) assetMap[a.sys.id] = 'https:' + a.fields.file.url;
+                    });
+                }
+                allArticlesCache = (data.items || []).map(item => {
+                    let imgUrl = '';
+                    if (item.fields.image && item.fields.image.sys) imgUrl = assetMap[item.fields.image.sys.id] || '';
+                    return {
+                        id: item.sys.id,
+                        title: item.fields.title || '',
+                        date: item.fields.date || '',
+                        image: imgUrl,
+                        keywords: (item.fields.keywords || '').toLowerCase()
+                    };
+                });
+                // Try to get slugs from Firebase for URLs
+                try {
+                    const slugSnap = await db.ref('articleSlugs').once('value');
+                    const slugMap = slugSnap.val() || {};
+                    const idToSlug = {};
+                    Object.entries(slugMap).forEach(([slug, id]) => { idToSlug[id] = slug; });
+                    allArticlesCache.forEach(a => { a.slug = idToSlug[a.id] || a.id; });
+                } catch(e) {
+                    allArticlesCache.forEach(a => { a.slug = a.id; });
+                }
+                // Try to get SEO cover images
+                try {
+                    const seoSnap = await db.ref('articleSeo').once('value');
+                    const seoAll = seoSnap.val() || {};
+                    allArticlesCache.forEach(a => {
+                        if (seoAll[a.id] && seoAll[a.id].coverImage) a.image = seoAll[a.id].coverImage;
+                        if (seoAll[a.id] && seoAll[a.id].keyword) a.keywords = (a.keywords + ' ' + seoAll[a.id].keyword).toLowerCase();
+                    });
+                } catch(e) {}
+                return allArticlesCache;
+            } catch(e) {
+                return [];
+            }
+        }
+
+        function updateSidebarTexts() {
+            const t = SIDEBAR_TEXTS[currentLang] || SIDEBAR_TEXTS.az;
+            document.getElementById('sidebarSearchTitle').textContent = t.search;
+            document.getElementById('sidebarSearchInput').placeholder = t.searchPlaceholder;
+            document.getElementById('sidebarSimilarTitle').textContent = t.similar;
+        }
+        updateSidebarTexts();
+
+        // Search functionality
+        const searchInput = document.getElementById('sidebarSearchInput');
+        const searchResults = document.getElementById('sidebarSearchResults');
+        let searchTimeout;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const q = this.value.trim().toLowerCase();
+            if (q.length < 2) { searchResults.innerHTML = ''; return; }
+            searchTimeout = setTimeout(async () => {
+                const articles = await fetchAllArticles();
+                const t = SIDEBAR_TEXTS[currentLang] || SIDEBAR_TEXTS.az;
+                const matches = articles.filter(a => a.title.toLowerCase().includes(q) || a.keywords.includes(q)).slice(0, 5);
+                if (matches.length === 0) {
+                    searchResults.innerHTML = `<div class="sidebar-no-results">${t.noResults}</div>`;
+                } else {
+                    searchResults.innerHTML = matches.map(a =>
+                        `<a class="sidebar-search-item" href="/${a.slug}">${a.title}<span class="search-item-date">${a.date}</span></a>`
+                    ).join('');
+                }
+            }, 300);
+        });
+
+        // Similar articles
+        async function loadSimilarArticles() {
+            const postId = await getPostId();
+            const articles = await fetchAllArticles();
+            const t = SIDEBAR_TEXTS[currentLang] || SIDEBAR_TEXTS.az;
+            const current = articles.find(a => a.id === postId);
+            const container = document.getElementById('sidebarSimilarList');
+
+            let similar = [];
+            if (current && current.keywords) {
+                const kws = current.keywords.split(/[,\s]+/).filter(Boolean);
+                similar = articles
+                    .filter(a => a.id !== postId)
+                    .map(a => {
+                        let score = 0;
+                        kws.forEach(kw => { if (a.keywords.includes(kw) || a.title.toLowerCase().includes(kw)) score++; });
+                        return { ...a, score };
+                    })
+                    .filter(a => a.score > 0)
+                    .sort((a, b) => b.score - a.score)
+                    .slice(0, 5);
+            }
+            if (similar.length === 0) {
+                similar = articles.filter(a => a.id !== postId).slice(0, 5);
+            }
+            if (similar.length === 0) {
+                container.innerHTML = `<div class="sidebar-no-results">${t.noSimilar}</div>`;
+                return;
+            }
+            container.innerHTML = similar.map(a => `
+                <a class="similar-article" href="/${a.slug}">
+                    ${a.image ? `<img class="similar-article-img" src="${a.image}" alt="${a.title}" loading="lazy">` : `<div class="similar-article-img" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-file-alt" style="color:#ccc;font-size:1.2rem;"></i></div>`}
+                    <div class="similar-article-info">
+                        <div class="similar-article-title">${a.title}</div>
+                        <div class="similar-article-date">${a.date}</div>
+                    </div>
+                </a>
+            `).join('');
+        }
+        loadSimilarArticles();
 
         // === BLOG CTA: Calendar + Call Form ===
         const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw869YoQXmQIJDknvOoLkBjetn7dT3BF8W7GXOgHhlk8FbAGclnCbDHDKIgX5S-UHr1/exec';
