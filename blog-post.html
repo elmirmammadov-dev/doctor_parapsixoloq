@@ -1163,7 +1163,51 @@
                 const authBtn = document.getElementById('userAuthBtn');
                 if (authBtn) {
                     authBtn.innerHTML = '<img src="/profil-sekli-1.webp" class="nav-user-avatar" alt="Şahsəddin İmanlı" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"> <span class="nav-user-name">Şahsəddin</span>';
-                    authBtn.onclick = function() { window.location.href = '/admin.html'; };
+                    authBtn.style.position = 'relative';
+                    // Create dropdown
+                    const dropdown = document.createElement('div');
+                    dropdown.id = 'adminDropdown';
+                    dropdown.style.cssText = 'display:none;position:absolute;top:100%;right:0;margin-top:6px;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.15);min-width:180px;z-index:999;overflow:hidden;';
+                    dropdown.innerHTML = '<a href="/admin.html" style="display:flex;align-items:center;gap:8px;padding:12px 16px;color:#333;text-decoration:none;font-size:0.85rem;font-weight:500;border-bottom:1px solid #eee;"><i class="fas fa-cog" style="color:#2d8157;"></i> Admin Panel</a>'
+                        + '<button id="adminLogoutBtn" style="display:flex;align-items:center;gap:8px;padding:12px 16px;color:#e74c3c;font-size:0.85rem;font-weight:500;border:none;background:none;cursor:pointer;width:100%;text-align:left;"><i class="fas fa-sign-out-alt"></i> Çıxış et</button>';
+                    authBtn.parentNode.style.position = 'relative';
+                    authBtn.parentNode.appendChild(dropdown);
+
+                    let clickCount = 0;
+                    let clickTimer = null;
+                    authBtn.onclick = function(e) {
+                        e.preventDefault();
+                        clickCount++;
+                        if (clickCount === 1) {
+                            clickTimer = setTimeout(function() {
+                                // Single click — toggle dropdown
+                                dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+                                clickCount = 0;
+                            }, 300);
+                        } else if (clickCount >= 2) {
+                            // Double click — go to admin panel
+                            clearTimeout(clickTimer);
+                            clickCount = 0;
+                            dropdown.style.display = 'none';
+                            window.location.href = '/admin.html';
+                        }
+                    };
+
+                    // Logout handler
+                    dropdown.querySelector('#adminLogoutBtn').onclick = function() {
+                        sessionStorage.removeItem('blogAdminAuth');
+                        window.isAdminLoggedIn = false;
+                        dropdown.style.display = 'none';
+                        window.location.reload();
+                    };
+
+                    // Close dropdown on outside click
+                    document.addEventListener('click', function(e) {
+                        if (!authBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                            dropdown.style.display = 'none';
+                            clickCount = 0;
+                        }
+                    });
                 }
             });
         }
