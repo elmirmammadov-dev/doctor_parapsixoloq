@@ -449,6 +449,38 @@
             color: #999;
             padding: 8px 0;
         }
+        .sidebar-archive-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-top: 4px solid var(--gold, #1a8a5c);
+        }
+        .sidebar-archive-box h3 {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 16px 0;
+        }
+        .sidebar-archive-list {
+            list-style: disc;
+            padding-left: 20px;
+            margin: 0;
+        }
+        .sidebar-archive-list li {
+            padding: 6px 0;
+        }
+        .sidebar-archive-list li a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .sidebar-archive-list li a:hover {
+            color: var(--gold, #1a8a5c);
+        }
         @media (max-width: 900px) {
             .blog-post-layout {
                 flex-direction: column;
@@ -1158,6 +1190,12 @@
                     <div style="text-align:center;padding:20px 0;color:#ccc;"><i class="fas fa-spinner fa-spin"></i></div>
                 </div>
             </div>
+            <div class="sidebar-archive-box">
+                <h3 id="sidebarArchiveTitle">ARXİVLƏR</h3>
+                <ul class="sidebar-archive-list" id="sidebarArchiveList">
+                    <li style="text-align:center;padding:10px 0;color:#ccc;list-style:none;"><i class="fas fa-spinner fa-spin"></i></li>
+                </ul>
+            </div>
         </aside>
     </div>
 
@@ -1410,6 +1448,7 @@
                 if (typeof updateSidebarTexts === 'function') updateSidebarTexts();
                 allArticlesCache = null;
                 if (typeof loadSimilarArticles === 'function') loadSimilarArticles();
+                if (typeof loadArchive === 'function') loadArchive();
                 if (typeof updateCtaUI === 'function') updateCtaUI();
                 if (typeof renderBlogCalendar === 'function') renderBlogCalendar();
                 updateCommentUI();
@@ -1608,8 +1647,10 @@
 
         // === SIDEBAR: Search + Similar Articles ===
         const SIDEBAR_TEXTS = {
-            az: { search: 'AXTARIŞ', searchPlaceholder: 'Məqalə axtar...', similar: 'OXŞAR MƏQALƏLƏR', noResults: 'Nəticə tapılmadı', noSimilar: 'Oxşar məqalə yoxdur' },
-            ru: { search: 'ПОИСК', searchPlaceholder: 'Найти статью...', similar: 'ПОХОЖИЕ СТАТЬИ', noResults: 'Ничего не найдено', noSimilar: 'Нет похожих статей' }
+            az: { search: 'AXTARIŞ', searchPlaceholder: 'Məqalə axtar...', similar: 'OXŞAR MƏQALƏLƏR', archive: 'Arxivlər', noResults: 'Nəticə tapılmadı', noSimilar: 'Oxşar məqalə yoxdur',
+                months: ['Yanvar','Fevral','Mart','Aprel','May','İyun','İyul','Avqust','Sentyabr','Oktyabr','Noyabr','Dekabr'] },
+            ru: { search: 'ПОИСК', searchPlaceholder: 'Найти статью...', similar: 'ПОХОЖИЕ СТАТЬИ', archive: 'Архивы', noResults: 'Ничего не найдено', noSimilar: 'Нет похожих статей',
+                months: ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'] }
         };
 
         let allArticlesCache = null;
@@ -1668,6 +1709,7 @@
             document.getElementById('sidebarSearchTitle').textContent = t.search;
             document.getElementById('sidebarSearchInput').placeholder = t.searchPlaceholder;
             document.getElementById('sidebarSimilarTitle').textContent = t.similar;
+            document.getElementById('sidebarArchiveTitle').textContent = t.archive;
         }
         updateSidebarTexts();
 
@@ -1733,6 +1775,51 @@
             `).join('');
         }
         loadSimilarArticles();
+
+        // Archive section
+        async function loadArchive() {
+            const articles = await fetchAllArticles();
+            const t = SIDEBAR_TEXTS[currentLang] || SIDEBAR_TEXTS.az;
+            const container = document.getElementById('sidebarArchiveList');
+            const monthMap = {};
+            articles.forEach(a => {
+                if (!a.date) return;
+                // Parse date - try common formats
+                const d = new Date(a.date);
+                if (isNaN(d.getTime())) return;
+                const key = d.getFullYear() + '-' + String(d.getMonth()).padStart(2, '0');
+                if (!monthMap[key]) monthMap[key] = { year: d.getFullYear(), month: d.getMonth(), count: 0, articles: [] };
+                monthMap[key].count++;
+                monthMap[key].articles.push(a);
+            });
+            const sorted = Object.values(monthMap).sort((a, b) => b.year - a.year || b.month - a.month);
+            if (sorted.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            container.innerHTML = sorted.map(m => {
+                const monthName = t.months[m.month];
+                const slugs = m.articles.map(a => a.slug);
+                return `<li><a href="/#about" class="archive-month-link" data-slugs='${JSON.stringify(slugs)}'>${monthName} ${m.year}</a></li>`;
+            }).join('');
+
+            // Click handler - show articles of that month in search results
+            container.querySelectorAll('.archive-month-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const slugs = JSON.parse(this.dataset.slugs);
+                    const matched = articles.filter(a => slugs.includes(a.slug));
+                    const searchResults = document.getElementById('sidebarSearchResults');
+                    searchResults.innerHTML = matched.map(a =>
+                        `<a class="sidebar-search-item" href="/${a.slug}">${a.title}<span class="search-item-date">${a.date}</span></a>`
+                    ).join('');
+                    // Scroll to search
+                    document.getElementById('sidebarSearchInput').value = this.textContent;
+                    document.querySelector('.sidebar-search-box').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                });
+            });
+        }
+        loadArchive();
 
         // === BLOG CTA: Calendar + Call Form ===
         const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw869YoQXmQIJDknvOoLkBjetn7dT3BF8W7GXOgHhlk8FbAGclnCbDHDKIgX5S-UHr1/exec';
