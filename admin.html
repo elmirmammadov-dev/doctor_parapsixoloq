@@ -55,9 +55,6 @@
                     <button class="admin-tab-btn" data-tab="reviews" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
                         <i class="fas fa-star"></i> <span data-admin-i18n="tabReviews">Rəylər</span>
                     </button>
-                    <button class="admin-tab-btn" data-tab="settings" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
-                        <i class="fas fa-cog"></i> <span data-admin-i18n="tabSettings">Ayarlar</span>
-                    </button>
                 </div>
 
                 <!-- Contentful tab — New Article Form -->
@@ -394,91 +391,9 @@
                         <p style="text-align:center;color:#999;padding:20px 0;">Yüklənir...</p>
                     </div>
                 </div>
-
-                <!-- Settings Tab — AdSense Controls -->
-                <div class="admin-tab-content" id="tabSettings" style="display:none;">
-                    <div style="margin-bottom:20px;">
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
-                            <i class="fab fa-google" style="color:#4285f4;font-size:1.2rem;"></i>
-                            <h3 style="margin:0;font-size:1.1rem;font-weight:700;color:var(--text-primary);" data-admin-i18n="settingsAdsenseTitle">Google AdSense Reklamları</h3>
-                        </div>
-                        <p style="font-size:0.85rem;color:#888;margin-bottom:16px;" data-admin-i18n="settingsAdsenseDesc">Blog yazısı səhifəsində reklam yerlərini idarə edin.</p>
-
-                        <!-- AdSense Publisher ID -->
-                        <div style="margin-bottom:20px;padding:14px;background:#f8f9fa;border-radius:12px;border:1px solid #e0e0e0;">
-                            <label style="font-weight:600;font-size:0.82rem;color:#555;display:block;margin-bottom:6px;">AdSense Publisher ID</label>
-                            <input type="text" id="adsensePublisherId" placeholder="ca-pub-XXXXXXXXXXXXXXXX" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;font-family:monospace;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
-                        </div>
-
-                        <!-- Ad Slot: Article Middle -->
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:#fff;border-radius:12px;border:1.5px solid #e8e8e8;margin-bottom:10px;">
-                            <div style="display:flex;align-items:center;gap:10px;">
-                                <div style="width:36px;height:36px;border-radius:10px;background:#fff3cd;display:flex;align-items:center;justify-content:center;"><i class="fas fa-align-center" style="color:#856404;"></i></div>
-                                <div>
-                                    <div style="font-weight:600;font-size:0.9rem;color:var(--text-primary);" data-admin-i18n="adSlotMiddle">Məqalənin ortası</div>
-                                    <div style="font-size:0.75rem;color:#999;" data-admin-i18n="adSlotMiddleDesc">Mətn arasında reklam bloku</div>
-                                </div>
-                            </div>
-                            <label style="position:relative;display:inline-block;width:48px;height:26px;cursor:pointer;">
-                                <input type="checkbox" id="adToggleMiddle" style="opacity:0;width:0;height:0;">
-                                <span style="position:absolute;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:26px;transition:0.3s;"></span>
-                                <span style="position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></span>
-                            </label>
-                        </div>
-
-                        <!-- Ad Slot: After Share -->
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:#fff;border-radius:12px;border:1.5px solid #e8e8e8;margin-bottom:10px;">
-                            <div style="display:flex;align-items:center;gap:10px;">
-                                <div style="width:36px;height:36px;border-radius:10px;background:#d4edda;display:flex;align-items:center;justify-content:center;"><i class="fas fa-share-alt" style="color:#155724;"></i></div>
-                                <div>
-                                    <div style="font-weight:600;font-size:0.9rem;color:var(--text-primary);" data-admin-i18n="adSlotAfterShare">Paylaşdan sonra</div>
-                                    <div style="font-size:0.75rem;color:#999;" data-admin-i18n="adSlotAfterShareDesc">Şərhlərdən əvvəl reklam</div>
-                                </div>
-                            </div>
-                            <label style="position:relative;display:inline-block;width:48px;height:26px;cursor:pointer;">
-                                <input type="checkbox" id="adToggleAfterShare" style="opacity:0;width:0;height:0;">
-                                <span style="position:absolute;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:26px;transition:0.3s;"></span>
-                                <span style="position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></span>
-                            </label>
-                        </div>
-
-                        <!-- Ad Slot: Sidebar -->
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:#fff;border-radius:12px;border:1.5px solid #e8e8e8;margin-bottom:16px;">
-                            <div style="display:flex;align-items:center;gap:10px;">
-                                <div style="width:36px;height:36px;border-radius:10px;background:#cce5ff;display:flex;align-items:center;justify-content:center;"><i class="fas fa-columns" style="color:#004085;"></i></div>
-                                <div>
-                                    <div style="font-weight:600;font-size:0.9rem;color:var(--text-primary);" data-admin-i18n="adSlotSidebar">Sidebar (Seans tarixindən sonra)</div>
-                                    <div style="font-size:0.75rem;color:#999;" data-admin-i18n="adSlotSidebarDesc">Sağ paneldə reklam bloku</div>
-                                </div>
-                            </div>
-                            <label style="position:relative;display:inline-block;width:48px;height:26px;cursor:pointer;">
-                                <input type="checkbox" id="adToggleSidebar" style="opacity:0;width:0;height:0;">
-                                <span style="position:absolute;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:26px;transition:0.3s;"></span>
-                                <span style="position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></span>
-                            </label>
-                        </div>
-
-                        <!-- Save Button -->
-                        <button id="saveAdsenseSettings" style="width:100%;padding:12px;background:var(--gold);color:#fff;border:none;border-radius:12px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.background='#15744d'" onmouseout="this.style.background='var(--gold)'">
-                            <i class="fas fa-save"></i> <span data-admin-i18n="saveSettings">Ayarları yadda saxla</span>
-                        </button>
-                        <p id="adsenseSettingsMsg" style="text-align:center;font-size:0.85rem;margin-top:8px;display:none;"></p>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
-
-    <style>
-        /* Toggle switch styles */
-        label:has(input[type="checkbox"]) input:checked + span {
-            background: var(--gold, #1a8a5c) !important;
-        }
-        label:has(input[type="checkbox"]) input:checked + span + span {
-            transform: translateX(22px) !important;
-        }
-    </style>
 
     <script src="translations.js"></script>
     <script>
