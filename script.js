@@ -686,7 +686,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cards = document.querySelectorAll('.blog-post-card');
         cards.forEach(card => {
-            if (card.href && mostReadId && card.href.includes(mostReadId)) {
+            if (mostReadId && card.dataset.id === mostReadId) {
                 card.classList.add('most-read');
                 const badge = document.createElement('span');
                 badge.className = 'blog-most-read-badge';
@@ -752,7 +752,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return {
                     id: id,
                     html: `
-                    <a href="${blogUrl}" class="blog-post-card" style="text-decoration:none;color:inherit;cursor:pointer;">
+                    <a href="${blogUrl}" class="blog-post-card" data-id="${id}" style="text-decoration:none;color:inherit;cursor:pointer;">
                         ${imgUrl ? `<div class="blog-post-cover" role="img" aria-label="${f.title}" style="background-image:url(${imgUrl});background-size:${bgSize};background-position:${coverPos};background-repeat:no-repeat;"></div>` : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`}
                         <div class="blog-post-info">
                             <h4>${f.title}</h4>
