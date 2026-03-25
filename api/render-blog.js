@@ -63,6 +63,7 @@ module.exports = async (req, res) => {
         const imageAlt = seoData.imageAlt || title;
         const siteUrl = 'https://www.sahseddinimanli.com';
         const pageUrl = seoData.slug ? `${siteUrl}/${seoData.slug}` : `${siteUrl}/blog/${postId}`;
+        const dateModified = article.sys.updatedAt || '';
 
         // Read the blog-post.html template
         const templatePath = path.join(process.cwd(), 'blog-post.html');
@@ -110,26 +111,32 @@ module.exports = async (req, res) => {
             `<meta name="twitter:description" content="${escapeHtml(metaDesc)}">`
         );
 
-        // Inject canonical URL and JSON-LD before </head>
+        // Inject canonical URL, og:url, and JSON-LD before </head>
         const jsonLd = {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": title,
             "description": metaDesc,
-            "image": imageUrl || '',
-            "datePublished": date,
-            "author": { "@type": "Person", "name": "Şahsəddin İmanlı" },
+            "image": imageUrl || undefined,
+            "datePublished": date || undefined,
+            "dateModified": dateModified || undefined,
+            "author": { "@type": "Person", "name": "Şahsəddin İmanlı", "url": siteUrl },
             "publisher": {
                 "@type": "Organization",
                 "name": "Şahsəddin İmanlı",
-                "url": siteUrl
+                "url": siteUrl,
+                "logo": { "@type": "ImageObject", "url": siteUrl + "/logo.webp" }
             },
             "mainEntityOfPage": { "@type": "WebPage", "@id": pageUrl },
-            "keywords": keyword
+            "keywords": keyword,
+            "inLanguage": "az"
         };
+        // Remove undefined values
+        Object.keys(jsonLd).forEach(k => jsonLd[k] === undefined && delete jsonLd[k]);
 
         const headInject = `
     <link rel="canonical" href="${pageUrl}">
+    <meta property="og:url" content="${pageUrl}">
     <script>window.__POST_ID__ = "${postId}";</script>
     <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
 

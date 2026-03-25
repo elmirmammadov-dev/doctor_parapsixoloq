@@ -13,6 +13,10 @@
       "destination": "/api/render-lang?lang=tr"
     },
     {
+      "source": "/blog/:id",
+      "destination": "/api/redirect-blog?id=:id"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
     },

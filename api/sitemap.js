@@ -54,15 +54,15 @@ module.exports = async (req, res) => {
         <priority>0.3</priority>
     </url>`;
 
-        // Add each blog post
+        // Add each blog post (only those with slug URLs)
         for (const article of articles) {
             const id = article.sys.id;
             const updated = article.sys.updatedAt ? article.sys.updatedAt.split('T')[0] : '';
             const slug = seoData[id] && seoData[id].slug ? seoData[id].slug : null;
-            const blogUrl = slug ? `${SITE_URL}/${slug}` : `${SITE_URL}/blog/${id}`;
+            if (!slug) continue; // Skip articles without slug - not accessible
             xml += `
     <url>
-        <loc>${blogUrl}</loc>
+        <loc>${SITE_URL}/${slug}</loc>
         ${updated ? `<lastmod>${updated}</lastmod>` : ''}
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
