@@ -790,6 +790,79 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchBlogPosts();
 
+    // === ANNOUNCEMENTS SECTION (Homepage) ===
+    const ANN_SECTION_PER_PAGE = 4;
+    let annSectionAll = [];
+    let annSectionPage = 0;
+
+    function renderAnnSectionPage() {
+        const grid = document.getElementById('annSectionGrid');
+        const pagination = document.getElementById('annSectionPagination');
+        if (!grid) return;
+        const totalPages = Math.ceil(annSectionAll.length / ANN_SECTION_PER_PAGE);
+        const start = annSectionPage * ANN_SECTION_PER_PAGE;
+        const items = annSectionAll.slice(start, start + ANN_SECTION_PER_PAGE);
+
+        if (annSectionAll.length === 0) {
+            grid.innerHTML = '<p style="text-align:center;color:#999;grid-column:1/-1;padding:30px 0;">Hazırda elan yoxdur.</p>';
+            pagination.style.display = 'none';
+            return;
+        }
+
+        grid.innerHTML = items.map(a => {
+            const pos = a.coverPos || '50% 50%';
+            const zoom = a.coverZoom || 1;
+            const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
+            const tag = a.link ? 'a' : 'div';
+            const href = a.link ? ` href="${a.link}" target="_blank" rel="noopener"` : '';
+            return `<${tag} class="ann-section-card"${href}>
+                ${a.image ? `<div class="ann-section-card-img" style="background-image:url(${a.image});background-position:${pos};background-size:${bgSize};"><span class="ann-section-badge">YENİ</span></div>` : ''}
+                <div class="ann-section-card-body">
+                    <div class="ann-section-card-title">${a.title}</div>
+                    ${a.desc ? `<div class="ann-section-card-desc">${a.desc}</div>` : ''}
+                    <div class="ann-section-card-date">${a.date || ''}</div>
+                </div>
+            </${tag}>`;
+        }).join('');
+
+        if (totalPages > 1) {
+            pagination.style.display = 'flex';
+            document.getElementById('annSectionPageInfo').textContent = (annSectionPage + 1) + ' / ' + totalPages;
+            document.getElementById('annSectionPrev').disabled = annSectionPage <= 0;
+            document.getElementById('annSectionNext').disabled = annSectionPage >= totalPages - 1;
+        } else {
+            pagination.style.display = 'none';
+        }
+    }
+
+    async function fetchAnnouncements() {
+        try {
+            const res = await fetch('https://hekim-sayti-comments-default-rtdb.firebaseio.com/announcements.json');
+            const data = await res.json();
+            if (!data) { annSectionAll = []; renderAnnSectionPage(); return; }
+            annSectionAll = Object.values(data)
+                .filter(a => a.active !== false)
+                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            annSectionPage = 0;
+            renderAnnSectionPage();
+            // Hide section if no announcements
+            const section = document.getElementById('announcementsSection');
+            if (section && annSectionAll.length === 0) section.style.display = 'none';
+        } catch(e) {}
+    }
+
+    const annPrevBtn = document.getElementById('annSectionPrev');
+    const annNextBtn = document.getElementById('annSectionNext');
+    if (annPrevBtn) annPrevBtn.addEventListener('click', function() {
+        if (annSectionPage > 0) { annSectionPage--; renderAnnSectionPage(); }
+    });
+    if (annNextBtn) annNextBtn.addEventListener('click', function() {
+        const totalPages = Math.ceil(annSectionAll.length / ANN_SECTION_PER_PAGE);
+        if (annSectionPage < totalPages - 1) { annSectionPage++; renderAnnSectionPage(); }
+    });
+
+    fetchAnnouncements();
+
     // === REVIEWS SECTION ===
     const REVIEWS_PER_PAGE = 6;
     let currentReviewPage = 0;
