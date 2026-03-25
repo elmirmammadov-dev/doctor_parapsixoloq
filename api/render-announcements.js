@@ -66,7 +66,7 @@ module.exports = async (req, res) => {
                 const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
                 return `
                 <article class="ann-card" itemscope itemtype="https://schema.org/Event">
-                    ${a.image ? `<div class="ann-card-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};" role="img" aria-label="${escapeHtml(a.title)}" itemprop="image"><span class="ann-badge">YENİ</span></div>` : ''}
+                    ${a.image ? `<div class="ann-card-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};" role="img" aria-label="${escapeHtml(a.title)}" itemprop="image">${a.showBadge !== false ? '<span class="ann-badge">YENİ</span>' : ''}</div>` : ''}
                     <div class="ann-card-body">
                         <h2 class="ann-card-title" itemprop="name">${escapeHtml(a.title)}</h2>
                         ${a.desc ? `<p class="ann-card-desc" itemprop="description">${escapeHtml(a.desc)}</p>` : ''}

@@ -816,7 +816,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const tag = a.link ? 'a' : 'div';
             const href = a.link ? ` href="${a.link}" target="_blank" rel="noopener"` : '';
             return `<${tag} class="ann-section-card"${href}>
-                ${a.image ? `<div class="ann-section-card-img" style="background-image:url(${a.image});background-position:${pos};background-size:${bgSize};"><span class="ann-section-badge">YENİ</span></div>` : ''}
+                ${a.image ? `<div class="ann-section-card-img" style="background-image:url(${a.image});background-position:${pos};background-size:${bgSize};">${a.showBadge !== false ? '<span class="ann-section-badge">YENİ</span>' : ''}</div>` : ''}
                 <div class="ann-section-card-body">
                     <div class="ann-section-card-title">${a.title}</div>
                     ${a.desc ? `<div class="ann-section-card-desc">${a.desc}</div>` : ''}

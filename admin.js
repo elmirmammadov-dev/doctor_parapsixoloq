@@ -3004,6 +3004,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 image: imageUrl,
                 coverPos: annPosX.toFixed(1) + '% ' + annPosY.toFixed(1) + '%',
                 coverZoom: annZoom,
+                showBadge: document.getElementById('annShowBadge').checked,
                 date: dateStr,
                 dateRaw: dateInput || new Date().toISOString().split('T')[0],
                 timestamp: dateTimestamp,
@@ -3022,6 +3023,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('annDesc').value = '';
             document.getElementById('annLink').value = '';
             document.getElementById('annDate').value = '';
+            document.getElementById('annShowBadge').checked = true;
             annImageFile.value = '';
             annImagePreview.style.display = 'none';
             annImageName.textContent = 'Seçilməyib';
@@ -3075,6 +3077,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('annDesc').value = item.desc || '';
             document.getElementById('annLink').value = item.link || '';
             document.getElementById('annDate').value = item.dateRaw || '';
+            document.getElementById('annShowBadge').checked = item.showBadge !== false;
             if (item.image) {
                 annImagePreview.src = item.image;
                 annCoverCard.style.backgroundImage = 'url(' + item.image + ')';

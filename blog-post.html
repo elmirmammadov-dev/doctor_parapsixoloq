@@ -708,8 +708,7 @@
         .ann-item:last-child {
             margin-bottom: 0;
         }
-        .ann-item::before {
-            content: 'YENİ';
+        .ann-badge-tag {
             position: absolute;
             top: 10px;
             left: 10px;
@@ -2302,7 +2301,7 @@
                 const pos = a.coverPos || '50% 50%';
                 const zoom = a.coverZoom || 1;
                 return `<${tag} class="ann-item"${href} itemscope itemtype="https://schema.org/Event">
-                    ${a.image ? `<div class="ann-item-img" style="background-image:url(${a.image});background-position:${pos};background-size:${zoom <= 1 ? 'cover' : (zoom * 100) + '%'};" role="img" aria-label="${a.title}" itemprop="image"></div>` : ''}
+                    ${a.image ? `<div class="ann-item-img" style="background-image:url(${a.image});background-position:${pos};background-size:${zoom <= 1 ? 'cover' : (zoom * 100) + '%'};" role="img" aria-label="${a.title}" itemprop="image">${a.showBadge !== false ? '<span class="ann-badge-tag">YENİ</span>' : ''}</div>` : (a.showBadge !== false ? '<div style="position:relative;"><span class="ann-badge-tag">YENİ</span></div>' : '')}
                     <div class="ann-item-body">
                         <div class="ann-item-title" itemprop="name">${a.title}</div>
                         ${a.desc ? `<div class="ann-item-desc" itemprop="description">${a.desc}</div>` : ''}

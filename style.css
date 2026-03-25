@@ -3187,12 +3187,11 @@ img {
     color: inherit;
     transition: all 0.35s;
     position: relative;
-    border: 1.5px solid #f0f0f0;
+    border: 2px solid #e74c3c;
 }
 .ann-section-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 12px 36px rgba(231,76,60,0.15);
-    border-color: #e74c3c;
+    box-shadow: 0 12px 36px rgba(231,76,60,0.18);
 }
 .ann-section-card-img {
     width: 100%;
