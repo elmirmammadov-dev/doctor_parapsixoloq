@@ -2985,6 +2985,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 imageUrl = snap.val() || '';
             }
 
+            const dateInput = document.getElementById('annDate').value;
+            let dateStr = '';
+            let dateTimestamp = Date.now();
+            if (dateInput) {
+                const d = new Date(dateInput);
+                dateStr = String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear();
+                dateTimestamp = d.getTime();
+            } else {
+                const now = new Date();
+                dateStr = String(now.getDate()).padStart(2, '0') + '.' + String(now.getMonth() + 1).padStart(2, '0') + '.' + now.getFullYear();
+            }
+
             const annData = {
                 title: title,
                 desc: desc,
@@ -2992,8 +3004,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 image: imageUrl,
                 coverPos: annPosX.toFixed(1) + '% ' + annPosY.toFixed(1) + '%',
                 coverZoom: annZoom,
-                date: new Date().toLocaleDateString('az-AZ', { day: 'numeric', month: 'long', year: 'numeric' }),
-                timestamp: Date.now(),
+                date: dateStr,
+                dateRaw: dateInput || new Date().toISOString().split('T')[0],
+                timestamp: dateTimestamp,
                 active: true
             };
 
@@ -3008,9 +3021,12 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('annTitle').value = '';
             document.getElementById('annDesc').value = '';
             document.getElementById('annLink').value = '';
+            document.getElementById('annDate').value = '';
             annImageFile.value = '';
             annImagePreview.style.display = 'none';
             annImageName.textContent = 'Seçilməyib';
+            annCoverWrap.style.display = 'none';
+            annPosX = 50; annPosY = 50; annZoom = 1;
             annEditId = null;
             setTimeout(() => { msg.style.display = 'none'; }, 3000);
             loadAdminAnnouncements();
@@ -3058,6 +3074,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('annTitle').value = item.title || '';
             document.getElementById('annDesc').value = item.desc || '';
             document.getElementById('annLink').value = item.link || '';
+            document.getElementById('annDate').value = item.dateRaw || '';
             if (item.image) {
                 annImagePreview.src = item.image;
                 annCoverCard.style.backgroundImage = 'url(' + item.image + ')';
