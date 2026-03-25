@@ -131,7 +131,21 @@ module.exports = async (req, res) => {
     <nav class="navbar scrolled" id="navbar">
         <div class="container navbar-content">
             <a href="/" class="navbar-logo"></a>
-            <a href="/" class="btn-session" style="text-decoration:none;">Ana Səhifə</a>
+            <ul class="navbar-menu" id="navMenu">
+                <li><a href="/#about" class="nav-link">Ana Səhifə</a></li>
+                <li><a href="/#blogSection" class="nav-link">Blog</a></li>
+                <li><a href="/#services" class="nav-link">Xidmətlər</a></li>
+                <li><a href="/#problems" class="nav-link">Fəaliyyətlər</a></li>
+                <li><a href="/#faq" class="nav-link">Sual-Cavab</a></li>
+                <li><a href="/#reviews" class="nav-link">Rəylər</a></li>
+                <li><a href="/#contact" class="nav-link">Əlaqə</a></li>
+            </ul>
+            <a href="https://wa.link/wcams9" target="_blank" class="btn-session" style="text-decoration:none;">Seansa Yazıl</a>
+            <button class="hamburger" id="hamburger" aria-label="Menyu" onclick="document.getElementById('navMenu').classList.toggle('active');this.classList.toggle('active');">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
