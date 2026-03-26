@@ -99,14 +99,6 @@
                                 <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">Şəkil Alt Mətni <span style="font-size:0.72rem;color:#999;font-weight:400;">| Şəkil yüklənmədikdə görünəcək mətn (SEO üçün vacib)</span></label>
                                 <input type="text" id="articleImageAlt" placeholder="Məs: Panik atak müalicəsi haqqında məqalə" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
                             </div>
-                            <div style="margin-top:10px;">
-                                <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">URL (Link) <span style="font-size:0.72rem;color:#999;font-weight:400;">| Məqalənin saytdakı linki (SEO üçün vacib)</span></label>
-                                <div style="display:flex;align-items:center;gap:0;border:1.5px solid #ddd;border-radius:10px;overflow:hidden;transition:border 0.3s;" id="slugInputWrap">
-                                    <span style="padding:10px 12px;background:#f0faf5;color:#2d8157;font-size:0.82rem;font-weight:600;white-space:nowrap;border-right:1px solid #ddd;">sahseddinimanli.com/</span>
-                                    <input type="text" id="articleSlug" placeholder="panik-atak-nedir-ve-nece-qurtulmaq-olar" style="flex:1;padding:10px 14px;border:none;font-size:0.9rem;outline:none;box-sizing:border-box;" onfocus="document.getElementById('slugInputWrap').style.borderColor='var(--gold)'" onblur="document.getElementById('slugInputWrap').style.borderColor='#ddd'">
-                                </div>
-                                <div style="font-size:0.72rem;color:#999;margin-top:4px;">Tövsiyə: kiçik hərflə, boşluq əvəzinə tire (-) işlədin. Məs: <b>panik-atak-nedir</b></div>
-                            </div>
                         </div>
                         <!-- Russian locale toggle -->
                         <div>
@@ -148,6 +140,15 @@
                                     <input type="text" id="articleImageAltRu" placeholder="Напр: Статья о лечении панических атак" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;transition:border 0.3s;box-sizing:border-box;" onfocus="this.style.borderColor='#7b68ee'" onblur="this.style.borderColor='#ddd'">
                                 </div>
                             </div>
+                        </div>
+                        <!-- URL/Slug -->
+                        <div style="margin-top:10px;">
+                            <label style="font-weight:600;font-size:0.82rem;color:var(--text-primary);margin-bottom:4px;display:block;">URL (Link) <span style="font-size:0.72rem;color:#999;font-weight:400;">| Məqalənin saytdakı linki (SEO üçün vacib)</span></label>
+                            <div style="display:flex;align-items:center;gap:0;border:1.5px solid #ddd;border-radius:10px;overflow:hidden;transition:border 0.3s;" id="slugInputWrap">
+                                <span style="padding:10px 12px;background:#f0faf5;color:#2d8157;font-size:0.82rem;font-weight:600;white-space:nowrap;border-right:1px solid #ddd;">sahseddinimanli.com/</span>
+                                <input type="text" id="articleSlug" placeholder="panik-atak-nedir-ve-nece-qurtulmaq-olar" style="flex:1;padding:10px 14px;border:none;font-size:0.9rem;outline:none;box-sizing:border-box;" onfocus="document.getElementById('slugInputWrap').style.borderColor='var(--gold)'" onblur="document.getElementById('slugInputWrap').style.borderColor='#ddd'">
+                            </div>
+                            <div style="font-size:0.72rem;color:#999;margin-top:4px;">Tövsiyə: kiçik hərflə, boşluq əvəzinə tire (-) işlədin. Məs: <b>panik-atak-nedir</b></div>
                         </div>
                         <!-- Image -->
                         <div>
