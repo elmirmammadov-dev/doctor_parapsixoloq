@@ -94,6 +94,11 @@ module.exports = async (req, res) => {
             /<meta property="og:locale" content="[^"]*">/,
             `<meta property="og:locale" content="${meta.ogLocale}">`
         );
+        // Update og:locale:alternate - remove current lang, add az
+        html = html.replace(
+            `<meta property="og:locale:alternate" content="${meta.ogLocale}">`,
+            `<meta property="og:locale:alternate" content="az_AZ">`
+        );
 
         // 7. Change Twitter tags
         html = html.replace(

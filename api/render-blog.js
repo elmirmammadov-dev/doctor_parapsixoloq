@@ -124,6 +124,12 @@ module.exports = async (req, res) => {
             '<meta name="twitter:description" content="Parapsixologiya, sağlamlıq və mənəvi inkişaf haqqında faydalı məqalələr.">',
             `<meta name="twitter:description" content="${escapeHtml(metaDesc)}">`
         );
+        if (imageUrl) {
+            html = html.replace(
+                '<meta name="twitter:image" content="https://www.sahseddinimanli.com/logo.webp">',
+                `<meta name="twitter:image" content="${imageUrl}">`
+            );
+        }
 
         // Inject canonical URL, og:url, and JSON-LD before </head>
         const jsonLd = {

@@ -59,18 +59,29 @@ module.exports = async (req, res) => {
         <priority>0.3</priority>
     </url>`;
 
-        // Add each blog post (only those with slug URLs)
+        // Add each blog post
         for (const article of articles) {
             const id = article.sys.id;
             const updated = article.sys.updatedAt ? article.sys.updatedAt.split('T')[0] : '';
             const slug = seoData[id] && seoData[id].slug ? seoData[id].slug : null;
-            if (!slug) continue; // Skip articles without slug - not accessible
+            if (!slug) continue; // Skip articles without slug URL
             xml += `
     <url>
         <loc>${SITE_URL}/${slug}</loc>
         ${updated ? `<lastmod>${updated}</lastmod>` : ''}
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
+    </url>`;
+        }
+
+        // Add announcements page with language variants
+        const langs = ['ru', 'en', 'tr'];
+        for (const l of langs) {
+            xml += `
+    <url>
+        <loc>${SITE_URL}/elanlar?lang=${l}</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>`;
         }
 

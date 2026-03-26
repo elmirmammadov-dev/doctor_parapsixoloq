@@ -2,6 +2,13 @@
 // ŞAHSƏDDIN İMANLI — Website Scripts
 // ============================================
 
+// Initialize Firebase (config set in HTML)
+if (window.__firebaseConfig && typeof firebase !== 'undefined') {
+    firebase.initializeApp(window.__firebaseConfig);
+    var adminDb = firebase.database();
+    sessionStorage.removeItem('blogAdminAuth');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // === ZENG BADGE TOOLTIP ===

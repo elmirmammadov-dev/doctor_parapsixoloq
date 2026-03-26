@@ -23,6 +23,9 @@
     <meta property="og:url" content="https://www.sahseddinimanli.com/">
     <meta property="og:site_name" content="Şahsəddin İmanlı">
     <meta property="og:locale" content="az_AZ">
+    <meta property="og:locale:alternate" content="ru_RU">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:locale:alternate" content="tr_TR">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
@@ -34,7 +37,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
     <link rel="stylesheet" href="style.css">
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -165,19 +169,19 @@
             <!-- Language Switcher (visible on both desktop and mobile) -->
             <div class="lang-switcher" id="langSwitcher">
                 <div class="lang-option active" data-lang="az">
-                    <img src="https://flagcdn.com/w40/az.png" alt="AZ">
+                    <img src="https://flagcdn.com/w40/az.png" alt="AZ" width="40" height="30">
                     <span>AZ</span>
                 </div>
                 <div class="lang-option" data-lang="ru">
-                    <img src="https://flagcdn.com/w40/ru.png" alt="RU">
+                    <img src="https://flagcdn.com/w40/ru.png" alt="RU" width="40" height="30">
                     <span>RUS</span>
                 </div>
                 <div class="lang-option" data-lang="en">
-                    <img src="https://flagcdn.com/w40/gb.png" alt="EN">
+                    <img src="https://flagcdn.com/w40/gb.png" alt="EN" width="40" height="30">
                     <span>ENG</span>
                 </div>
                 <div class="lang-option" data-lang="tr">
-                    <img src="https://flagcdn.com/w40/tr.png" alt="TR">
+                    <img src="https://flagcdn.com/w40/tr.png" alt="TR" width="40" height="30">
                     <span>TR</span>
                 </div>
             </div>
@@ -223,7 +227,7 @@
                 <div class="section-line" style="background:#e74c3c;"></div>
             </div>
             <div class="ann-section-grid" id="annSectionGrid">
-                <!-- Rendered by JS -->
+                <noscript><p>Elanları görmək üçün JavaScript-i aktiv edin. / <a href="/elanlar">Elanlar səhifəsinə keçin</a></p></noscript>
             </div>
             <div class="ann-section-pagination" id="annSectionPagination" style="display:none;">
                 <button id="annSectionPrev"><i class="fas fa-chevron-left"></i></button>
@@ -249,7 +253,7 @@
         </div>
         <div class="container">
             <div class="hero-banner-img-wrap">
-                <img src="hero-banner.webp" alt="Şahsəddin İmanlı">
+                <img src="hero-banner.webp" alt="Şahsəddin İmanlı - Parapsixoloq və Tantra Yoqa Müəllimi" width="600" height="700" fetchpriority="high">
                 <div class="hero-img-badge hero-img-badge-left" id="zengBadge" style="cursor:pointer;">
                     <div class="hero-bar-label" data-i18n="hero_form_title">Zəng Sifarişi</div>
                     <div class="badge-tooltip" id="zengTooltip" data-i18n="zeng_tooltip">Bu seçim üçün mütləq nömrənizi yazmalısınız. Ad, Soyad yazmaya da bilərsiniz.</div>
@@ -313,7 +317,7 @@
             <div class="about-content">
                 <div class="about-image-col">
                     <div class="about-image-frame">
-                        <img src="profil-sekli.webp" loading="lazy" alt="Şahsəddin İmanlı">
+                        <img src="profil-sekli.webp" loading="lazy" alt="Şahsəddin İmanlı profil şəkli" width="300" height="300">
                         <div class="about-trust-badge">
                             <div class="trust-stars">
                                 <i class="fas fa-star"></i>
@@ -454,7 +458,7 @@
                 <div class="section-line"></div>
             </div>
             <div class="blog-grid blog-section-grid" id="blogGrid">
-                <!-- Blog cards rendered by JS -->
+                <noscript><p>Blog yazılarını görmək üçün JavaScript-i aktiv edin.</p></noscript>
             </div>
         </div>
     </section>
@@ -480,7 +484,7 @@
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
-                        <img src="chakra-icon.webp" loading="lazy" alt="Çakra" class="service-img-icon">
+                        <img src="chakra-icon.webp" loading="lazy" alt="Çakra terapiyası" width="80" height="80" class="service-img-icon">
                     </div>
                     <h3 data-i18n="service_2_title">Çakraların Açılması</h3>
                     <p data-i18n="service_2_desc">Bədəndəki enerji mərkəzləri (çakralar) üzərində işləyirik. Xüsusilə 6-cı çakra — "Bəsirət gözü" və 7-ci çakra — "Tac çakra" (Allahla rabitə) üzərində mənəvi təmizlənmə aparılır.</p>
@@ -739,7 +743,7 @@
 
             <!-- Reviews List -->
             <div class="reviews-grid" id="reviewsGrid">
-                <!-- Reviews rendered by JS -->
+                <noscript><p>Rəyləri görmək üçün JavaScript-i aktiv edin.</p></noscript>
             </div>
             <div class="reviews-pagination" id="reviewsLoadMore" style="display:none;">
                 <!-- Pagination rendered by JS -->
@@ -850,13 +854,13 @@
         <span class="whatsapp-pulse delay"></span>
     </a>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="translations.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js" defer></script>
+    <script src="translations.js" defer></script>
     <script>
-        // Firebase init for admin panel
-        const firebaseConfig = {
+        // Firebase config - will be initialized after defer scripts load
+        window.__firebaseConfig = {
             apiKey: "AIzaSyBpgpRCBTtg4Tt0XRMUmOH8qs9RBcj04vo",
             authDomain: "hekim-sayti-comments.firebaseapp.com",
             databaseURL: "https://hekim-sayti-comments-default-rtdb.firebaseio.com",
@@ -865,13 +869,9 @@
             messagingSenderId: "158921605576",
             appId: "1:158921605576:web:1c5d06133260aae200c0fd"
         };
-        firebase.initializeApp(firebaseConfig);
-        const adminDb = firebase.database();
-        // Clear admin blog session when returning to main page
-        sessionStorage.removeItem('blogAdminAuth');
     </script>
-    <script src="auth.js"></script>
-    <script src="tracker.js"></script>
-    <script src="script.js"></script>
+    <script src="auth.js" defer></script>
+    <script src="tracker.js" defer></script>
+    <script src="script.js" defer></script>
 </body>
 </html>
