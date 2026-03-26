@@ -704,18 +704,21 @@ document.addEventListener("DOMContentLoaded", function() {
         thumbEditId = articleId;
         // Load image URL and thumb settings from Firebase
         adminDb.ref('articleSeo/' + articleId).once('value').then(function(snap) {
-            console.log('Firebase data:', snap.val());
             var seo = snap.val() || {};
-            // Try coverImage first, then fallback to Contentful image
+            console.log('Firebase SEO:', JSON.stringify(seo));
+            // Try coverImage first, then fallback to Contentful image from DOM
             var imgUrl = seo.coverImage || '';
+            console.log('coverImage:', imgUrl);
             if (!imgUrl) {
-                // Try to get from the thumbnail preview in the list
                 var thumbEl = document.querySelector('.admin-thumb-preview[data-article-id="' + articleId + '"]');
+                console.log('thumbEl:', thumbEl);
                 if (thumbEl) {
                     var bg = thumbEl.style.backgroundImage;
+                    console.log('bg:', bg);
                     imgUrl = bg.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
                 }
             }
+            console.log('Final imgUrl:', imgUrl);
             if (!imgUrl) { alert('Bu məqalənin şəkili yoxdur. Əvvəlcə məqaləyə şəkil əlavə edin.'); return; }
             thumbPosX = 50; thumbPosY = 50; thumbZoom = 1;
             if (seo.thumbPos) {
