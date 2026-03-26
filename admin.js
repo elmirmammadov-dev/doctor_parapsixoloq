@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Admin auth check
     if (sessionStorage.getItem("adminAuth") !== "true") {
-        window.location.href = "index.html";
+        window.location.href = "/";
         return;
     }
     // Shared variables needed from main script
@@ -704,8 +704,17 @@ document.addEventListener("DOMContentLoaded", function() {
         // Load image URL and thumb settings from Firebase
         adminDb.ref('articleSeo/' + articleId).once('value').then(function(snap) {
             var seo = snap.val() || {};
+            // Try coverImage first, then fallback to Contentful image
             var imgUrl = seo.coverImage || '';
-            if (!imgUrl) { alert('Bu məqalənin şəkili yoxdur'); return; }
+            if (!imgUrl) {
+                // Try to get from the thumbnail preview in the list
+                var thumbEl = document.querySelector('.admin-thumb-preview[data-article-id="' + articleId + '"]');
+                if (thumbEl) {
+                    var bg = thumbEl.style.backgroundImage;
+                    imgUrl = bg.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+                }
+            }
+            if (!imgUrl) { alert('Bu məqalənin şəkili yoxdur. Əvvəlcə məqaləyə şəkil əlavə edin.'); return; }
             thumbPosX = 50; thumbPosY = 50; thumbZoom = 1;
             if (seo.thumbPos) {
                 var parts = seo.thumbPos.split('%').map(function(s) { return parseFloat(s.trim()); });
