@@ -1060,15 +1060,21 @@ img {
     .hero-banner {
         padding-top: 86px;
     }
+    .hero-banner .container {
+        padding: 0;
+    }
     .hero-banner-text {
-        padding: 30px 0 40px;
+        padding: 30px 16px 40px;
     }
     .hero-banner-img-wrap {
-        border-radius: 16px;
+        border-radius: 0;
     }
     .hero-form-bar {
-        border-radius: 0 0 16px 16px;
+        border-radius: 0;
         padding: 20px 0;
+    }
+    .hero-form-bar .hero-bar-inner {
+        border-radius: 0;
     }
     .hero-bar-form {
         flex-direction: column;
