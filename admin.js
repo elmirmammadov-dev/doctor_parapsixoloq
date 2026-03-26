@@ -653,13 +653,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 card.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #eee;border-radius:10px;margin-bottom:10px;background:#fafafa;';
                 card.innerHTML = `
                     <input type="checkbox" class="admin-article-checkbox" data-id="${id}" onchange="toggleArticleSelect('${id}', this.checked)" style="width:18px;height:18px;cursor:pointer;flex-shrink:0;accent-color:#2e7d32;">
-                    ${imgUrl ? `<div style="width:60px;height:60px;border-radius:8px;flex-shrink:0;background-image:url(${imgUrl});background-size:${thumbBgSize};background-position:${thumbPos};background-repeat:no-repeat;cursor:pointer;border:2px solid #e0e0e0;" onclick="openThumbEditor('${id}','${imgUrl.replace(/'/g,"\\'")}')"></div>` : `<div style="width:60px;height:60px;background:#f0f7f3;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-image" style="color:#ccc;"></i></div>`}
+                    ${imgUrl ? `<div class="admin-thumb-preview" data-article-id="${id}" data-img-url="${imgUrl}" style="width:60px;height:60px;border-radius:8px;flex-shrink:0;background-image:url(${imgUrl});background-size:${thumbBgSize};background-position:${thumbPos};background-repeat:no-repeat;cursor:pointer;border:2px solid #e0e0e0;"></div>` : `<div style="width:60px;height:60px;background:#f0f7f3;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-image" style="color:#ccc;"></i></div>`}
                     <div style="flex:1;min-width:0;">
                         <p style="font-weight:600;font-size:0.9rem;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.title || adminT('noTitle')}</p>
                         <span style="font-size:0.8rem;color:#999;">${f.date || ''}</span>
                     </div>
                     <div style="display:flex;gap:6px;flex-shrink:0;">
-                        <button onclick="openThumbEditor('${id}','${imgUrl ? imgUrl.replace(/'/g,"\\'") : ''}')" style="padding:8px 10px;background:#9b59b6;color:#fff;border:none;border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;white-space:nowrap;" title="Thumbnail tənzimlə">
+                        <button class="admin-thumb-btn" data-article-id="${id}" data-img-url="${imgUrl || ''}" style="padding:8px 10px;background:#9b59b6;color:#fff;border:none;border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;white-space:nowrap;" title="Thumbnail tənzimlə">
                             <i class="fas fa-crop-alt"></i>
                         </button>
                         <button onclick="editArticle('${id}')" style="padding:8px 14px;background:var(--gold);color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;white-space:nowrap;">
@@ -671,6 +671,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
                 `;
                 listEl.appendChild(card);
+            });
+            // Bind thumb editor clicks via delegation
+            listEl.querySelectorAll('.admin-thumb-preview, .admin-thumb-btn').forEach(function(el) {
+                el.addEventListener('click', function() {
+                    var aid = this.dataset.articleId;
+                    var url = this.dataset.imgUrl;
+                    if (aid && url) openThumbEditor(aid, url);
+                });
             });
         } catch (err) {
             listEl.innerHTML = '<p style="text-align:center;color:#e74c3c;padding:20px 0;">' + adminT('errorPrefix') + err.message + '</p>';
