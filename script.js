@@ -814,8 +814,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const items = annSectionAll.slice(start, start + ANN_SECTION_PER_PAGE);
 
         if (annSectionAll.length === 0) {
-            grid.innerHTML = '<p style="text-align:center;color:#999;grid-column:1/-1;padding:30px 0;">Hazırda elan yoxdur.</p>';
-            pagination.style.display = 'none';
+            const section = document.getElementById('announcementsSection');
+            if (section) section.style.display = 'none';
             return;
         }
 
