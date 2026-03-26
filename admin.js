@@ -2913,8 +2913,10 @@ document.addEventListener("DOMContentLoaded", function() {
             this.style.cursor = 'grabbing'; e.preventDefault();
         });
         annCoverCard.addEventListener('touchstart', function(e) {
-            annDragging = true; annStartX = e.touches[0].clientX; annStartY = e.touches[0].clientY;
-            annStartPosX = annPosX; annStartPosY = annPosY;
+            if (e.touches.length === 1) {
+                annDragging = true; annStartX = e.touches[0].clientX; annStartY = e.touches[0].clientY;
+                annStartPosX = annPosX; annStartPosY = annPosY;
+            }
         }, { passive: true });
         document.addEventListener('mousemove', function(e) {
             if (!annDragging) return;
@@ -2925,7 +2927,7 @@ document.addEventListener("DOMContentLoaded", function() {
             applyAnnCoverView();
         });
         document.addEventListener('touchmove', function(e) {
-            if (!annDragging) return;
+            if (!annDragging || e.touches.length !== 1) return;
             var dx = e.touches[0].clientX - annStartX, dy = e.touches[0].clientY - annStartY;
             var sens = 0.3 / annZoom;
             annPosX = Math.max(0, Math.min(100, annStartPosX - dx * sens));
@@ -2935,12 +2937,38 @@ document.addEventListener("DOMContentLoaded", function() {
         document.addEventListener('mouseup', function() { annDragging = false; if (annCoverCard) annCoverCard.style.cursor = 'grab'; });
         document.addEventListener('touchend', function() { annDragging = false; });
 
-        // Zoom with scroll
+        // Zoom with scroll (desktop)
         annCoverCard.addEventListener('wheel', function(e) {
             e.preventDefault();
             var delta = e.deltaY < 0 ? 0.1 : -0.1;
             annZoom = Math.max(1, Math.min(5, annZoom + delta));
             applyAnnCoverView();
+        }, { passive: false });
+
+        // Pinch-to-zoom (mobile/tablet)
+        var annPinchStartDist = 0;
+        var annPinchStartZoom = 1;
+        annCoverCard.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 2) {
+                annDragging = false;
+                var dx = e.touches[0].clientX - e.touches[1].clientX;
+                var dy = e.touches[0].clientY - e.touches[1].clientY;
+                annPinchStartDist = Math.sqrt(dx * dx + dy * dy);
+                annPinchStartZoom = annZoom;
+                e.preventDefault();
+            }
+        }, { passive: false });
+        annCoverCard.addEventListener('touchmove', function(e) {
+            if (e.touches.length === 2) {
+                var dx = e.touches[0].clientX - e.touches[1].clientX;
+                var dy = e.touches[0].clientY - e.touches[1].clientY;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                if (annPinchStartDist > 0) {
+                    annZoom = Math.max(1, Math.min(5, annPinchStartZoom * (dist / annPinchStartDist)));
+                    applyAnnCoverView();
+                }
+                e.preventDefault();
+            }
         }, { passive: false });
     }
 
