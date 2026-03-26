@@ -700,9 +700,11 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     window.openThumbEditor = function(articleId) {
+        console.log('openThumbEditor called:', articleId);
         thumbEditId = articleId;
         // Load image URL and thumb settings from Firebase
         adminDb.ref('articleSeo/' + articleId).once('value').then(function(snap) {
+            console.log('Firebase data:', snap.val());
             var seo = snap.val() || {};
             // Try coverImage first, then fallback to Contentful image
             var imgUrl = seo.coverImage || '';
