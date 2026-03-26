@@ -120,8 +120,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof renderCalendar === 'function') renderCalendar();
         if (typeof renderHeroCalendar === 'function') renderHeroCalendar();
 
-        // Re-fetch blog posts in new language
-        if (typeof fetchBlogPosts === 'function') fetchBlogPosts();
+        // Re-render blog posts (no re-fetch needed, all locales use az)
+        if (allBlogCards && allBlogCards.length > 0 && typeof renderBlogPage === 'function') {
+            renderBlogPage(1);
+        } else if (typeof fetchBlogPosts === 'function') {
+            fetchBlogPosts();
+        }
 
         // Update auth navbar text
         if (typeof updateNavbarAuth === 'function' && typeof firebase !== 'undefined') {
