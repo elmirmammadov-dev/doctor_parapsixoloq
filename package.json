@@ -6,11 +6,11 @@
     "build": "node minify.js"
   },
   "dependencies": {
-    "node-fetch": "2.7.0"
+    "node-fetch": "2.7.0",
+    "clean-css": "^5.3.3",
+    "terser": "^5.31.0"
   },
   "devDependencies": {
-    "clean-css": "^5.3.3",
-    "terser": "^5.31.0",
     "sharp": "^0.34.5"
   }
 }
