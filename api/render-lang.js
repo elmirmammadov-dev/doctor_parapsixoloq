@@ -183,6 +183,9 @@ module.exports = async (req, res) => {
             // SSR Announcements
             if (annData && typeof annData === 'object') {
                 const anns = Object.values(annData).filter(a => a.active !== false).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)).slice(0, 6);
+                if (anns.length === 0) {
+                    html = html.replace(/<section class="announcements-section" id="announcementsSection">/, '<section class="announcements-section" id="announcementsSection" style="display:none;">');
+                }
                 if (anns.length > 0) {
                     const annHtml = anns.map(a => {
                         const pos = a.coverPos || '50% 50%'; const zoom = a.coverZoom || 1;

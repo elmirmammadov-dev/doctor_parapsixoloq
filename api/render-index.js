@@ -152,6 +152,12 @@ module.exports = async (req, res) => {
                 /<div class="ann-section-grid" id="annSectionGrid">[\s\S]*?<\/div>/,
                 `<div class="ann-section-grid" id="annSectionGrid">${annHtml}</div>`
             );
+        } else {
+            // Hide entire announcements section if no announcements
+            html = html.replace(
+                /<section class="announcements-section" id="announcementsSection">/,
+                '<section class="announcements-section" id="announcementsSection" style="display:none;">'
+            );
         }
         if (reviewsHtml) {
             html = html.replace(
