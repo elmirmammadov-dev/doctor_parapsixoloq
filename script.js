@@ -754,12 +754,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 let coverZoom = 1;
                 if (seoData[id] && seoData[id].coverImage) {
                     imgUrl = seoData[id].coverImage;
-                }
-                if (seoData[id] && seoData[id].coverPos) {
-                    coverPos = seoData[id].coverPos;
-                }
-                if (seoData[id] && seoData[id].coverZoom) {
-                    coverZoom = seoData[id].coverZoom;
+                    if (seoData[id].coverPos) coverPos = seoData[id].coverPos;
+                    if (seoData[id].coverZoom) coverZoom = seoData[id].coverZoom;
                 }
                 // Use background-image with zoom via background-size (matches admin preview)
                 const bgSize = coverZoom <= 1 ? 'cover' : (coverZoom * 100) + '%';
