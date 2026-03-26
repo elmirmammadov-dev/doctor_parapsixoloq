@@ -148,14 +148,16 @@ module.exports = async (req, res) => {
             );
         }
         if (annHtml) {
-            // Show section and inject content
-            html = html.replace(
-                /<section([^>]*id="announcementsSection")[^>]*>/,
-                '<section class="announcements-section" id="announcementsSection">'
-            );
             html = html.replace(
                 /<div class="ann-section-grid" id="annSectionGrid">[\s\S]*?<\/div>/,
                 `<div class="ann-section-grid" id="annSectionGrid">${annHtml}</div>`
+            );
+        }
+        if (!annHtml) {
+            // Hide entire announcements section if no announcements
+            html = html.replace(
+                /<section[^>]*id="announcementsSection"[^>]*>/,
+                '<section class="announcements-section" id="announcementsSection" style="display:none !important;">'
             );
         }
         if (reviewsHtml) {

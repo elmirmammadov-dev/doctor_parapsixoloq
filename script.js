@@ -858,9 +858,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             annSectionPage = 0;
             renderAnnSectionPage();
-            // Show section only if announcements exist
+            // Hide section if no announcements
             const section = document.getElementById('announcementsSection');
-            if (section) section.style.display = annSectionAll.length > 0 ? '' : 'none';
+            if (section && annSectionAll.length === 0) section.style.display = 'none';
         } catch(e) {}
     }
 
