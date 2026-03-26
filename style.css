@@ -1097,7 +1097,7 @@ img {
         grid-template-columns: 1fr;
     }
     .blog-section-grid .blog-post-card {
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 1 / 1;
     }
     .blog-section-grid .blog-post-card.most-read {
         transform: none;
