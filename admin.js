@@ -727,23 +727,48 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             if (seo.thumbZoom) thumbZoom = seo.thumbZoom;
 
-            // Create modal
+            // Remove existing overlay if any
+            var existingOverlay = document.getElementById('thumbEditorOverlay');
+            if (existingOverlay) existingOverlay.remove();
+
+            // Create modal using DOM API (avoids URL quoting issues)
             var overlay = document.createElement('div');
             overlay.id = 'thumbEditorOverlay';
             overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;';
-            overlay.innerHTML = `
-                <div style="background:#fff;border-radius:16px;padding:24px;max-width:320px;width:100%;text-align:center;">
-                    <h4 style="margin:0 0 6px;font-size:0.95rem;color:#333;"><i class="fas fa-crop-alt" style="color:#9b59b6;"></i> Thumbnail Tənzimlə</h4>
-                    <p style="font-size:0.75rem;color:#999;margin:0 0 12px;">Sürükləyib tənzimləyin, scroll/pinch ilə zoom edin</p>
-                    <div id="thumbEditorCard" style="width:200px;height:200px;border-radius:12px;margin:0 auto;background-image:url(${imgUrl});background-size:cover;background-position:50% 50%;background-repeat:no-repeat;cursor:grab;border:2px solid #9b59b6;overflow:hidden;"></div>
-                    <div id="thumbPosLabel" style="font-size:0.72rem;color:#999;margin-top:6px;">50% 50% | Zoom: 100%</div>
-                    <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
-                        <button onclick="thumbReset()" style="padding:8px 16px;background:#f0f0f0;border:1px solid #ddd;border-radius:8px;font-size:0.8rem;cursor:pointer;"><i class="fas fa-undo"></i> Sıfırla</button>
-                        <button onclick="saveThumb()" style="padding:8px 16px;background:#9b59b6;color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;"><i class="fas fa-save"></i> Saxla</button>
-                        <button onclick="closeThumbEditor()" style="padding:8px 16px;background:#e74c3c;color:#fff;border:none;border-radius:8px;font-size:0.8rem;cursor:pointer;"><i class="fas fa-times"></i></button>
-                    </div>
-                </div>
-            `;
+
+            var modal = document.createElement('div');
+            modal.style.cssText = 'background:#fff;border-radius:16px;padding:24px;max-width:320px;width:100%;text-align:center;';
+
+            var title = document.createElement('h4');
+            title.style.cssText = 'margin:0 0 6px;font-size:0.95rem;color:#333;';
+            title.innerHTML = '<i class="fas fa-crop-alt" style="color:#9b59b6;"></i> Thumbnail Tənzimlə';
+            modal.appendChild(title);
+
+            var desc = document.createElement('p');
+            desc.style.cssText = 'font-size:0.75rem;color:#999;margin:0 0 12px;';
+            desc.textContent = 'Sürükləyib tənzimləyin, scroll/pinch ilə zoom edin';
+            modal.appendChild(desc);
+
+            var editorCard = document.createElement('div');
+            editorCard.id = 'thumbEditorCard';
+            editorCard.style.cssText = 'width:200px;height:200px;border-radius:12px;margin:0 auto;background-repeat:no-repeat;cursor:grab;border:2px solid #9b59b6;overflow:hidden;';
+            editorCard.style.backgroundImage = 'url(' + imgUrl + ')';
+            editorCard.style.backgroundSize = 'cover';
+            editorCard.style.backgroundPosition = '50% 50%';
+            modal.appendChild(editorCard);
+
+            var posLabel = document.createElement('div');
+            posLabel.id = 'thumbPosLabel';
+            posLabel.style.cssText = 'font-size:0.72rem;color:#999;margin-top:6px;';
+            posLabel.textContent = '50% 50% | Zoom: 100%';
+            modal.appendChild(posLabel);
+
+            var btnWrap = document.createElement('div');
+            btnWrap.style.cssText = 'display:flex;gap:8px;justify-content:center;margin-top:14px;';
+            btnWrap.innerHTML = '<button onclick="thumbReset()" style="padding:8px 16px;background:#f0f0f0;border:1px solid #ddd;border-radius:8px;font-size:0.8rem;cursor:pointer;"><i class="fas fa-undo"></i> Sıfırla</button><button onclick="saveThumb()" style="padding:8px 16px;background:#9b59b6;color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;"><i class="fas fa-save"></i> Saxla</button><button onclick="closeThumbEditor()" style="padding:8px 16px;background:#e74c3c;color:#fff;border:none;border-radius:8px;font-size:0.8rem;cursor:pointer;"><i class="fas fa-times"></i></button>';
+            modal.appendChild(btnWrap);
+
+            overlay.appendChild(modal);
             document.body.appendChild(overlay);
             applyThumbView();
 
