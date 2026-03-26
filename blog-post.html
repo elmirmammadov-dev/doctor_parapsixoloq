@@ -42,6 +42,7 @@
         .navbar-menu { margin: 0 auto; }
         .blog-post-layout {
             display: flex;
+            flex-wrap: wrap;
             max-width: 1200px;
             margin: 10px auto 60px;
             padding: 0 10px;
@@ -837,16 +838,17 @@
             .blog-detail-title { font-size: 1.5rem; }
         }
 
-        /* Comments wrapper - aligned with blog-detail column */
+        /* Comments wrapper - full width row, aligned with blog-detail column */
         .blog-comments-wrapper {
-            max-width: 1200px;
-            margin: 0 auto 60px;
-            padding: 0 10px;
-            padding-right: calc(300px + 30px + 10px);
+            flex-basis: 100%;
+            max-width: 100%;
+            padding: 0;
+            padding-right: calc(300px + 30px);
+            box-sizing: border-box;
         }
         @media (max-width: 900px) {
             .blog-comments-wrapper {
-                padding-right: 10px;
+                padding-right: 0;
             }
         }
         .blog-sidebar {
