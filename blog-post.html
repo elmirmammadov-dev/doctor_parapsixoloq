@@ -337,9 +337,12 @@
             flex-shrink: 0;
             position: sticky;
             top: 100px;
+            align-self: flex-start;
             display: flex;
             flex-direction: column;
             gap: 24px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
         }
         .sidebar-search-box {
             background: #fff;
