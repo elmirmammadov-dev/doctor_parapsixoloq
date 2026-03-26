@@ -3090,8 +3090,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 applyAnnCoverView();
                 annCoverWrap.style.display = 'block';
                 annImageName.textContent = 'Mövcud şəkil';
+            } else {
+                annImagePreview.src = '';
+                annImagePreview.style.display = 'none';
+                annCoverCard.style.backgroundImage = '';
+                annCoverWrap.style.display = 'none';
+                annImageName.textContent = 'Seçilməyib';
+                annPosX = 50; annPosY = 50; annZoom = 1;
+                document.getElementById('annImageFile').value = '';
             }
-            document.querySelector('#tabAnnouncements').scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('tabAnnouncements').scrollTop = 0;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     };
 
