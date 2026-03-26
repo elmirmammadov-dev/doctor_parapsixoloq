@@ -640,20 +640,28 @@ document.addEventListener("DOMContentLoaded", function() {
                 const id = item.sys.id;
                 const imgId = f.image && f.image.sys ? f.image.sys.id : null;
                 let imgUrl = imgId ? assets[imgId] : null;
-                // Prefer ImgBB cover image
+                // Prefer ImgBB cover image + get thumbnail settings
+                let thumbPos = '50% 50%';
+                let thumbZoom = 1;
+                let thumbBgSize = 'cover';
                 if (seoData[id] && seoData[id].coverImage) imgUrl = seoData[id].coverImage;
+                if (seoData[id] && seoData[id].thumbPos) thumbPos = seoData[id].thumbPos;
+                if (seoData[id] && seoData[id].thumbZoom) { thumbZoom = seoData[id].thumbZoom; thumbBgSize = (thumbZoom * 100) + '%'; }
 
                 const card = document.createElement('div');
                 card.dataset.articleId = id;
                 card.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #eee;border-radius:10px;margin-bottom:10px;background:#fafafa;';
                 card.innerHTML = `
                     <input type="checkbox" class="admin-article-checkbox" data-id="${id}" onchange="toggleArticleSelect('${id}', this.checked)" style="width:18px;height:18px;cursor:pointer;flex-shrink:0;accent-color:#2e7d32;">
-                    ${imgUrl ? `<img src="${imgUrl}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : `<div style="width:60px;height:60px;background:#f0f7f3;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-image" style="color:#ccc;"></i></div>`}
+                    ${imgUrl ? `<div style="width:60px;height:60px;border-radius:8px;flex-shrink:0;background-image:url(${imgUrl});background-size:${thumbBgSize};background-position:${thumbPos};background-repeat:no-repeat;cursor:pointer;border:2px solid #e0e0e0;" onclick="openThumbEditor('${id}','${imgUrl.replace(/'/g,"\\'")}')"></div>` : `<div style="width:60px;height:60px;background:#f0f7f3;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-image" style="color:#ccc;"></i></div>`}
                     <div style="flex:1;min-width:0;">
                         <p style="font-weight:600;font-size:0.9rem;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.title || adminT('noTitle')}</p>
                         <span style="font-size:0.8rem;color:#999;">${f.date || ''}</span>
                     </div>
                     <div style="display:flex;gap:6px;flex-shrink:0;">
+                        <button onclick="openThumbEditor('${id}','${imgUrl ? imgUrl.replace(/'/g,"\\'") : ''}')" style="padding:8px 10px;background:#9b59b6;color:#fff;border:none;border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;white-space:nowrap;" title="Thumbnail tənzimlə">
+                            <i class="fas fa-crop-alt"></i>
+                        </button>
                         <button onclick="editArticle('${id}')" style="padding:8px 14px;background:var(--gold);color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;white-space:nowrap;">
                             <i class="fas fa-edit"></i> ${adminT('edit')}
                         </button>
@@ -668,6 +676,136 @@ document.addEventListener("DOMContentLoaded", function() {
             listEl.innerHTML = '<p style="text-align:center;color:#e74c3c;padding:20px 0;">' + adminT('errorPrefix') + err.message + '</p>';
         }
     }
+
+    // Thumbnail Editor
+    var thumbEditId = null, thumbPosX = 50, thumbPosY = 50, thumbZoom = 1;
+    var thumbDragging = false, thumbStartX = 0, thumbStartY = 0, thumbStartPosX = 50, thumbStartPosY = 50;
+    var thumbPinchStartDist = 0, thumbPinchStartZoom = 1;
+
+    function applyThumbView() {
+        var card = document.getElementById('thumbEditorCard');
+        if (!card) return;
+        card.style.backgroundSize = thumbZoom <= 1 ? 'cover' : (thumbZoom * 100) + '%';
+        card.style.backgroundPosition = thumbPosX.toFixed(1) + '% ' + thumbPosY.toFixed(1) + '%';
+        var lbl = document.getElementById('thumbPosLabel');
+        if (lbl) lbl.textContent = thumbPosX.toFixed(0) + '% ' + thumbPosY.toFixed(0) + '% | Zoom: ' + (thumbZoom * 100).toFixed(0) + '%';
+    }
+
+    window.openThumbEditor = function(articleId, imgUrl) {
+        if (!imgUrl) return;
+        thumbEditId = articleId;
+        // Load existing thumb settings
+        adminDb.ref('articleSeo/' + articleId).once('value').then(function(snap) {
+            var seo = snap.val() || {};
+            thumbPosX = 50; thumbPosY = 50; thumbZoom = 1;
+            if (seo.thumbPos) {
+                var parts = seo.thumbPos.split('%').map(function(s) { return parseFloat(s.trim()); });
+                if (parts.length >= 2) { thumbPosX = parts[0]; thumbPosY = parts[1]; }
+            }
+            if (seo.thumbZoom) thumbZoom = seo.thumbZoom;
+
+            // Create modal
+            var overlay = document.createElement('div');
+            overlay.id = 'thumbEditorOverlay';
+            overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;';
+            overlay.innerHTML = `
+                <div style="background:#fff;border-radius:16px;padding:24px;max-width:320px;width:100%;text-align:center;">
+                    <h4 style="margin:0 0 6px;font-size:0.95rem;color:#333;"><i class="fas fa-crop-alt" style="color:#9b59b6;"></i> Thumbnail Tənzimlə</h4>
+                    <p style="font-size:0.75rem;color:#999;margin:0 0 12px;">Sürükləyib tənzimləyin, scroll/pinch ilə zoom edin</p>
+                    <div id="thumbEditorCard" style="width:200px;height:200px;border-radius:12px;margin:0 auto;background-image:url(${imgUrl});background-size:cover;background-position:50% 50%;background-repeat:no-repeat;cursor:grab;border:2px solid #9b59b6;overflow:hidden;"></div>
+                    <div id="thumbPosLabel" style="font-size:0.72rem;color:#999;margin-top:6px;">50% 50% | Zoom: 100%</div>
+                    <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
+                        <button onclick="thumbReset()" style="padding:8px 16px;background:#f0f0f0;border:1px solid #ddd;border-radius:8px;font-size:0.8rem;cursor:pointer;"><i class="fas fa-undo"></i> Sıfırla</button>
+                        <button onclick="saveThumb()" style="padding:8px 16px;background:#9b59b6;color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;"><i class="fas fa-save"></i> Saxla</button>
+                        <button onclick="closeThumbEditor()" style="padding:8px 16px;background:#e74c3c;color:#fff;border:none;border-radius:8px;font-size:0.8rem;cursor:pointer;"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            applyThumbView();
+
+            // Drag events
+            var card = document.getElementById('thumbEditorCard');
+            card.addEventListener('mousedown', function(e) {
+                thumbDragging = true; thumbStartX = e.clientX; thumbStartY = e.clientY;
+                thumbStartPosX = thumbPosX; thumbStartPosY = thumbPosY;
+                card.style.cursor = 'grabbing'; e.preventDefault();
+            });
+            card.addEventListener('touchstart', function(e) {
+                if (e.touches.length === 1) {
+                    thumbDragging = true; thumbStartX = e.touches[0].clientX; thumbStartY = e.touches[0].clientY;
+                    thumbStartPosX = thumbPosX; thumbStartPosY = thumbPosY;
+                } else if (e.touches.length === 2) {
+                    thumbDragging = false;
+                    var dx = e.touches[0].clientX - e.touches[1].clientX;
+                    var dy = e.touches[0].clientY - e.touches[1].clientY;
+                    thumbPinchStartDist = Math.sqrt(dx*dx + dy*dy);
+                    thumbPinchStartZoom = thumbZoom;
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            document.addEventListener('mousemove', thumbMouseMove);
+            document.addEventListener('touchmove', thumbTouchMove, { passive: false });
+            document.addEventListener('mouseup', thumbMouseUp);
+            document.addEventListener('touchend', thumbTouchEnd);
+            card.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                thumbZoom = Math.max(1, Math.min(5, thumbZoom + (e.deltaY < 0 ? 0.1 : -0.1)));
+                applyThumbView();
+            }, { passive: false });
+
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) closeThumbEditor(); });
+        });
+    };
+
+    function thumbMouseMove(e) {
+        if (!thumbDragging) return;
+        var sens = 0.3 / thumbZoom;
+        thumbPosX = Math.max(0, Math.min(100, thumbStartPosX - (e.clientX - thumbStartX) * sens));
+        thumbPosY = Math.max(0, Math.min(100, thumbStartPosY - (e.clientY - thumbStartY) * sens));
+        applyThumbView();
+    }
+    function thumbTouchMove(e) {
+        if (e.touches.length === 2 && thumbPinchStartDist > 0) {
+            var dx = e.touches[0].clientX - e.touches[1].clientX;
+            var dy = e.touches[0].clientY - e.touches[1].clientY;
+            var dist = Math.sqrt(dx*dx + dy*dy);
+            thumbZoom = Math.max(1, Math.min(5, thumbPinchStartZoom * (dist / thumbPinchStartDist)));
+            applyThumbView(); e.preventDefault();
+        } else if (thumbDragging && e.touches.length === 1) {
+            var sens = 0.3 / thumbZoom;
+            thumbPosX = Math.max(0, Math.min(100, thumbStartPosX - (e.touches[0].clientX - thumbStartX) * sens));
+            thumbPosY = Math.max(0, Math.min(100, thumbStartPosY - (e.touches[0].clientY - thumbStartY) * sens));
+            applyThumbView();
+        }
+    }
+    function thumbMouseUp() { thumbDragging = false; var c = document.getElementById('thumbEditorCard'); if (c) c.style.cursor = 'grab'; }
+    function thumbTouchEnd() { thumbDragging = false; thumbPinchStartDist = 0; }
+
+    window.thumbReset = function() { thumbPosX = 50; thumbPosY = 50; thumbZoom = 1; applyThumbView(); };
+
+    window.saveThumb = function() {
+        if (!thumbEditId) return;
+        adminDb.ref('articleSeo/' + thumbEditId).update({
+            thumbPos: thumbPosX.toFixed(1) + '% ' + thumbPosY.toFixed(1) + '%',
+            thumbZoom: thumbZoom
+        }).then(function() {
+            closeThumbEditor();
+            loadAdminArticles();
+        });
+    };
+
+    window.closeThumbEditor = function() {
+        var overlay = document.getElementById('thumbEditorOverlay');
+        if (overlay) {
+            document.removeEventListener('mousemove', thumbMouseMove);
+            document.removeEventListener('touchmove', thumbTouchMove);
+            document.removeEventListener('mouseup', thumbMouseUp);
+            document.removeEventListener('touchend', thumbTouchEnd);
+            overlay.remove();
+        }
+        thumbEditId = null;
+    };
 
     // Delete article from Contentful
     window.deleteArticle = async function(entryId, btn) {
