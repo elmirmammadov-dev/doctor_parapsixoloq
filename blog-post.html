@@ -2066,7 +2066,11 @@
                     const seoSnap = await db.ref('articleSeo').once('value');
                     const seoAll = seoSnap.val() || {};
                     allArticlesCache.forEach(a => {
-                        if (seoAll[a.id] && seoAll[a.id].coverImage) a.image = seoAll[a.id].coverImage;
+                        if (seoAll[a.id] && seoAll[a.id].coverImage) {
+                            a.image = seoAll[a.id].coverImage;
+                            a.coverPos = seoAll[a.id].coverPos || '50% 50%';
+                            a.coverZoom = seoAll[a.id].coverZoom || 1;
+                        }
                         if (seoAll[a.id] && seoAll[a.id].keyword) a.keywords = (a.keywords + ' ' + seoAll[a.id].keyword).toLowerCase();
                     });
                 } catch(e) {}
@@ -2119,15 +2123,17 @@
             const start = similarPage * SIMILAR_PER_PAGE;
             const pageItems = similarAll.slice(start, start + SIMILAR_PER_PAGE);
 
-            container.innerHTML = pageItems.map(a => `
-                <a class="similar-article" href="/${a.slug}">
-                    ${a.image ? `<img class="similar-article-img" src="${a.image}" alt="${a.title}" loading="lazy">` : `<div class="similar-article-img" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-file-alt" style="color:#ccc;font-size:1.2rem;"></i></div>`}
+            container.innerHTML = pageItems.map(a => {
+                const bgSize = a.coverZoom && a.coverZoom > 1 ? (a.coverZoom * 100) + '%' : 'cover';
+                const bgPos = a.coverPos || '50% 50%';
+                return `<a class="similar-article" href="/${a.slug}">
+                    ${a.image ? `<div class="similar-article-img" style="background-image:url(${a.image});background-size:${bgSize};background-position:${bgPos};background-repeat:no-repeat;" role="img" aria-label="${a.title}"></div>` : `<div class="similar-article-img" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-file-alt" style="color:#ccc;font-size:1.2rem;"></i></div>`}
                     <div class="similar-article-info">
                         <div class="similar-article-title">${a.title}</div>
                         <div class="similar-article-date">${a.date}</div>
                     </div>
-                </a>
-            `).join('');
+                </a>`;
+            }).join('');
 
             if (totalPages > 1) {
                 pagination.style.display = 'flex';
