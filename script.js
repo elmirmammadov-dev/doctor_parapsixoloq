@@ -761,15 +761,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (seoData[id] && seoData[id].coverZoom) {
                     coverZoom = seoData[id].coverZoom;
                 }
-                // Use background-image with cover + scale for zoom (matches admin preview)
-                const scaleStyle = coverZoom > 1 ? `transform:scale(${coverZoom});` : '';
+                // Use background-image with zoom via background-size (matches admin preview)
+                const bgSize = coverZoom <= 1 ? 'cover' : (coverZoom * 100) + '%';
                 const blogUrl = (seoData[id] && seoData[id].slug) ? '/' + seoData[id].slug : '#';
                 return {
                     id: id,
                     date: f.date || '',
                     html: `
                     <a href="${blogUrl}" class="blog-post-card" data-id="${id}" style="text-decoration:none;color:inherit;cursor:pointer;">
-                        ${imgUrl ? `<div class="blog-post-cover" role="img" aria-label="${f.title}" style="background-image:url(${imgUrl});background-size:cover;background-position:${coverPos};background-repeat:no-repeat;${scaleStyle}"></div>` : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`}
+                        ${imgUrl ? `<div class="blog-post-cover" role="img" aria-label="${f.title}" style="background-image:url(${imgUrl});background-size:${bgSize};background-position:${coverPos};background-repeat:no-repeat;"></div>` : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`}
                         <div class="blog-post-info">
                             <h4>${f.title}</h4>
                             <div style="display:flex;align-items:center;gap:12px;margin-top:4px;">

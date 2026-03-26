@@ -59,10 +59,10 @@ module.exports = async (req, res) => {
                 if (seo[id] && seo[id].coverImage) imgUrl = seo[id].coverImage;
                 if (seo[id] && seo[id].coverPos) coverPos = seo[id].coverPos;
                 if (seo[id] && seo[id].coverZoom) coverZoom = seo[id].coverZoom;
-                const scaleStyle = coverZoom > 1 ? `transform:scale(${coverZoom});` : '';
+                const bgSize = coverZoom <= 1 ? 'cover' : (coverZoom * 100) + '%';
                 const blogUrl = (seo[id] && seo[id].slug) ? '/' + seo[id].slug : '#';
                 return `<a href="${escapeHtml(blogUrl)}" class="blog-post-card" data-id="${id}" style="text-decoration:none;color:inherit;cursor:pointer;">
-                    ${imgUrl ? `<div class="blog-post-cover" role="img" aria-label="${escapeHtml(f.title)}" style="background-image:url(${escapeHtml(imgUrl)});background-size:cover;background-position:${coverPos};background-repeat:no-repeat;${scaleStyle}"></div>` : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`}
+                    ${imgUrl ? `<div class="blog-post-cover" role="img" aria-label="${escapeHtml(f.title)}" style="background-image:url(${escapeHtml(imgUrl)});background-size:${bgSize};background-position:${coverPos};background-repeat:no-repeat;"></div>` : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`}
                     <div class="blog-post-info">
                         <h4>${escapeHtml(f.title)}</h4>
                         <div style="display:flex;align-items:center;gap:12px;margin-top:4px;">
