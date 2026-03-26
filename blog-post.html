@@ -821,10 +821,16 @@
                 flex-direction: column;
             }
             .blog-right-sidebar {
-                width: 100%;
-                position: static;
-                order: -1;
+                display: contents;
             }
+            .blog-detail { order: 1; }
+            .sidebar-search-box { order: 2; }
+            .blog-comments-wrapper { order: 3; width: 100%; max-width: 100%; padding: 0; margin: 0 0 40px; }
+            .sidebar-similar-box { order: 4; }
+            .sidebar-archive-box { order: 5; }
+            .sidebar-announcements-box { order: 6; }
+            .blog-sidebar-right { order: 7; }
+            .blog-sidebar-left { order: 8; }
         }
         @media (max-width: 600px) {
             .blog-detail { margin-top: 10px; }
@@ -1629,10 +1635,8 @@
                 </div>
             </div>
         </aside>
-    </div>
-
-    <!-- Comments Section -->
-    <div class="blog-comments-wrapper">
+        <!-- Comments Section (inside layout for mobile ordering) -->
+        <div class="blog-comments-wrapper">
         <div class="comments-section" id="commentsSection" style="display:none;">
             <h3 id="commentsTitle">Şərhlər</h3>
             <div class="comments-divider"></div>
@@ -1657,6 +1661,7 @@
             <div class="comments-list" id="commentsList"></div>
             <div class="comments-pagination" id="commentsPagination" style="display:none;"></div>
         </div>
+    </div>
     </div>
 
     <!-- Floating WhatsApp Button -->
