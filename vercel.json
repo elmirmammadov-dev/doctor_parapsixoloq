@@ -1,5 +1,10 @@
 {
+  "buildCommand": "npm run build",
   "rewrites": [
+    {
+      "source": "/",
+      "destination": "/api/render-index"
+    },
     {
       "source": "/ru",
       "destination": "/api/render-lang?lang=ru"

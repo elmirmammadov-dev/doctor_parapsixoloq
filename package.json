@@ -2,10 +2,15 @@
   "name": "shahseddin-imanli-website",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "build": "node minify.js"
+  },
   "dependencies": {
     "node-fetch": "2.7.0"
   },
   "devDependencies": {
+    "clean-css": "^5.3.3",
+    "terser": "^5.31.0",
     "sharp": "^0.34.5"
   }
 }
