@@ -2302,8 +2302,8 @@
             const pageItems = annAll.slice(start, start + ANN_PER_PAGE);
 
             if (annAll.length === 0) {
-                container.innerHTML = `<div class="ann-empty"><i class="fas fa-bullhorn" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>${t.empty}</div>`;
-                pagination.style.display = 'none';
+                const annBox = document.querySelector('.sidebar-announcements-box');
+                if (annBox) annBox.style.display = 'none';
                 return;
             }
 
