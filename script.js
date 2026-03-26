@@ -823,11 +823,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const pos = a.coverPos || '50% 50%';
             const zoom = a.coverZoom || 1;
             const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
-            const tag = a.link ? 'a' : 'div';
-            const href = a.link ? ` href="${a.link}" target="_blank" rel="noopener nofollow"` : '';
             const aTitle = a['title_' + currentLang] || a.title;
             const aDesc = a['desc_' + currentLang] || a.desc;
-            return `<${tag} class="ann-section-card"${href}>
+            const annHref = a.slug ? `/elanlar/${a.slug}` : (a.link || '');
+            const tag = annHref ? 'a' : 'div';
+            const href = annHref ? ` href="${annHref}"` : '';
+            return `<${tag} class="ann-section-card"${href} style="text-decoration:none;color:inherit;">
                 ${a.image ? `<div class="ann-section-card-img" style="background-image:url(${a.image});background-position:${pos};background-size:${bgSize};">${a.showBadge !== false ? '<span class="ann-section-badge">YENİ</span>' : ''}</div>` : ''}
                 <div class="ann-section-card-body">
                     <div class="ann-section-card-title">${aTitle}</div>

@@ -26,6 +26,10 @@
       "destination": "/api/render-announcements"
     },
     {
+      "source": "/elanlar/:slug",
+      "destination": "/api/render-announcement?slug=:slug"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
     },

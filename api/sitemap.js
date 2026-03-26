@@ -85,6 +85,21 @@ module.exports = async (req, res) => {
     </url>`;
         }
 
+        // Add individual announcement pages
+        try {
+            const annRes = await fetch(`${FIREBASE_DB_URL}/announcements.json`);
+            const annData = await annRes.json() || {};
+            for (const [id, a] of Object.entries(annData)) {
+                if (a.active === false || !a.slug) continue;
+                xml += `
+    <url>
+        <loc>${SITE_URL}/elanlar/${a.slug}</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>`;
+            }
+        } catch(e) {}
+
         xml += '\n</urlset>';
 
         res.setHeader('Content-Type', 'application/xml; charset=utf-8');

@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
             "name": L(a, 'title'),
             "description": L(a, 'desc'),
             "image": a.image || undefined,
-            "url": a.link || `${SITE_URL}/elanlar`,
+            "url": a.slug ? `${SITE_URL}/elanlar/${a.slug}` : `${SITE_URL}/elanlar`,
             "startDate": a.date || undefined,
             "organizer": {
                 "@type": "Person",
@@ -68,16 +68,17 @@ module.exports = async (req, res) => {
                 const pos = a.coverPos || '50% 50%';
                 const zoom = a.coverZoom || 1;
                 const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
+                const detailUrl = a.slug ? `/elanlar/${a.slug}` : '';
                 return `
-                <article class="ann-card" itemscope itemtype="https://schema.org/Event">
+                <a href="${detailUrl || '#'}" class="ann-card" itemscope itemtype="https://schema.org/Event" style="text-decoration:none;color:inherit;display:block;">
                     ${a.image ? `<div class="ann-card-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};" role="img" aria-label="${escapeHtml(L(a, 'title'))}" itemprop="image">${a.showBadge !== false ? '<span class="ann-badge">YENİ</span>' : ''}</div>` : ''}
                     <div class="ann-card-body">
                         <h2 class="ann-card-title" itemprop="name">${escapeHtml(L(a, 'title'))}</h2>
                         ${L(a, 'desc') ? `<p class="ann-card-desc" itemprop="description">${escapeHtml(L(a, 'desc'))}</p>` : ''}
                         <time class="ann-card-date" itemprop="startDate"><i class="fas fa-calendar-alt"></i> ${escapeHtml(a.date || '')}</time>
-                        ${a.link ? `<a href="${escapeHtml(a.link)}" class="ann-card-link" target="_blank" rel="noopener nofollow" itemprop="url">Ətraflı bax &rarr;</a>` : ''}
+                        <span class="ann-card-link" itemprop="url">Ətraflı bax &rarr;</span>
                     </div>
-                </article>`;
+                </a>`;
             }).join('');
 
         const html = `<!DOCTYPE html>

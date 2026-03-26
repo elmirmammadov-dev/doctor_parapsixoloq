@@ -3006,9 +3006,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 dateStr = String(now.getDate()).padStart(2, '0') + '.' + String(now.getMonth() + 1).padStart(2, '0') + '.' + now.getFullYear();
             }
 
+            // Generate slug from title
+            function generateAnnSlug(text) {
+                var map = {'ə':'e','ü':'u','ö':'o','ş':'s','ç':'c','ğ':'g','ı':'i','İ':'i','Ə':'e','Ü':'u','Ö':'o','Ş':'s','Ç':'c','Ğ':'g'};
+                return text.toLowerCase().replace(/[əüöşçğıİƏÜÖŞÇĞ]/g, function(c) { return map[c] || c; })
+                    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 80);
+            }
+            var annSlug = generateAnnSlug(title);
+
             const annData = {
                 title: title,
                 desc: desc,
+                slug: annSlug,
                 title_az: title,
                 desc_az: desc,
                 title_ru: document.getElementById('annTitle_ru').value.trim(),

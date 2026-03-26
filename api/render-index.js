@@ -88,11 +88,12 @@ module.exports = async (req, res) => {
                     const pos = a.coverPos || '50% 50%';
                     const zoom = a.coverZoom || 1;
                     const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
-                    const tag = a.link ? 'a' : 'div';
-                    const href = a.link ? ` href="${escapeHtml(a.link)}" target="_blank" rel="noopener nofollow"` : '';
                     const aTitle = a.title_az || a.title || '';
                     const aDesc = a.desc_az || a.desc || '';
-                    return `<${tag} class="ann-section-card"${href}>
+                    const annHref = a.slug ? `/elanlar/${a.slug}` : '';
+                    const tag = annHref ? 'a' : 'div';
+                    const href = annHref ? ` href="${escapeHtml(annHref)}"` : '';
+                    return `<${tag} class="ann-section-card"${href} style="text-decoration:none;color:inherit;">
                         ${a.image ? `<div class="ann-section-card-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};">${a.showBadge !== false ? '<span class="ann-section-badge">YEN\u0130</span>' : ''}</div>` : ''}
                         <div class="ann-section-card-body">
                             <div class="ann-section-card-title">${escapeHtml(aTitle)}</div>

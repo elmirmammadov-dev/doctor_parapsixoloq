@@ -2308,8 +2308,9 @@
             }
 
             container.innerHTML = pageItems.map(a => {
-                const tag = a.link ? 'a' : 'div';
-                const href = a.link ? ` href="${a.link}" target="_blank" rel="noopener nofollow"` : '';
+                const annHref = a.slug ? `/elanlar/${a.slug}` : (a.link || '');
+                const tag = annHref ? 'a' : 'div';
+                const href = annHref ? ` href="${annHref}"` : '';
                 const pos = a.coverPos || '50% 50%';
                 const zoom = a.coverZoom || 1;
                 const aTitle = a['title_' + currentLang] || a.title;
