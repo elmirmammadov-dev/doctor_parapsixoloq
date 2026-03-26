@@ -5031,6 +5031,16 @@ img {
     .blog-week-best-badge {
         font-size: 0.6rem;
         padding: 3px 10px;
+        margin-top: 0;
+        transform: none;
+    }
+    .blog-post-card.most-read,
+    .blog-post-card.week-best {
+        transform: none;
+    }
+    .blog-post-card.most-read:hover,
+    .blog-post-card.week-best:hover {
+        transform: none;
     }
     .hero-banner-h1 {
         font-size: 1rem;
