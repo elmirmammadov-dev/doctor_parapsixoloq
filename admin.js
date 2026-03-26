@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (adminPanelClose) {
         adminPanelClose.addEventListener('click', () => {
-            window.location.href = 'index.html';
+            window.location.href = '/';
         });
     }
 
