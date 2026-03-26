@@ -190,7 +190,7 @@ module.exports = async (req, res) => {
                         const aTitle = a['title_' + lang] || a.title_az || a.title || '';
                         const aDesc = a['desc_' + lang] || a.desc_az || a.desc || '';
                         const tag = a.link ? 'a' : 'div';
-                        const href = a.link ? ` href="${escapeHtml(a.link)}" target="_blank" rel="noopener"` : '';
+                        const href = a.link ? ` href="${escapeHtml(a.link)}" target="_blank" rel="noopener nofollow"` : '';
                         return `<${tag} class="ann-section-card"${href}>
                             ${a.image ? `<div class="ann-section-card-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};">${a.showBadge !== false ? '<span class="ann-section-badge">YEN\u0130</span>' : ''}</div>` : ''}
                             <div class="ann-section-card-body"><div class="ann-section-card-title">${escapeHtml(aTitle)}</div>${aDesc ? `<div class="ann-section-card-desc">${escapeHtml(aDesc)}</div>` : ''}<div class="ann-section-card-date">${escapeHtml(a.date || '')}</div></div>

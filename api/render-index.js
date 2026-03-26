@@ -89,7 +89,7 @@ module.exports = async (req, res) => {
                     const zoom = a.coverZoom || 1;
                     const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
                     const tag = a.link ? 'a' : 'div';
-                    const href = a.link ? ` href="${escapeHtml(a.link)}" target="_blank" rel="noopener"` : '';
+                    const href = a.link ? ` href="${escapeHtml(a.link)}" target="_blank" rel="noopener nofollow"` : '';
                     const aTitle = a.title_az || a.title || '';
                     const aDesc = a.desc_az || a.desc || '';
                     return `<${tag} class="ann-section-card"${href}>

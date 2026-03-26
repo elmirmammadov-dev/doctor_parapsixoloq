@@ -75,7 +75,7 @@ module.exports = async (req, res) => {
                         <h2 class="ann-card-title" itemprop="name">${escapeHtml(L(a, 'title'))}</h2>
                         ${L(a, 'desc') ? `<p class="ann-card-desc" itemprop="description">${escapeHtml(L(a, 'desc'))}</p>` : ''}
                         <time class="ann-card-date" itemprop="startDate"><i class="fas fa-calendar-alt"></i> ${escapeHtml(a.date || '')}</time>
-                        ${a.link ? `<a href="${escapeHtml(a.link)}" class="ann-card-link" target="_blank" rel="noopener" itemprop="url">Ətraflı bax &rarr;</a>` : ''}
+                        ${a.link ? `<a href="${escapeHtml(a.link)}" class="ann-card-link" target="_blank" rel="noopener nofollow" itemprop="url">Ətraflı bax &rarr;</a>` : ''}
                     </div>
                 </article>`;
             }).join('');

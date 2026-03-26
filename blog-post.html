@@ -2309,7 +2309,7 @@
 
             container.innerHTML = pageItems.map(a => {
                 const tag = a.link ? 'a' : 'div';
-                const href = a.link ? ` href="${a.link}" target="_blank" rel="noopener"` : '';
+                const href = a.link ? ` href="${a.link}" target="_blank" rel="noopener nofollow"` : '';
                 const pos = a.coverPos || '50% 50%';
                 const zoom = a.coverZoom || 1;
                 const aTitle = a['title_' + currentLang] || a.title;
