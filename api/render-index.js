@@ -56,11 +56,9 @@ module.exports = async (req, res) => {
                 let imgUrl = imgId ? assets[imgId] : null;
                 let coverPos = '50% 50%';
                 let coverZoom = 1;
-                if (seo[id] && seo[id].coverImage) {
-                    imgUrl = seo[id].coverImage;
-                    if (seo[id].coverPos) coverPos = seo[id].coverPos;
-                    if (seo[id].coverZoom) coverZoom = seo[id].coverZoom;
-                }
+                if (seo[id] && seo[id].coverImage) imgUrl = seo[id].coverImage;
+                if (seo[id] && seo[id].coverPos) coverPos = seo[id].coverPos;
+                if (seo[id] && seo[id].coverZoom) coverZoom = seo[id].coverZoom;
                 const bgSize = coverZoom <= 1 ? 'cover' : (coverZoom * 100) + '%';
                 const blogUrl = (seo[id] && seo[id].slug) ? '/' + seo[id].slug : '#';
                 return `<a href="${escapeHtml(blogUrl)}" class="blog-post-card" data-id="${id}" style="text-decoration:none;color:inherit;cursor:pointer;">
