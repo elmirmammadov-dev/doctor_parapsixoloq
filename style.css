@@ -30,6 +30,7 @@
     width: 100%;
     text-align: center;
     position: relative;
+    z-index: 10001;
     box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
     animation: disclaimerFadeIn 0.4s ease;
 }
@@ -91,6 +92,9 @@
 .disclaimer-accept {
     padding: 14px 48px;
     font-size: 1rem;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
 }
 
 @media (max-width: 480px) {
