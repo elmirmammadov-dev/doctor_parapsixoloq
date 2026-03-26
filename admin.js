@@ -700,25 +700,18 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     window.openThumbEditor = function(articleId) {
-        console.log('openThumbEditor called:', articleId);
         thumbEditId = articleId;
         // Load image URL and thumb settings from Firebase
         adminDb.ref('articleSeo/' + articleId).once('value').then(function(snap) {
             var seo = snap.val() || {};
-            console.log('Firebase SEO:', JSON.stringify(seo));
-            // Try coverImage first, then fallback to Contentful image from DOM
             var imgUrl = seo.coverImage || '';
-            console.log('coverImage:', imgUrl);
             if (!imgUrl) {
                 var thumbEl = document.querySelector('.admin-thumb-preview[data-article-id="' + articleId + '"]');
-                console.log('thumbEl:', thumbEl);
                 if (thumbEl) {
                     var bg = thumbEl.style.backgroundImage;
-                    console.log('bg:', bg);
                     imgUrl = bg.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
                 }
             }
-            console.log('Final imgUrl:', imgUrl);
             if (!imgUrl) { alert('Bu məqalənin şəkili yoxdur. Əvvəlcə məqaləyə şəkil əlavə edin.'); return; }
             thumbPosX = 50; thumbPosY = 50; thumbZoom = 1;
             if (seo.thumbPos) {
@@ -734,7 +727,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Create modal using DOM API (avoids URL quoting issues)
             var overlay = document.createElement('div');
             overlay.id = 'thumbEditorOverlay';
-            overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;';
+            overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10005;display:flex;align-items:center;justify-content:center;padding:20px;';
 
             var modal = document.createElement('div');
             modal.style.cssText = 'background:#fff;border-radius:16px;padding:24px;max-width:320px;width:100%;text-align:center;';
