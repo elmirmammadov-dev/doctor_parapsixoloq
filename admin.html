@@ -17,6 +17,8 @@
 <style>
     #annShowBadge:checked + .ann-badge-slider { background: #4cd964 !important; }
     #annShowBadge:checked ~ .ann-badge-knob { left: 22px !important; }
+    .ann-lang-tab.active { background: var(--gold, #c5a637) !important; color: #fff !important; border-color: var(--gold, #c5a637) !important; }
+    .ann-lang-tab:hover:not(.active) { background: #f5f5f5 !important; }
 </style>
 </head>
 <body>
@@ -408,13 +410,42 @@
                             <span data-admin-i18n="annAddNew">Yeni elan əlavə et</span>
                         </h4>
                         <div style="display:flex;flex-direction:column;gap:12px;">
+                            <!-- Language tabs for announcement -->
                             <div>
-                                <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;" data-admin-i18n="annTitle">Başlıq</label>
-                                <input type="text" id="annTitle" placeholder="Elanın başlığı" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
-                            </div>
-                            <div>
-                                <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;" data-admin-i18n="annDesc">Açıqlama</label>
-                                <textarea id="annDesc" placeholder="Qısa açıqlama yazın..." rows="3" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                                <div id="annLangTabs" style="display:flex;gap:4px;margin-bottom:8px;">
+                                    <button type="button" class="ann-lang-tab active" data-ann-lang="az" style="padding:6px 14px;border:1.5px solid #ddd;border-radius:8px;background:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:0.2s;">🇦🇿 AZ</button>
+                                    <button type="button" class="ann-lang-tab" data-ann-lang="ru" style="padding:6px 14px;border:1.5px solid #ddd;border-radius:8px;background:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:0.2s;">🇷🇺 RU</button>
+                                    <button type="button" class="ann-lang-tab" data-ann-lang="en" style="padding:6px 14px;border:1.5px solid #ddd;border-radius:8px;background:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:0.2s;">🇬🇧 EN</button>
+                                    <button type="button" class="ann-lang-tab" data-ann-lang="tr" style="padding:6px 14px;border:1.5px solid #ddd;border-radius:8px;background:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:0.2s;">🇹🇷 TR</button>
+                                </div>
+                                <!-- AZ -->
+                                <div class="ann-lang-panel" data-ann-lang-panel="az">
+                                    <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Başlıq (AZ)</label>
+                                    <input type="text" id="annTitle_az" placeholder="Elanın başlığı" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:8px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                                    <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Açıqlama (AZ)</label>
+                                    <textarea id="annDesc_az" placeholder="Qısa açıqlama yazın..." rows="3" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                                </div>
+                                <!-- RU -->
+                                <div class="ann-lang-panel" data-ann-lang-panel="ru" style="display:none;">
+                                    <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Заголовок (RU)</label>
+                                    <input type="text" id="annTitle_ru" placeholder="Заголовок объявления" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:8px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                                    <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Описание (RU)</label>
+                                    <textarea id="annDesc_ru" placeholder="Краткое описание..." rows="3" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                                </div>
+                                <!-- EN -->
+                                <div class="ann-lang-panel" data-ann-lang-panel="en" style="display:none;">
+                                    <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Title (EN)</label>
+                                    <input type="text" id="annTitle_en" placeholder="Announcement title" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:8px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                                    <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Description (EN)</label>
+                                    <textarea id="annDesc_en" placeholder="Short description..." rows="3" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                                </div>
+                                <!-- TR -->
+                                <div class="ann-lang-panel" data-ann-lang-panel="tr" style="display:none;">
+                                    <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Başlık (TR)</label>
+                                    <input type="text" id="annTitle_tr" placeholder="Duyuru başlığı" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:8px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                                    <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Açıklama (TR)</label>
+                                    <textarea id="annDesc_tr" placeholder="Kısa açıklama yazın..." rows="3" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                                </div>
                             </div>
                             <div>
                                 <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;" data-admin-i18n="annLink">Link (ixtiyari)</label>

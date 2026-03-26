@@ -16,6 +16,7 @@ function escapeHtml(str) {
 
 module.exports = async (req, res) => {
     try {
+        const lang = req.query.lang || 'az';
         // Fetch announcements from Firebase
         const annRes = await fetch(`${FIREBASE_DB_URL}/announcements.json`);
         const annData = await annRes.json() || {};
@@ -25,11 +26,14 @@ module.exports = async (req, res) => {
             .filter(a => a.active !== false)
             .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
+        // Helper to get localized field
+        const L = (a, field) => a[field + '_' + lang] || a[field] || '';
+
         // Build JSON-LD structured data
         const jsonLdItems = announcements.map(a => ({
             "@type": "Event",
-            "name": a.title,
-            "description": a.desc || '',
+            "name": L(a, 'title'),
+            "description": L(a, 'desc'),
             "image": a.image || undefined,
             "url": a.link || `${SITE_URL}/elanlar`,
             "startDate": a.date || undefined,
@@ -66,10 +70,10 @@ module.exports = async (req, res) => {
                 const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
                 return `
                 <article class="ann-card" itemscope itemtype="https://schema.org/Event">
-                    ${a.image ? `<div class="ann-card-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};" role="img" aria-label="${escapeHtml(a.title)}" itemprop="image">${a.showBadge !== false ? '<span class="ann-badge">YENİ</span>' : ''}</div>` : ''}
+                    ${a.image ? `<div class="ann-card-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};" role="img" aria-label="${escapeHtml(L(a, 'title'))}" itemprop="image">${a.showBadge !== false ? '<span class="ann-badge">YENİ</span>' : ''}</div>` : ''}
                     <div class="ann-card-body">
-                        <h2 class="ann-card-title" itemprop="name">${escapeHtml(a.title)}</h2>
-                        ${a.desc ? `<p class="ann-card-desc" itemprop="description">${escapeHtml(a.desc)}</p>` : ''}
+                        <h2 class="ann-card-title" itemprop="name">${escapeHtml(L(a, 'title'))}</h2>
+                        ${L(a, 'desc') ? `<p class="ann-card-desc" itemprop="description">${escapeHtml(L(a, 'desc'))}</p>` : ''}
                         <time class="ann-card-date" itemprop="startDate"><i class="fas fa-calendar-alt"></i> ${escapeHtml(a.date || '')}</time>
                         ${a.link ? `<a href="${escapeHtml(a.link)}" class="ann-card-link" target="_blank" rel="noopener" itemprop="url">Ətraflı bax &rarr;</a>` : ''}
                     </div>

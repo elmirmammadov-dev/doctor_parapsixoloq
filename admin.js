@@ -2953,6 +2953,15 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // Announcement language tab switching
+    document.querySelectorAll('.ann-lang-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            var lang = this.dataset.annLang;
+            document.querySelectorAll('.ann-lang-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.annLang === lang); });
+            document.querySelectorAll('.ann-lang-panel').forEach(function(p) { p.style.display = p.dataset.annLangPanel === lang ? '' : 'none'; });
+        });
+    });
+
     async function uploadAnnImage(file) {
         const formData = new FormData();
         formData.append('image', file);
@@ -2963,8 +2972,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     document.getElementById('annSaveBtn').addEventListener('click', async function() {
-        const title = document.getElementById('annTitle').value.trim();
-        const desc = document.getElementById('annDesc').value.trim();
+        const title = document.getElementById('annTitle_az').value.trim();
+        const desc = document.getElementById('annDesc_az').value.trim();
         const link = document.getElementById('annLink').value.trim();
         const msg = document.getElementById('annMsg');
         const file = annImageFile.files[0];
@@ -3000,6 +3009,14 @@ document.addEventListener("DOMContentLoaded", function() {
             const annData = {
                 title: title,
                 desc: desc,
+                title_az: title,
+                desc_az: desc,
+                title_ru: document.getElementById('annTitle_ru').value.trim(),
+                desc_ru: document.getElementById('annDesc_ru').value.trim(),
+                title_en: document.getElementById('annTitle_en').value.trim(),
+                desc_en: document.getElementById('annDesc_en').value.trim(),
+                title_tr: document.getElementById('annTitle_tr').value.trim(),
+                desc_tr: document.getElementById('annDesc_tr').value.trim(),
                 link: link,
                 image: imageUrl,
                 coverPos: annPosX.toFixed(1) + '% ' + annPosY.toFixed(1) + '%',
@@ -3019,8 +3036,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
             msg.style.display = 'block'; msg.style.color = '#2d8157'; msg.textContent = adminT('annSaved') || 'Elan yadda saxlandı!';
             // Reset form
-            document.getElementById('annTitle').value = '';
-            document.getElementById('annDesc').value = '';
+            ['az','ru','en','tr'].forEach(function(l) {
+                document.getElementById('annTitle_' + l).value = '';
+                document.getElementById('annDesc_' + l).value = '';
+            });
             document.getElementById('annLink').value = '';
             document.getElementById('annDate').value = '';
             document.getElementById('annShowBadge').checked = true;
@@ -3073,8 +3092,17 @@ document.addEventListener("DOMContentLoaded", function() {
             const item = snap.val();
             if (!item) return;
             annEditId = id;
-            document.getElementById('annTitle').value = item.title || '';
-            document.getElementById('annDesc').value = item.desc || '';
+            document.getElementById('annTitle_az').value = item.title_az || item.title || '';
+            document.getElementById('annDesc_az').value = item.desc_az || item.desc || '';
+            document.getElementById('annTitle_ru').value = item.title_ru || '';
+            document.getElementById('annDesc_ru').value = item.desc_ru || '';
+            document.getElementById('annTitle_en').value = item.title_en || '';
+            document.getElementById('annDesc_en').value = item.desc_en || '';
+            document.getElementById('annTitle_tr').value = item.title_tr || '';
+            document.getElementById('annDesc_tr').value = item.desc_tr || '';
+            // Reset lang tabs to AZ
+            document.querySelectorAll('.ann-lang-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.annLang === 'az'); });
+            document.querySelectorAll('.ann-lang-panel').forEach(function(p) { p.style.display = p.dataset.annLangPanel === 'az' ? '' : 'none'; });
             document.getElementById('annLink').value = item.link || '';
             document.getElementById('annDate').value = item.dateRaw || '';
             document.getElementById('annShowBadge').checked = item.showBadge !== false;

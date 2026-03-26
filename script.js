@@ -124,6 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update social links based on language
         updateSocialLinks(lang);
+
+        // Re-render announcements with new language
+        if (typeof renderAnnSectionPage === 'function') renderAnnSectionPage();
     }
 
     // Lang switcher click
@@ -815,11 +818,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
             const tag = a.link ? 'a' : 'div';
             const href = a.link ? ` href="${a.link}" target="_blank" rel="noopener"` : '';
+            const aTitle = a['title_' + currentLang] || a.title;
+            const aDesc = a['desc_' + currentLang] || a.desc;
             return `<${tag} class="ann-section-card"${href}>
                 ${a.image ? `<div class="ann-section-card-img" style="background-image:url(${a.image});background-position:${pos};background-size:${bgSize};">${a.showBadge !== false ? '<span class="ann-section-badge">YENİ</span>' : ''}</div>` : ''}
                 <div class="ann-section-card-body">
-                    <div class="ann-section-card-title">${a.title}</div>
-                    ${a.desc ? `<div class="ann-section-card-desc">${a.desc}</div>` : ''}
+                    <div class="ann-section-card-title">${aTitle}</div>
+                    ${aDesc ? `<div class="ann-section-card-desc">${aDesc}</div>` : ''}
                     <div class="ann-section-card-date">${a.date || ''}</div>
                 </div>
             </${tag}>`;
