@@ -96,6 +96,8 @@ module.exports = async (req, res) => {
     <script>
         function setCampCookie(id,v){var d=new Date();d.setTime(d.getTime()+365*24*60*60*1000);document.cookie='camp_'+id+'='+encodeURIComponent(v)+';expires='+d.toUTCString()+';path=/;SameSite=Lax';}
         function getCampCookie(id){var n='camp_'+id+'=',p=document.cookie.split(';');for(var i=0;i<p.length;i++){var c=p[i].trim();if(c.indexOf(n)===0)return decodeURIComponent(c.substring(n.length));}return null;}
+        function getBrowserFingerprint(){var c=document.createElement('canvas'),x=c.getContext('2d');x.textBaseline='top';x.font='14px Arial';x.fillText('fingerprint',2,2);var r=[navigator.userAgent,navigator.language,screen.width+'x'+screen.height,screen.colorDepth,new Date().getTimezoneOffset(),navigator.hardwareConcurrency||0,navigator.deviceMemory||0,navigator.platform||'',c.toDataURL()].join('|');var h=0;for(var i=0;i<r.length;i++){h=((h<<5)-h)+r.charCodeAt(i);h=h&h;}return 'fp_'+Math.abs(h).toString(36);}
+        var browserFingerprint=getBrowserFingerprint();
         // Claim modal
         window.openCampClaimModal = function(campId, title, discount) {
             if (getCampCookie(campId)) { alert('Bu kampaniyadan artıq kupon almısınız.'); return; }
@@ -121,7 +123,7 @@ module.exports = async (req, res) => {
                 if (!name || !surname || !phone) { errEl.textContent = 'Bütün sahələri doldurun!'; return; }
                 this.disabled = true; this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
                 try {
-                    var res = await fetch('/api/claim-coupon', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ campaignId: campId, name: name, surname: surname, phone: phone }) });
+                    var res = await fetch('/api/claim-coupon', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ campaignId: campId, name: name, surname: surname, phone: phone, fingerprint: browserFingerprint }) });
                     var data = await res.json();
                     if (data.success) {
                         setCampCookie(campId, data.couponCode);

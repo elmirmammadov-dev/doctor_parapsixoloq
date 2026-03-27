@@ -822,6 +822,38 @@ document.addEventListener('DOMContentLoaded', () => {
         return null;
     }
 
+    // Browser fingerprint for duplicate protection
+    function getBrowserFingerprint() {
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        ctx.textBaseline = 'top';
+        ctx.font = '14px Arial';
+        ctx.fillText('fingerprint', 2, 2);
+        var canvasData = canvas.toDataURL();
+
+        var raw = [
+            navigator.userAgent,
+            navigator.language,
+            screen.width + 'x' + screen.height,
+            screen.colorDepth,
+            new Date().getTimezoneOffset(),
+            navigator.hardwareConcurrency || 0,
+            navigator.deviceMemory || 0,
+            (navigator.platform || ''),
+            canvasData
+        ].join('|');
+
+        // Simple hash
+        var hash = 0;
+        for (var i = 0; i < raw.length; i++) {
+            hash = ((hash << 5) - hash) + raw.charCodeAt(i);
+            hash = hash & hash;
+        }
+        return 'fp_' + Math.abs(hash).toString(36);
+    }
+
+    var browserFingerprint = getBrowserFingerprint();
+
     function renderAnnCard(a) {
         const pos = a.coverPos || '50% 50%';
         const zoom = a.coverZoom || 1;
@@ -985,7 +1017,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 var res = await fetch('/api/claim-coupon', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ campaignId: campId, name: name, surname: surname, phone: phone })
+                    body: JSON.stringify({ campaignId: campId, name: name, surname: surname, phone: phone, fingerprint: browserFingerprint })
                 });
                 var data = await res.json();
                 if (data.success) {

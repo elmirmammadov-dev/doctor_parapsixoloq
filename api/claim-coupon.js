@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
     if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return; }
 
     try {
-        const { campaignId, name, surname, phone } = req.body || {};
+        const { campaignId, name, surname, phone, fingerprint } = req.body || {};
 
         // Validate inputs
         if (!campaignId || !name || !surname || !phone) {
@@ -57,6 +57,15 @@ module.exports = async (req, res) => {
             return res.status(400).json({ error: 'Bu telefon nömrəsi ilə artıq kupon alınıb' });
         }
 
+        // Check browser fingerprint duplicate
+        if (fingerprint) {
+            const fpCheckRes = await fetch(`${FIREBASE_DB_URL}/campaignClaimIndex/${campaignId}/fp_${fingerprint}.json`);
+            const fpExists = await fpCheckRes.json();
+            if (fpExists) {
+                return res.status(400).json({ error: 'Bu cihazdan artıq kupon alınıb' });
+            }
+        }
+
         // Increment claimedCount with ETag for race condition safety
         const countUrl = `${FIREBASE_DB_URL}/campaigns/${campaignId}/claimedCount.json`;
         let claimed = false;
@@ -96,6 +105,7 @@ module.exports = async (req, res) => {
             surname: surname.trim(),
             phone: phoneTrimmed,
             ip: ip,
+            fingerprint: fingerprint || null,
             couponCode: campaign.couponCode,
             claimedAt: Date.now()
         };
@@ -105,8 +115,8 @@ module.exports = async (req, res) => {
             body: JSON.stringify(claimData)
         });
 
-        // Save IP and phone index for duplicate prevention
-        await Promise.all([
+        // Save IP, phone and fingerprint index for duplicate prevention
+        const indexWrites = [
             fetch(`${FIREBASE_DB_URL}/campaignClaimIndex/${campaignId}/${sanitizedIP}.json`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -117,7 +127,15 @@ module.exports = async (req, res) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(true)
             })
-        ]);
+        ];
+        if (fingerprint) {
+            indexWrites.push(fetch(`${FIREBASE_DB_URL}/campaignClaimIndex/${campaignId}/fp_${fingerprint}.json`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(true)
+            }));
+        }
+        await Promise.all(indexWrites);
 
         return res.status(200).json({
             success: true,
