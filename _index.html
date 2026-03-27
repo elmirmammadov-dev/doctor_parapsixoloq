@@ -36,7 +36,7 @@
     <link rel="icon" type="image/png" href="logo.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
     <link rel="stylesheet" href="style.css">
@@ -220,14 +220,21 @@
     <main>
     <!-- Hero Headline Section -->
     <section class="hero-headline" id="heroHeadline">
-        <div class="hero-headline-bg"></div>
+        <div class="hero-headline-bg">
+            <div class="hero-mandala hero-mandala-1"></div>
+            <div class="hero-mandala hero-mandala-2"></div>
+        </div>
         <div class="container hero-headline-content">
             <p class="hero-headline-sub" data-i18n="hero_sub">PARAPSİXOLOQ & PSİXOLOQ & YOQ</p>
             <h1 class="hero-headline-name" data-i18n="hero_name">Şahsəddin İmanlı</h1>
             <div class="hero-headline-divider">
                 <svg viewBox="0 0 400 20" preserveAspectRatio="none"><path d="M0,10 Q50,0 100,10 T200,10 T300,10 T400,10" stroke="currentColor" stroke-width="2" fill="none"/></svg>
             </div>
-            <p class="hero-headline-quote" data-i18n="hero_quote">"İnsanın ruhunu müalicə etmədən cismini müalicə etmək olmaz"</p>
+            <div class="hero-headline-quote-wrap">
+                <span class="hero-quote-mark hero-quote-open">"</span>
+                <p class="hero-headline-quote" data-i18n="hero_quote">İnsanın ruhunu müalicə etmədən cismini müalicə etmək olmaz</p>
+                <span class="hero-quote-mark hero-quote-close">"</span>
+            </div>
         </div>
     </section>
 

@@ -3172,7 +3172,7 @@ img {
 /* === HERO HEADLINE SECTION === */
 .hero-headline {
     position: relative;
-    padding: 80px 0 50px;
+    padding: 80px 0 55px;
     overflow: hidden;
     text-align: center;
     background: #1a3c2a;
@@ -3183,85 +3183,126 @@ img {
     background: #1a3c2a;
     z-index: 0;
 }
+/* Geometric mandala patterns */
+.hero-mandala {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(197,166,55,0.08);
+    animation: heroMandalaSpin 60s linear infinite;
+}
+.hero-mandala::before, .hero-mandala::after {
+    content: '';
+    position: absolute;
+    top: 10%; left: 10%; right: 10%; bottom: 10%;
+    border-radius: 50%;
+    border: 1px solid rgba(197,166,55,0.06);
+}
+.hero-mandala::after {
+    top: 25%; left: 25%; right: 25%; bottom: 25%;
+    border: 1px solid rgba(197,166,55,0.04);
+}
+.hero-mandala-1 {
+    width: 500px; height: 500px;
+    top: -180px; left: -120px;
+    border: 1px solid rgba(197,166,55,0.1);
+    animation-duration: 50s;
+}
+.hero-mandala-2 {
+    width: 400px; height: 400px;
+    bottom: -150px; right: -100px;
+    border: 1px solid rgba(255,255,255,0.06);
+    animation-duration: 70s;
+    animation-direction: reverse;
+}
+@keyframes heroMandalaSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+/* Shimmer overlay */
 .hero-headline-bg::before {
     content: '';
     position: absolute;
-    top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background: radial-gradient(ellipse at 30% 40%, rgba(197,166,55,0.12) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 60%, rgba(45,180,100,0.08) 0%, transparent 40%);
-    animation: heroShimmer 8s ease-in-out infinite alternate;
-}
-.hero-headline-bg::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background:
-        radial-gradient(circle at 20% 50%, rgba(197,166,55,0.06) 0%, transparent 40%),
-        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.03) 0%, transparent 30%);
-    animation: heroGlow 6s ease-in-out infinite alternate-reverse;
+    top: 0; left: -100%; right: 0; bottom: 0;
+    width: 300%;
+    background: linear-gradient(105deg, transparent 40%, rgba(197,166,55,0.04) 45%, rgba(197,166,55,0.08) 50%, rgba(197,166,55,0.04) 55%, transparent 60%);
+    animation: heroShimmer 6s ease-in-out infinite;
+    z-index: 1;
 }
 @keyframes heroShimmer {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    100% { transform: translate(3%, -2%) rotate(1deg); }
-}
-@keyframes heroGlow {
-    0% { opacity: 0.5; }
-    100% { opacity: 1; }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(50%); }
 }
 .hero-headline-content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 .hero-headline-sub {
     font-family: var(--font-display, 'Montserrat', sans-serif);
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.25em;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.35em;
     color: var(--gold, #c5a637);
-    margin: 0 0 12px;
+    margin: 0 0 16px;
     text-transform: uppercase;
-    animation: heroFadeUp 0.8s ease-out both;
+    animation: heroFadeUp 1s ease-out both;
 }
 .hero-headline-name {
-    font-family: var(--font-display, 'Montserrat', sans-serif);
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    font-weight: 800;
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+    font-weight: 700;
     color: #fff;
     margin: 0;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    animation: heroFadeUp 0.8s ease-out 0.2s both;
+    line-height: 1.1;
+    letter-spacing: 0.06em;
+    animation: heroFadeUp 1s ease-out 0.2s both;
 }
 .hero-headline-divider {
-    width: 200px;
-    margin: 20px auto;
-    color: rgba(255,255,255,0.3);
-    animation: heroFadeUp 0.8s ease-out 0.4s both;
+    width: 180px;
+    margin: 22px auto;
+    color: rgba(197,166,55,0.4);
+    animation: heroFadeUp 1s ease-out 0.4s both;
 }
 .hero-headline-divider svg {
     width: 100%;
-    height: 16px;
+    height: 14px;
 }
+.hero-headline-quote-wrap {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+    max-width: 650px;
+    margin: 0 auto;
+    animation: heroFadeUp 1s ease-out 0.55s both;
+}
+.hero-quote-mark {
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 3rem;
+    line-height: 0.8;
+    color: var(--gold, #c5a637);
+    opacity: 0.5;
+    flex-shrink: 0;
+}
+.hero-quote-open { align-self: flex-start; margin-top: -4px; }
+.hero-quote-close { align-self: flex-end; margin-bottom: -4px; }
 .hero-headline-quote {
-    font-family: 'Georgia', serif;
-    font-size: clamp(1rem, 2.5vw, 1.35rem);
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: clamp(1.05rem, 2.5vw, 1.4rem);
     font-style: italic;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255,255,255,0.85);
     margin: 0;
-    line-height: 1.5;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    animation: heroFadeUp 0.8s ease-out 0.5s both;
+    line-height: 1.6;
 }
 @keyframes heroFadeUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(24px); }
     to { opacity: 1; transform: translateY(0); }
 }
 @media (max-width: 600px) {
     .hero-headline { padding: 60px 0 40px; }
-    .hero-headline-sub { font-size: 0.7rem; letter-spacing: 0.15em; }
+    .hero-headline-sub { font-size: 0.68rem; letter-spacing: 0.2em; }
+    .hero-mandala-1 { width: 300px; height: 300px; top: -100px; left: -80px; }
+    .hero-mandala-2 { width: 250px; height: 250px; bottom: -80px; right: -60px; }
+    .hero-quote-mark { font-size: 2rem; }
 }
 
 /* === ANNOUNCEMENTS SECTION (Homepage) === */
