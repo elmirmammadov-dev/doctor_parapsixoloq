@@ -3175,19 +3175,39 @@ img {
     padding: 80px 0 50px;
     overflow: hidden;
     text-align: center;
+    background: #1a3c2a;
 }
 .hero-headline-bg {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(135deg, #0a1a2e 0%, #1a3c2a 30%, #2d5a3d 60%, #1a2e1a 100%);
+    background: #1a3c2a;
     z-index: 0;
+}
+.hero-headline-bg::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(ellipse at 30% 40%, rgba(197,166,55,0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 60%, rgba(45,180,100,0.08) 0%, transparent 40%);
+    animation: heroShimmer 8s ease-in-out infinite alternate;
 }
 .hero-headline-bg::after {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: radial-gradient(ellipse at 30% 20%, rgba(197,166,55,0.15) 0%, transparent 60%),
-                radial-gradient(ellipse at 70% 80%, rgba(45,129,87,0.12) 0%, transparent 50%);
+    background:
+        radial-gradient(circle at 20% 50%, rgba(197,166,55,0.06) 0%, transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.03) 0%, transparent 30%);
+    animation: heroGlow 6s ease-in-out infinite alternate-reverse;
+}
+@keyframes heroShimmer {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(3%, -2%) rotate(1deg); }
+}
+@keyframes heroGlow {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
 .hero-headline-content {
     position: relative;
@@ -3201,6 +3221,7 @@ img {
     color: var(--gold, #c5a637);
     margin: 0 0 12px;
     text-transform: uppercase;
+    animation: heroFadeUp 0.8s ease-out both;
 }
 .hero-headline-name {
     font-family: var(--font-display, 'Montserrat', sans-serif);
@@ -3210,11 +3231,13 @@ img {
     margin: 0;
     line-height: 1.15;
     letter-spacing: -0.02em;
+    animation: heroFadeUp 0.8s ease-out 0.2s both;
 }
 .hero-headline-divider {
     width: 200px;
     margin: 20px auto;
     color: rgba(255,255,255,0.3);
+    animation: heroFadeUp 0.8s ease-out 0.4s both;
 }
 .hero-headline-divider svg {
     width: 100%;
@@ -3230,6 +3253,11 @@ img {
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    animation: heroFadeUp 0.8s ease-out 0.5s both;
+}
+@keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 @media (max-width: 600px) {
     .hero-headline { padding: 60px 0 40px; }
