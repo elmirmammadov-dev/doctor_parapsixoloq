@@ -3248,7 +3248,7 @@ img {
     text-shadow: 0 0 24px rgba(212,175,55,0.4);
 }
 .hero-headline-name {
-    font-family: 'Playfair Display', 'Georgia', serif;
+    font-family: var(--font-display, 'Montserrat', sans-serif);
     font-size: clamp(2.2rem, 5.5vw, 3.6rem);
     font-weight: 700;
     color: #fff;
