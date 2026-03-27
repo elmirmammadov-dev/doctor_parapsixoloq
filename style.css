@@ -3203,7 +3203,7 @@ img {
 }
 .hero-headline-sub {
     font-family: var(--font-display, 'Montserrat', sans-serif);
-    font-size: 0.82rem;
+    font-size: 1.1rem;
     font-weight: 800;
     letter-spacing: 0.35em;
     color: #d4af37;
