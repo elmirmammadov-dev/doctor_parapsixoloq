@@ -1800,7 +1800,20 @@ document.addEventListener("DOMContentLoaded", function() {
         else if (align === 'right') { img.style.marginLeft = 'auto'; img.style.marginRight = '0'; img.style.display = 'block'; }
         else { img.style.marginLeft = '0'; img.style.marginRight = 'auto'; img.style.display = 'block'; }
     };
-    window.removeCoverImg = function() {
+    window.removeCoverImg = async function() {
+        // Delete from ImgBB and Firebase if editing an existing article
+        if (editingEntryId) {
+            try {
+                const seoSnap = await adminDb.ref('articleSeo/' + editingEntryId).once('value');
+                const seo = seoSnap.val() || {};
+                // Delete from ImgBB
+                if (seo.coverDeleteUrl) await deleteFromImgBB(seo.coverDeleteUrl);
+                // Remove from Firebase
+                await adminDb.ref('articleSeo/' + editingEntryId + '/coverImage').remove();
+                await adminDb.ref('articleSeo/' + editingEntryId + '/coverDeleteUrl').remove();
+            } catch(e) { console.warn('Şəkil bazadan silinə bilmədi:', e); }
+        }
+        // Clear UI
         var img = document.getElementById('articleImagePreview');
         if (img) img.src = '';
         var card = document.getElementById('coverPreviewCard');
