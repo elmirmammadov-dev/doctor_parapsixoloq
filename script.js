@@ -901,7 +901,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         var html = '<div class="camp-card" data-camp-id="' + c.id + '">';
         if (expired) html += '<div class="camp-ended-overlay"><div class="camp-ended-text">BİTİB</div></div>';
-        if (c.image) html += '<div class="camp-card-img" style="background-image:url(' + c.image + ');"><div class="camp-discount-badge">-' + c.discountPercent + '%</div></div>';
+        if (c.image) {
+            var cPos = c.coverPos || '50% 50%';
+            var cZoom = c.coverZoom || 1;
+            var cBgSize = cZoom <= 1 ? 'cover' : (cZoom * 100) + '%';
+            html += '<div class="camp-card-img" style="background-image:url(' + c.image + ');background-position:' + cPos + ';background-size:' + cBgSize + ';"><div class="camp-discount-badge">-' + c.discountPercent + '%</div></div>';
+        }
         html += '<div class="camp-card-body">';
         html += '<div class="camp-card-title">' + (c.title || '') + '</div>';
         if (c.desc) html += '<div class="camp-card-desc">' + c.desc + '</div>';

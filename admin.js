@@ -3430,21 +3430,112 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('campCouponCode').value = generateCouponCode();
     });
 
-    // Campaign image preview
+    // Campaign image preview with drag + zoom
     const campImgInput = document.getElementById('campImageFile');
+    const campCoverCard = document.getElementById('campCoverPreviewCard');
+    const campCoverWrap = document.getElementById('campCoverPreviewWrap');
+    let campPosX = 50, campPosY = 50, campZoom = 1;
+    let campDragging = false, campStartX, campStartY, campStartPosX, campStartPosY;
+
+    function updateCampCoverLabel() {
+        var lbl = document.getElementById('campCoverPosLabel');
+        if (lbl) lbl.textContent = campPosX.toFixed(0) + '% ' + campPosY.toFixed(0) + '% | Zoom: ' + (campZoom * 100).toFixed(0) + '%';
+    }
+    function applyCampCoverView() {
+        if (!campCoverCard) return;
+        campCoverCard.style.backgroundSize = (campZoom * 100) + '%';
+        campCoverCard.style.backgroundPosition = campPosX.toFixed(1) + '% ' + campPosY.toFixed(1) + '%';
+        updateCampCoverLabel();
+    }
+
     if (campImgInput) {
         campImgInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
+            var file = e.target.files[0];
             if (!file) return;
             document.getElementById('campImageName').textContent = file.name;
-            const reader = new FileReader();
+            var reader = new FileReader();
             reader.onload = function(ev) {
-                const wrap = document.getElementById('campCoverPreviewWrap');
-                const card = document.getElementById('campCoverPreviewCard');
-                card.style.backgroundImage = 'url(' + ev.target.result + ')';
-                wrap.style.display = 'block';
+                campCoverCard.style.backgroundImage = 'url(' + ev.target.result + ')';
+                campPosX = 50; campPosY = 50; campZoom = 1;
+                applyCampCoverView();
+                campCoverWrap.style.display = 'block';
             };
             reader.readAsDataURL(file);
+        });
+    }
+
+    // Drag
+    if (campCoverCard) {
+        campCoverCard.addEventListener('mousedown', function(e) {
+            campDragging = true; campStartX = e.clientX; campStartY = e.clientY;
+            campStartPosX = campPosX; campStartPosY = campPosY;
+            this.style.cursor = 'grabbing'; e.preventDefault();
+        });
+        campCoverCard.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 1) {
+                campDragging = true; campStartX = e.touches[0].clientX; campStartY = e.touches[0].clientY;
+                campStartPosX = campPosX; campStartPosY = campPosY;
+            }
+        }, { passive: true });
+        document.addEventListener('mousemove', function(e) {
+            if (!campDragging) return;
+            var dx = e.clientX - campStartX, dy = e.clientY - campStartY;
+            var sens = 0.3 / campZoom;
+            campPosX = Math.max(0, Math.min(100, campStartPosX - dx * sens));
+            campPosY = Math.max(0, Math.min(100, campStartPosY - dy * sens));
+            applyCampCoverView();
+        });
+        document.addEventListener('touchmove', function(e) {
+            if (!campDragging || e.touches.length !== 1) return;
+            var dx = e.touches[0].clientX - campStartX, dy = e.touches[0].clientY - campStartY;
+            var sens = 0.3 / campZoom;
+            campPosX = Math.max(0, Math.min(100, campStartPosX - dx * sens));
+            campPosY = Math.max(0, Math.min(100, campStartPosY - dy * sens));
+            applyCampCoverView();
+        }, { passive: true });
+        document.addEventListener('mouseup', function() { campDragging = false; if (campCoverCard) campCoverCard.style.cursor = 'grab'; });
+        document.addEventListener('touchend', function() { campDragging = false; });
+
+        // Zoom with scroll
+        campCoverCard.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            var delta = e.deltaY < 0 ? 0.1 : -0.1;
+            campZoom = Math.max(1, Math.min(5, campZoom + delta));
+            applyCampCoverView();
+        }, { passive: false });
+
+        // Pinch-to-zoom
+        var campPinchStartDist = 0, campPinchStartZoom = 1;
+        campCoverCard.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 2) {
+                campDragging = false;
+                var dx = e.touches[0].clientX - e.touches[1].clientX;
+                var dy = e.touches[0].clientY - e.touches[1].clientY;
+                campPinchStartDist = Math.sqrt(dx * dx + dy * dy);
+                campPinchStartZoom = campZoom;
+                e.preventDefault();
+            }
+        }, { passive: false });
+        campCoverCard.addEventListener('touchmove', function(e) {
+            if (e.touches.length === 2) {
+                var dx = e.touches[0].clientX - e.touches[1].clientX;
+                var dy = e.touches[0].clientY - e.touches[1].clientY;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                if (campPinchStartDist > 0) {
+                    campZoom = Math.max(1, Math.min(5, campPinchStartZoom * (dist / campPinchStartDist)));
+                    applyCampCoverView();
+                }
+                e.preventDefault();
+            }
+        }, { passive: false });
+    }
+
+    // Reset
+    var campResetBtn = document.getElementById('campCoverReset');
+    if (campResetBtn) {
+        campResetBtn.addEventListener('click', function() {
+            campPosX = 50; campPosY = 50; campZoom = 1;
+            applyCampCoverView();
         });
     }
 
@@ -3510,6 +3601,8 @@ document.addEventListener("DOMContentLoaded", function() {
             };
 
             if (campImageUrl) campData.image = campImageUrl;
+            campData.coverPos = campPosX.toFixed(1) + '% ' + campPosY.toFixed(1) + '%';
+            campData.coverZoom = campZoom;
 
             if (campEditId) {
                 // Update - keep original start/end if not changing duration
@@ -3554,6 +3647,8 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('campImageFile').value = '';
         document.getElementById('campImageName').textContent = '';
         document.getElementById('campCoverPreviewWrap').style.display = 'none';
+        campPosX = 50; campPosY = 50; campZoom = 1;
+        document.getElementById('campSaveBtn').innerHTML = '<i class="fas fa-save"></i> Kampaniyanı saxla';
         var slider = document.getElementById('campActiveSlider');
         var knob = document.getElementById('campActiveKnob');
         if (slider) slider.style.background = '#4cd964';
@@ -3617,11 +3712,17 @@ document.addEventListener("DOMContentLoaded", function() {
         else if (mins % 60 === 0) { document.getElementById('campDurationValue').value = mins / 60; document.getElementById('campDurationUnit').value = 'hours'; }
         else { document.getElementById('campDurationValue').value = mins; document.getElementById('campDurationUnit').value = 'minutes'; }
 
-        // Restore image
+        // Restore image with position and zoom
         if (c.image) {
-            var card = document.getElementById('campCoverPreviewCard');
-            card.style.backgroundImage = 'url(' + c.image + ')';
-            document.getElementById('campCoverPreviewWrap').style.display = 'block';
+            campCoverCard.style.backgroundImage = 'url(' + c.image + ')';
+            campCoverWrap.style.display = 'block';
+            if (c.coverPos) {
+                var parts = c.coverPos.split('%');
+                campPosX = parseFloat(parts[0]) || 50;
+                campPosY = parseFloat(parts[1]) || 50;
+            } else { campPosX = 50; campPosY = 50; }
+            campZoom = c.coverZoom || 1;
+            applyCampCoverView();
         }
 
         // Toggle visual

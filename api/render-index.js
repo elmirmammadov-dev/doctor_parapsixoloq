@@ -125,7 +125,7 @@ module.exports = async (req, res) => {
                     const pct = Math.min(100, Math.round((claimed / max) * 100));
                     return `<div class="camp-card"${expired ? ' style="opacity:0.7;"' : ''}>
                         ${expired ? '<div class="camp-ended-overlay"><div class="camp-ended-text">B\u0130T\u0130B</div></div>' : ''}
-                        ${c.image ? `<div class="camp-card-img" style="background-image:url(${escapeHtml(c.image)});"><div class="camp-discount-badge">-${c.discountPercent}%</div></div>` : ''}
+                        ${c.image ? `<div class="camp-card-img" style="background-image:url(${escapeHtml(c.image)});background-position:${c.coverPos || '50% 50%'};background-size:${(c.coverZoom || 1) <= 1 ? 'cover' : ((c.coverZoom || 1) * 100) + '%'};"><div class="camp-discount-badge">-${c.discountPercent}%</div></div>` : ''}
                         <div class="camp-card-body">
                             <div class="camp-card-title">${escapeHtml(c.title || '')}</div>
                             ${c.desc ? `<div class="camp-card-desc">${escapeHtml(c.desc)}</div>` : ''}
