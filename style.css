@@ -3195,27 +3195,34 @@ img {
     position: relative;
     z-index: 2;
 }
+.hero-headline-h1 {
+    margin: 0 0 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .hero-headline-sub {
     font-family: var(--font-display, 'Montserrat', sans-serif);
     font-size: 0.82rem;
     font-weight: 800;
     letter-spacing: 0.35em;
     color: #d4af37;
-    margin: 0 0 10px;
+    margin-bottom: 10px;
     text-transform: uppercase;
     animation: heroFadeUp 1s ease-out both;
     text-shadow: 0 0 24px rgba(212,175,55,0.4);
+    display: block;
 }
 .hero-headline-name {
     font-family: var(--font-display, 'Montserrat', sans-serif);
     font-size: clamp(2.2rem, 5.5vw, 3.6rem);
     font-weight: 700;
     color: #fff;
-    margin: 0 0 24px;
     line-height: 1.1;
     letter-spacing: 0.06em;
     animation: heroFadeUp 1s ease-out 0.2s both;
     text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+    display: block;
 }
 blockquote.hero-headline-quote-wrap {
     display: flex;
