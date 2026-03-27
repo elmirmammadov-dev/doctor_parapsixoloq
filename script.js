@@ -883,12 +883,13 @@ document.addEventListener('DOMContentLoaded', () => {
         var h = Math.floor((diff % 86400000) / 3600000);
         var m = Math.floor((diff % 3600000) / 60000);
         var s = Math.floor((diff % 60000) / 1000);
-        return '<div class="camp-countdown" data-end="' + endTs + '">' +
-            '<div class="camp-countdown-item"><div class="camp-countdown-num">' + d + '</div><div class="camp-countdown-label">Gün</div></div>' +
-            '<div class="camp-countdown-item"><div class="camp-countdown-num">' + h + '</div><div class="camp-countdown-label">Saat</div></div>' +
+        var html = '<div class="camp-countdown" data-end="' + endTs + '">';
+        if (d > 0) html += '<div class="camp-countdown-item"><div class="camp-countdown-num">' + d + '</div><div class="camp-countdown-label">Gün</div></div>';
+        html += '<div class="camp-countdown-item"><div class="camp-countdown-num">' + h + '</div><div class="camp-countdown-label">Saat</div></div>' +
             '<div class="camp-countdown-item"><div class="camp-countdown-num">' + m + '</div><div class="camp-countdown-label">Dəq</div></div>' +
             '<div class="camp-countdown-item"><div class="camp-countdown-num">' + s + '</div><div class="camp-countdown-label">San</div></div>' +
         '</div>';
+        return html;
     }
 
     function renderCampCard(c) {
@@ -975,12 +976,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 var endTs = parseInt(el.dataset.end);
                 var diff = Math.max(0, endTs - Date.now());
                 if (diff <= 0) { el.innerHTML = '<div class="camp-countdown-item"><div class="camp-countdown-num" style="color:#e74c3c;">Bitdi</div></div>'; return; }
-                var nums = el.querySelectorAll('.camp-countdown-num');
-                if (nums.length >= 4) {
-                    nums[0].textContent = Math.floor(diff / 86400000);
-                    nums[1].textContent = Math.floor((diff % 86400000) / 3600000);
-                    nums[2].textContent = Math.floor((diff % 3600000) / 60000);
-                    nums[3].textContent = Math.floor((diff % 60000) / 1000);
+                var d = Math.floor(diff / 86400000);
+                var h = Math.floor((diff % 86400000) / 3600000);
+                var m = Math.floor((diff % 3600000) / 60000);
+                var s = Math.floor((diff % 60000) / 1000);
+                var dayEl = el.querySelector('.camp-countdown-day');
+                if (d > 0 && !dayEl) {
+                    el.insertAdjacentHTML('afterbegin', '<div class="camp-countdown-item camp-countdown-day"><div class="camp-countdown-num">' + d + '</div><div class="camp-countdown-label">Gün</div></div>');
+                } else if (d > 0 && dayEl) {
+                    dayEl.querySelector('.camp-countdown-num').textContent = d;
+                } else if (d === 0 && dayEl) {
+                    dayEl.remove();
+                }
+                var items = el.querySelectorAll('.camp-countdown-item:not(.camp-countdown-day)');
+                if (items.length >= 3) {
+                    items[0].querySelector('.camp-countdown-num').textContent = h;
+                    items[1].querySelector('.camp-countdown-num').textContent = m;
+                    items[2].querySelector('.camp-countdown-num').textContent = s;
                 }
             });
         }, 1000);
