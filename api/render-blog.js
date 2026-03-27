@@ -188,8 +188,8 @@ window.__POST_DATA__ = ${JSON.stringify(JSON.stringify(preloadData))};</script>
             html = html.replace('</body>', `<div style="display:none" aria-hidden="true">${annSeoHtml}</div>\n</body>`);
         }
 
-        // Set cache headers
-        res.setHeader('Cache-Control', 's-maxage=0, stale-while-revalidate=60');
+        // No cache - always serve fresh data
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.status(200).send(html);
 

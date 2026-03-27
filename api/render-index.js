@@ -166,8 +166,8 @@ module.exports = async (req, res) => {
             );
         }
 
-        // No cache, revalidate in background for performance
-        res.setHeader('Cache-Control', 's-maxage=0, stale-while-revalidate=60');
+        // No cache - always serve fresh data
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.status(200).send(html);
 
