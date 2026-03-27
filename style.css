@@ -3323,15 +3323,13 @@ img {
 
 /* === SPLIT LAYOUT: Elanlar + Kampaniyalar === */
 .ann-camp-split {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 32px;
-    align-items: stretch;
+    align-items: start;
 }
 .ann-split-col {
-    flex: 1;
     min-width: 0;
-    display: flex;
-    flex-direction: column;
 }
 .ann-split-title {
     font-family: var(--font-display, 'Montserrat', sans-serif);
@@ -3349,23 +3347,6 @@ img {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    flex: 1;
-}
-.ann-split-grid .ann-section-card,
-.camp-split-grid .camp-card {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-.ann-section-card .ann-section-card-body,
-.camp-card .camp-card-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-.ann-section-card .ann-section-card-desc,
-.camp-card .camp-card-desc {
-    flex: 1;
 }
 .ann-split-more {
     display: inline-flex;
@@ -3632,7 +3613,7 @@ img {
 .camp-copy-btn:hover { background: var(--gold, #c5a637); color: #fff; }
 
 @media (max-width: 900px) {
-    .ann-camp-split { flex-direction: column; gap: 24px; }
+    .ann-camp-split { grid-template-columns: 1fr; gap: 24px; }
 }
 
 /* === FAQ === */
