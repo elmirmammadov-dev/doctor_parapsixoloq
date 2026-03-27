@@ -884,9 +884,9 @@ document.addEventListener('DOMContentLoaded', () => {
         var m = Math.floor((diff % 3600000) / 60000);
         var s = Math.floor((diff % 60000) / 1000);
         var html = '<div class="camp-countdown" data-end="' + endTs + '">';
-        if (d > 0) html += '<div class="camp-countdown-item"><div class="camp-countdown-num">' + d + '</div><div class="camp-countdown-label">Gün</div></div>';
-        html += '<div class="camp-countdown-item"><div class="camp-countdown-num">' + h + '</div><div class="camp-countdown-label">Saat</div></div>' +
-            '<div class="camp-countdown-item"><div class="camp-countdown-num">' + m + '</div><div class="camp-countdown-label">Dəq</div></div>' +
+        if (d > 0) html += '<div class="camp-countdown-item camp-countdown-day"><div class="camp-countdown-num">' + d + '</div><div class="camp-countdown-label">Gün</div></div>';
+        if (d > 0 || h > 0) html += '<div class="camp-countdown-item camp-countdown-hour"><div class="camp-countdown-num">' + h + '</div><div class="camp-countdown-label">Saat</div></div>';
+        html += '<div class="camp-countdown-item"><div class="camp-countdown-num">' + m + '</div><div class="camp-countdown-label">Dəq</div></div>' +
             '<div class="camp-countdown-item"><div class="camp-countdown-num">' + s + '</div><div class="camp-countdown-label">San</div></div>' +
         '</div>';
         return html;
@@ -980,6 +980,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 var h = Math.floor((diff % 86400000) / 3600000);
                 var m = Math.floor((diff % 3600000) / 60000);
                 var s = Math.floor((diff % 60000) / 1000);
+                // Day
                 var dayEl = el.querySelector('.camp-countdown-day');
                 if (d > 0 && !dayEl) {
                     el.insertAdjacentHTML('afterbegin', '<div class="camp-countdown-item camp-countdown-day"><div class="camp-countdown-num">' + d + '</div><div class="camp-countdown-label">Gün</div></div>');
@@ -988,11 +989,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (d === 0 && dayEl) {
                     dayEl.remove();
                 }
-                var items = el.querySelectorAll('.camp-countdown-item:not(.camp-countdown-day)');
-                if (items.length >= 3) {
-                    items[0].querySelector('.camp-countdown-num').textContent = h;
-                    items[1].querySelector('.camp-countdown-num').textContent = m;
-                    items[2].querySelector('.camp-countdown-num').textContent = s;
+                // Hour
+                var hourEl = el.querySelector('.camp-countdown-hour');
+                if ((d > 0 || h > 0) && !hourEl) {
+                    var afterDay = el.querySelector('.camp-countdown-day');
+                    var ref = afterDay ? afterDay.nextSibling : el.firstChild;
+                    var tmp = document.createElement('div');
+                    tmp.innerHTML = '<div class="camp-countdown-item camp-countdown-hour"><div class="camp-countdown-num">' + h + '</div><div class="camp-countdown-label">Saat</div></div>';
+                    el.insertBefore(tmp.firstChild, ref);
+                } else if ((d > 0 || h > 0) && hourEl) {
+                    hourEl.querySelector('.camp-countdown-num').textContent = h;
+                } else if (d === 0 && h === 0 && hourEl) {
+                    hourEl.remove();
+                }
+                // Min + Sec (always last 2 items)
+                var rest = el.querySelectorAll('.camp-countdown-item:not(.camp-countdown-day):not(.camp-countdown-hour)');
+                if (rest.length >= 2) {
+                    rest[0].querySelector('.camp-countdown-num').textContent = m;
+                    rest[1].querySelector('.camp-countdown-num').textContent = s;
                 }
             });
         }, 1000);
