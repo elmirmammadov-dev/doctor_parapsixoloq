@@ -1440,7 +1440,16 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         const data = await res.json();
         if (!data.success) throw new Error(data.error?.message || 'Şəkil yüklənmədi');
-        return data.data.url;
+        return { url: data.data.url, deleteUrl: data.data.delete_url || null };
+    }
+
+    async function deleteFromImgBB(deleteUrl) {
+        if (!deleteUrl) return;
+        try {
+            await fetch(deleteUrl, { mode: 'no-cors' });
+        } catch(e) {
+            console.warn('Köhnə şəkil ImgBB-dən silinə bilmədi:', e);
+        }
     }
 
     // Insert image into rich text editor
@@ -1591,13 +1600,13 @@ document.addEventListener("DOMContentLoaded", function() {
             placeholder.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Şəkil yüklənir...';
             editor.appendChild(placeholder);
             try {
-                const url = await uploadToImgBB(file);
+                const imgResult = await uploadToImgBB(file);
                 placeholder.remove();
                 const wrap = document.createElement('div');
                 wrap.style.cssText = 'position:relative;display:inline-block;max-width:100%;margin:8px 0;';
                 wrap.className = 'editor-img-wrap';
                 const img = document.createElement('img');
-                img.src = url;
+                img.src = imgResult.url;
                 img.alt = altText;
                 img.style.cssText = 'max-width:100%;height:auto;border-radius:8px;display:block;';
                 const xBtn = document.createElement('button');
@@ -2399,9 +2408,20 @@ document.addEventListener("DOMContentLoaded", function() {
                 let coverImageUrl = null;
 
                 // Upload cover image to ImgBB if provided
+                let coverDeleteUrl = null;
                 if (imageFile) {
+                    // Delete old image from ImgBB if editing
+                    if (editingEntryId) {
+                        try {
+                            const oldSeoSnap = await adminDb.ref('articleSeo/' + editingEntryId + '/coverDeleteUrl').once('value');
+                            const oldDeleteUrl = oldSeoSnap.val();
+                            if (oldDeleteUrl) await deleteFromImgBB(oldDeleteUrl);
+                        } catch(e) {}
+                    }
                     statusEl.textContent = 'Şəkil yüklənir (ImgBB)...';
-                    coverImageUrl = await uploadToImgBB(imageFile);
+                    const imgResult = await uploadToImgBB(imageFile);
+                    coverImageUrl = imgResult.url;
+                    coverDeleteUrl = imgResult.deleteUrl;
                 }
 
                 // Convert HTML to Contentful rich text
@@ -2431,7 +2451,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                     await adminDb.ref('articleHtml/' + editingEntryId).set(htmlData);
                     const seoObj = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(1) + '% ' + coverPosY.toFixed(1) + '%', coverZoom: coverZoom };
-                    if (coverImageUrl) seoObj.coverImage = coverImageUrl;
+                    if (coverImageUrl) {
+                        seoObj.coverImage = coverImageUrl;
+                        seoObj.coverDeleteUrl = coverDeleteUrl || null;
+                    }
                     if (articleSlug) seoObj.slug = articleSlug;
                     if (metaDescRu) seoObj.metaDescRu = metaDescRu;
                     if (keywordRu) seoObj.keywordRu = keywordRu;
@@ -2464,7 +2487,10 @@ document.addEventListener("DOMContentLoaded", function() {
                         }
                         await adminDb.ref('articleHtml/' + newEntryId).set(htmlData);
                         const seoObj2 = { metaDesc, keyword, imageAlt, coverPos: coverPosX.toFixed(1) + '% ' + coverPosY.toFixed(1) + '%', coverZoom: coverZoom };
-                        if (coverImageUrl) seoObj2.coverImage = coverImageUrl;
+                        if (coverImageUrl) {
+                            seoObj2.coverImage = coverImageUrl;
+                            seoObj2.coverDeleteUrl = coverDeleteUrl || null;
+                        }
                         if (articleSlug) seoObj2.slug = articleSlug;
                         if (metaDescRu) seoObj2.metaDescRu = metaDescRu;
                         if (keywordRu) seoObj2.keywordRu = keywordRu;
