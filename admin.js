@@ -1479,6 +1479,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 bar.contentEditable = 'false';
                 bar.style.cssText = 'display:flex;gap:4px;align-items:center;padding:6px 8px;background:#f0faf5;border:1px solid #2d8157;border-radius:8px;margin:4px 0;font-size:0.75rem;flex-wrap:wrap;user-select:none;';
                 var curWidth = parseInt(img.style.width) || 100;
+                var curAlt = img.alt || '';
                 bar.innerHTML = `
                     <span style="color:#2d8157;font-weight:600;">Ölçü:</span>
                     <button type="button" onclick="resizeEditorImg(this,25)" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">25%</button>
@@ -1492,6 +1493,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     <button type="button" onclick="alignEditorImg(this,'left')" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">Sol</button>
                     <button type="button" onclick="alignEditorImg(this,'center')" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">Orta</button>
                     <button type="button" onclick="alignEditorImg(this,'right')" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:0.72rem;">Sağ</button>
+                    <span style="color:#999;">|</span>
+                    <span style="color:#2d8157;font-weight:600;">Alt mətn:</span>
+                    <input type="text" value="${curAlt.replace(/"/g, '&quot;')}" oninput="updateEditorImgAlt(this)" placeholder="Şəklin alt mətni..." style="width:160px;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:0.78rem;line-height:1;" title="Şəklin alt mətni (SEO üçün vacibdir)">
                     <span style="color:#999;">|</span>
                     <button type="button" onclick="removeEditorImg(this)" style="padding:3px 8px;border:1px solid #e74c3c;border-radius:4px;background:#ffeaea;cursor:pointer;font-size:0.72rem;color:#e74c3c;">Sil</button>
                     <span style="color:#999;">|</span>
@@ -1510,6 +1514,14 @@ document.addEventListener("DOMContentLoaded", function() {
         if (img && img.tagName === 'IMG') {
             img.style.maxWidth = pct + '%';
             img.style.width = pct + '%';
+        }
+    };
+
+    window.updateEditorImgAlt = function(input) {
+        const bar = input.closest('.img-resize-bar');
+        const img = bar ? bar.previousElementSibling : null;
+        if (img && img.tagName === 'IMG') {
+            img.alt = input.value;
         }
     };
 
