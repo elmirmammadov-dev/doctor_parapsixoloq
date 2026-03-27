@@ -3188,7 +3188,7 @@ img {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(58,110,72,0.82);
+    background: rgba(30,70,45,0.88);
     z-index: 0;
 }
 .hero-headline-content {
@@ -3232,17 +3232,18 @@ blockquote.hero-headline-quote-wrap {
     max-width: 700px;
     margin: 0 auto;
     animation: heroFadeUp 1s ease-out 0.45s both;
-    background: rgba(212,175,55,0.12);
+    background: rgba(212,175,55,0.2);
     border-radius: 16px;
     padding: 18px 28px;
-    border: 1px solid rgba(212,175,55,0.25);
+    border: 1px solid rgba(212,175,55,0.4);
+    backdrop-filter: blur(4px);
 }
 .hero-quote-mark {
     font-family: 'Playfair Display', 'Georgia', serif;
     font-size: 3.5rem;
     line-height: 1;
-    color: #fff;
-    opacity: 0.7;
+    color: #d4af37;
+    opacity: 0.9;
     flex-shrink: 0;
 }
 .hero-quote-open { align-self: flex-start; }
@@ -3251,7 +3252,7 @@ blockquote.hero-headline-quote-wrap {
     font-family: 'Playfair Display', 'Georgia', serif;
     font-size: clamp(1rem, 2.5vw, 1.3rem);
     font-style: italic;
-    color: rgba(255,255,255,0.85);
+    color: #fff;
     margin: 0;
     line-height: 1.55;
 }
