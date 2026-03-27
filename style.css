@@ -3238,14 +3238,14 @@ img {
 }
 .hero-headline-sub {
     font-family: var(--font-display, 'Montserrat', sans-serif);
-    font-size: 0.78rem;
-    font-weight: 600;
+    font-size: 0.82rem;
+    font-weight: 800;
     letter-spacing: 0.35em;
-    color: var(--gold, #c5a637);
+    color: #d4af37;
     margin: 0 0 10px;
     text-transform: uppercase;
     animation: heroFadeUp 1s ease-out both;
-    text-shadow: 0 0 20px rgba(197,166,55,0.3);
+    text-shadow: 0 0 24px rgba(212,175,55,0.4);
 }
 .hero-headline-name {
     font-family: 'Playfair Display', 'Georgia', serif;
