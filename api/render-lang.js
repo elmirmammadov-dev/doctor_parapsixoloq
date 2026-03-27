@@ -233,6 +233,8 @@ module.exports = async (req, res) => {
 
         // Set cache headers
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('CDN-Cache-Control', 'no-store');
+        res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.status(200).send(html);
 

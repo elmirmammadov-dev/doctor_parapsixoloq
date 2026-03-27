@@ -103,7 +103,9 @@ module.exports = async (req, res) => {
         xml += '\n</urlset>';
 
         res.setHeader('Content-Type', 'application/xml; charset=utf-8');
-        res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('CDN-Cache-Control', 'no-store');
+        res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
         res.status(200).send(xml);
     } catch (err) {
         console.error('Sitemap error:', err);
