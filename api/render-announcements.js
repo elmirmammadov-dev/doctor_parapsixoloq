@@ -120,8 +120,8 @@ module.exports = async (req, res) => {
         .ann-card-img { width: 100%; aspect-ratio: 16/9; background-size: cover; background-position: center; background-repeat: no-repeat; position: relative; }
         .ann-badge { position: absolute; top: 12px; left: 12px; background: #e74c3c; color: #fff; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em; padding: 4px 10px; border-radius: 8px; box-shadow: 0 2px 8px rgba(231,76,60,0.4); }
         .ann-card-body { padding: 20px 24px; }
-        .ann-card-title { font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 700; color: #1a1a2e; margin: 0 0 10px; }
-        .ann-card-desc { font-size: 0.95rem; color: #555; line-height: 1.65; margin: 0 0 14px; }
+        .ann-card-title { font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 700; color: #1a1a2e; margin: 0 0 10px; word-break: break-word; overflow-wrap: break-word; }
+        .ann-card-desc { font-size: 0.95rem; color: #555; line-height: 1.65; margin: 0 0 14px; word-break: break-word; overflow-wrap: break-word; }
         .ann-card-date { font-size: 0.82rem; color: #e74c3c; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px; }
         .ann-card-date i { font-size: 0.75rem; }
         .ann-card-link { display: inline-flex; align-items: center; gap: 4px; color: var(--gold, #1a8a5c); font-weight: 600; font-size: 0.9rem; text-decoration: none; }

@@ -131,9 +131,9 @@ module.exports = async (req, res) => {
         .ann-detail-img { width: 100%; aspect-ratio: 16/9; background-size: cover; background-position: center; background-repeat: no-repeat; position: relative; }
         .ann-detail-badge { position: absolute; top: 14px; left: 14px; background: #e74c3c; color: #fff; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; padding: 5px 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(231,76,60,0.4); }
         .ann-detail-body { padding: 28px 32px; }
-        .ann-detail-title { font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 700; color: #1a1a2e; margin: 0 0 12px; line-height: 1.3; }
+        .ann-detail-title { font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 700; color: #1a1a2e; margin: 0 0 12px; line-height: 1.3; word-break: break-word; overflow-wrap: break-word; }
         .ann-detail-date { font-size: 0.85rem; color: #e74c3c; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px; }
-        .ann-detail-desc { font-size: 1.05rem; color: #444; line-height: 1.75; margin: 0 0 20px; white-space: pre-line; }
+        .ann-detail-desc { font-size: 1.05rem; color: #444; line-height: 1.75; margin: 0 0 20px; white-space: pre-line; word-break: break-word; overflow-wrap: break-word; }
         .ann-detail-link { display: inline-flex; align-items: center; gap: 6px; background: var(--gold, #1a8a5c); color: #fff; padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: 0.3s; }
         .ann-detail-link:hover { opacity: 0.85; transform: translateY(-2px); }
         .ann-related-section { margin-top: 50px; }
