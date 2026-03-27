@@ -94,9 +94,11 @@ module.exports = async (req, res) => {
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script src="/style.css"></script>
     <script>
-        // Claim modal (same as homepage)
+        function setCampCookie(id,v){var d=new Date();d.setTime(d.getTime()+365*24*60*60*1000);document.cookie='camp_'+id+'='+encodeURIComponent(v)+';expires='+d.toUTCString()+';path=/;SameSite=Lax';}
+        function getCampCookie(id){var n='camp_'+id+'=',p=document.cookie.split(';');for(var i=0;i<p.length;i++){var c=p[i].trim();if(c.indexOf(n)===0)return decodeURIComponent(c.substring(n.length));}return null;}
+        // Claim modal
         window.openCampClaimModal = function(campId, title, discount) {
-            if (localStorage.getItem('camp_claimed_' + campId)) { alert('Bu kampaniyadan artıq kupon almısınız.'); return; }
+            if (getCampCookie(campId)) { alert('Bu kampaniyadan artıq kupon almısınız.'); return; }
             var overlay = document.createElement('div');
             overlay.className = 'camp-modal-overlay';
             overlay.innerHTML = '<div class="camp-modal">' +
@@ -122,7 +124,7 @@ module.exports = async (req, res) => {
                     var res = await fetch('/api/claim-coupon', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ campaignId: campId, name: name, surname: surname, phone: phone }) });
                     var data = await res.json();
                     if (data.success) {
-                        localStorage.setItem('camp_claimed_' + campId, data.couponCode);
+                        setCampCookie(campId, data.couponCode);
                         overlay.innerHTML = '<div class="camp-modal"><h3 style="text-align:center;color:#27ae60;"><i class="fas fa-check-circle"></i> Təbriklər!</h3><p style="text-align:center;">Sizin ' + data.discount + '% endirim kuponunuz:</p><div class="camp-success-code"><span>' + data.couponCode + '</span></div><button class="camp-copy-btn" onclick="navigator.clipboard.writeText(\\'' + data.couponCode + '\\');this.textContent=\\'Kopyalandı!\\'"><i class="fas fa-copy"></i> Kodu kopyala</button><p style="text-align:center;font-size:0.78rem;color:#999;margin-top:12px;">Bu kodu WhatsApp-da göstərin.</p><button class="camp-modal-cancel" onclick="this.closest(\\'.camp-modal-overlay\\').remove()" style="margin-top:12px;">Bağla</button></div>';
                     } else { errEl.textContent = data.error || 'Xəta'; this.disabled = false; this.innerHTML = '<i class="fas fa-ticket-alt"></i> Kuponu al'; }
                 } catch(e) { errEl.textContent = 'Bağlantı xətası'; this.disabled = false; this.innerHTML = '<i class="fas fa-ticket-alt"></i> Kuponu al'; }

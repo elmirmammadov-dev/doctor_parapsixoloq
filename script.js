@@ -807,6 +807,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // === ANNOUNCEMENTS & CAMPAIGNS SECTION (Homepage Split) ===
     const FIREBASE_URL = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
 
+    // Cookie helpers for coupon claim tracking
+    function setCampCookie(campId, code) {
+        var d = new Date(); d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+        document.cookie = 'camp_' + campId + '=' + encodeURIComponent(code) + ';expires=' + d.toUTCString() + ';path=/;SameSite=Lax';
+    }
+    function getCampCookie(campId) {
+        var name = 'camp_' + campId + '=';
+        var parts = document.cookie.split(';');
+        for (var i = 0; i < parts.length; i++) {
+            var c = parts[i].trim();
+            if (c.indexOf(name) === 0) return decodeURIComponent(c.substring(name.length));
+        }
+        return null;
+    }
+
     function renderAnnCard(a) {
         const pos = a.coverPos || '50% 50%';
         const zoom = a.coverZoom || 1;
@@ -849,7 +864,7 @@ document.addEventListener('DOMContentLoaded', () => {
         var claimed = c.claimedCount || 0;
         var max = c.maxCoupons || 1;
         var pct = Math.min(100, Math.round((claimed / max) * 100));
-        var alreadyClaimed = localStorage.getItem('camp_claimed_' + c.id);
+        var alreadyClaimed = getCampCookie(c.id);
 
         var html = '<div class="camp-card" data-camp-id="' + c.id + '">';
         if (expired) html += '<div class="camp-ended-overlay"><div class="camp-ended-text">BİTİB</div></div>';
@@ -941,7 +956,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Claim modal
     window.openCampClaimModal = function(campId, title, discount) {
-        if (localStorage.getItem('camp_claimed_' + campId)) { alert('Bu kampaniyadan artıq kupon almısınız.'); return; }
+        if (getCampCookie(campId)) { alert('Bu kampaniyadan artıq kupon almısınız.'); return; }
         var overlay = document.createElement('div');
         overlay.className = 'camp-modal-overlay';
         overlay.innerHTML = '<div class="camp-modal">' +
@@ -974,7 +989,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 var data = await res.json();
                 if (data.success) {
-                    localStorage.setItem('camp_claimed_' + campId, data.couponCode);
+                    setCampCookie(campId, data.couponCode);
                     overlay.innerHTML = '<div class="camp-modal">' +
                         '<h3 style="text-align:center;color:#27ae60;"><i class="fas fa-check-circle"></i> Təbriklər!</h3>' +
                         '<p style="text-align:center;color:#666;margin:8px 0;">Sizin ' + data.discount + '% endirim kuponunuz:</p>' +
