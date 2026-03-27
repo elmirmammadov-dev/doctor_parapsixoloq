@@ -3325,10 +3325,13 @@ img {
 .ann-camp-split {
     display: flex;
     gap: 32px;
+    align-items: stretch;
 }
 .ann-split-col {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
 }
 .ann-split-title {
     font-family: var(--font-display, 'Montserrat', sans-serif);
@@ -3341,10 +3344,28 @@ img {
     gap: 8px;
 }
 .ann-split-title i { color: #e74c3c; }
-.ann-split-grid {
+.ann-split-grid,
+.camp-split-grid {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    flex: 1;
+}
+.ann-split-grid .ann-section-card,
+.camp-split-grid .camp-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.ann-section-card .ann-section-card-body,
+.camp-card .camp-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.ann-section-card .ann-section-card-desc,
+.camp-card .camp-card-desc {
+    flex: 1;
 }
 .ann-split-more {
     display: inline-flex;
