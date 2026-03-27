@@ -31,6 +31,10 @@
       "destination": "/api/render-announcement?slug=:slug"
     },
     {
+      "source": "/kampaniyalar",
+      "destination": "/api/render-campaigns"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
     },

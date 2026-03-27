@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
         let html = fs.readFileSync(htmlPath, 'utf-8');
 
         // Fetch blog posts, announcements, and reviews in parallel
-        const [blogData, seoData, annData, reviewsData] = await Promise.all([
+        const [blogData, seoData, annData, reviewsData, campData] = await Promise.all([
             fetch(`https://cdn.contentful.com/spaces/${CONTENTFUL_SPACE}/entries?access_token=${CONTENTFUL_TOKEN}&content_type=blogPost&include=1&order=-sys.createdAt&locale=az`)
                 .then(r => r.json()).catch(() => ({})),
             fetch(`${FIREBASE_DB_URL}/articleSeo.json`)
@@ -29,6 +29,8 @@ module.exports = async (req, res) => {
             fetch(`${FIREBASE_DB_URL}/announcements.json`)
                 .then(r => r.json()).catch(() => ({})),
             fetch(`${FIREBASE_DB_URL}/reviews.json`)
+                .then(r => r.json()).catch(() => ({})),
+            fetch(`${FIREBASE_DB_URL}/campaigns.json`)
                 .then(r => r.json()).catch(() => ({}))
         ]);
 
@@ -77,12 +79,13 @@ module.exports = async (req, res) => {
         }
 
         // === SSR Announcement Cards ===
+        // === SSR Announcement Cards (left column, max 2) ===
         let annHtml = '';
         if (annData && typeof annData === 'object') {
             const announcements = Object.values(annData)
                 .filter(a => a.active !== false)
                 .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
-                .slice(0, 6);
+                .slice(0, 2);
             if (announcements.length > 0) {
                 annHtml = announcements.map(a => {
                     const pos = a.coverPos || '50% 50%';
@@ -101,6 +104,34 @@ module.exports = async (req, res) => {
                             <div class="ann-section-card-date">${escapeHtml(a.date || '')}</div>
                         </div>
                     </${tag}>`;
+                }).join('');
+            }
+        }
+
+        // === SSR Campaign Cards (right column, max 2) ===
+        let campHtml = '';
+        const now = Date.now();
+        if (campData && typeof campData === 'object') {
+            const campaigns = Object.entries(campData)
+                .map(([id, c]) => ({ id, ...c }))
+                .filter(c => c.active !== false)
+                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
+                .slice(0, 2);
+            if (campaigns.length > 0) {
+                campHtml = campaigns.map(c => {
+                    const expired = (c.endTimestamp && now > c.endTimestamp) || ((c.claimedCount || 0) >= c.maxCoupons);
+                    const claimed = c.claimedCount || 0;
+                    const max = c.maxCoupons || 1;
+                    const pct = Math.min(100, Math.round((claimed / max) * 100));
+                    return `<div class="camp-card"${expired ? ' style="opacity:0.7;"' : ''}>
+                        ${expired ? '<div class="camp-ended-overlay"><div class="camp-ended-text">B\u0130T\u0130B</div></div>' : ''}
+                        ${c.image ? `<div class="camp-card-img" style="background-image:url(${escapeHtml(c.image)});"><div class="camp-discount-badge">-${c.discountPercent}%</div></div>` : ''}
+                        <div class="camp-card-body">
+                            <div class="camp-card-title">${escapeHtml(c.title || '')}</div>
+                            ${c.desc ? `<div class="camp-card-desc">${escapeHtml(c.desc)}</div>` : ''}
+                            <div class="camp-progress-wrap"><div class="camp-progress-bar"><div class="camp-progress-fill" style="width:${pct}%;"></div></div><div class="camp-progress-text"><span>${claimed} / ${max} kupon</span><span>${max - claimed} qal\u0131b</span></div></div>
+                        </div>
+                    </div>`;
                 }).join('');
             }
         }
@@ -149,11 +180,27 @@ module.exports = async (req, res) => {
         }
         if (annHtml) {
             html = html.replace(
-                /<div class="ann-section-grid" id="annSectionGrid">[\s\S]*?<\/div>/,
-                `<div class="ann-section-grid" id="annSectionGrid">${annHtml}</div>`
+                /<div class="ann-split-grid" id="annSplitGrid"><\/div>/,
+                `<div class="ann-split-grid" id="annSplitGrid">${annHtml}</div>`
             );
         } else {
-            // Hide entire announcements section if no announcements
+            html = html.replace(
+                /<div class="ann-split-col" id="annSplitLeft">/,
+                '<div class="ann-split-col" id="annSplitLeft" style="display:none;">'
+            );
+        }
+        if (campHtml) {
+            html = html.replace(
+                /<div class="camp-split-grid" id="campSplitGrid"><\/div>/,
+                `<div class="camp-split-grid" id="campSplitGrid">${campHtml}</div>`
+            );
+        } else {
+            html = html.replace(
+                /<div class="ann-split-col" id="annSplitRight">/,
+                '<div class="ann-split-col" id="annSplitRight" style="display:none;">'
+            );
+        }
+        if (!annHtml && !campHtml) {
             html = html.replace(
                 /<section class="announcements-section" id="announcementsSection">/,
                 '<section class="announcements-section" id="announcementsSection" style="display:none;">'

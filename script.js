@@ -804,81 +804,202 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchBlogPosts();
 
-    // === ANNOUNCEMENTS SECTION (Homepage) ===
-    const ANN_SECTION_PER_PAGE = 4;
-    let annSectionAll = [];
-    let annSectionPage = 0;
+    // === ANNOUNCEMENTS & CAMPAIGNS SECTION (Homepage Split) ===
+    const FIREBASE_URL = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
 
-    function renderAnnSectionPage() {
-        const grid = document.getElementById('annSectionGrid');
-        const pagination = document.getElementById('annSectionPagination');
-        if (!grid) return;
-        const totalPages = Math.ceil(annSectionAll.length / ANN_SECTION_PER_PAGE);
-        const start = annSectionPage * ANN_SECTION_PER_PAGE;
-        const items = annSectionAll.slice(start, start + ANN_SECTION_PER_PAGE);
-
-        if (annSectionAll.length === 0) {
-            grid.innerHTML = '<p style="text-align:center;color:#999;grid-column:1/-1;padding:30px 0;">Hazırda elan yoxdur.</p>';
-            pagination.style.display = 'none';
-            return;
-        }
-
-        grid.innerHTML = items.map(a => {
-            const pos = a.coverPos || '50% 50%';
-            const zoom = a.coverZoom || 1;
-            const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
-            const aTitle = a['title_' + currentLang] || a.title;
-            const aDesc = a['desc_' + currentLang] || a.desc;
-            const annHref = a.slug ? `/elanlar/${a.slug}` : (a.link || '');
-            const tag = annHref ? 'a' : 'div';
-            const href = annHref ? ` href="${annHref}"` : '';
-            return `<${tag} class="ann-section-card"${href} style="text-decoration:none;color:inherit;">
-                ${a.image ? `<div class="ann-section-card-img" style="background-image:url(${a.image});background-position:${pos};background-size:${bgSize};">${a.showBadge !== false ? '<span class="ann-section-badge">YENİ</span>' : ''}</div>` : ''}
-                <div class="ann-section-card-body">
-                    <div class="ann-section-card-title">${aTitle}</div>
-                    ${aDesc ? `<div class="ann-section-card-desc">${aDesc}</div>` : ''}
-                    <div class="ann-section-card-date">${a.date || ''}</div>
-                </div>
-            </${tag}>`;
-        }).join('');
-
-        if (totalPages > 1) {
-            pagination.style.display = 'flex';
-            document.getElementById('annSectionPageInfo').textContent = (annSectionPage + 1) + ' / ' + totalPages;
-            document.getElementById('annSectionPrev').disabled = annSectionPage <= 0;
-            document.getElementById('annSectionNext').disabled = annSectionPage >= totalPages - 1;
-        } else {
-            pagination.style.display = 'none';
-        }
+    function renderAnnCard(a) {
+        const pos = a.coverPos || '50% 50%';
+        const zoom = a.coverZoom || 1;
+        const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
+        const aTitle = a['title_' + currentLang] || a.title;
+        const aDesc = a['desc_' + currentLang] || a.desc;
+        const annHref = a.slug ? '/elanlar/' + a.slug : (a.link || '');
+        const tag = annHref ? 'a' : 'div';
+        const href = annHref ? ' href="' + annHref + '"' : '';
+        return '<' + tag + ' class="ann-section-card"' + href + ' style="text-decoration:none;color:inherit;">' +
+            (a.image ? '<div class="ann-section-card-img" style="background-image:url(' + a.image + ');background-position:' + pos + ';background-size:' + bgSize + ';">' + (a.showBadge !== false ? '<span class="ann-section-badge">YENİ</span>' : '') + '</div>' : '') +
+            '<div class="ann-section-card-body">' +
+                '<div class="ann-section-card-title">' + aTitle + '</div>' +
+                (aDesc ? '<div class="ann-section-card-desc">' + aDesc + '</div>' : '') +
+                '<div class="ann-section-card-date">' + (a.date || '') + '</div>' +
+            '</div>' +
+        '</' + tag + '>';
     }
 
-    async function fetchAnnouncements() {
+    function isCampExpired(c) {
+        return (c.endTimestamp && Date.now() > c.endTimestamp) || (c.claimedCount >= c.maxCoupons);
+    }
+
+    function campCountdownHtml(endTs) {
+        var diff = Math.max(0, endTs - Date.now());
+        var d = Math.floor(diff / 86400000);
+        var h = Math.floor((diff % 86400000) / 3600000);
+        var m = Math.floor((diff % 3600000) / 60000);
+        var s = Math.floor((diff % 60000) / 1000);
+        return '<div class="camp-countdown" data-end="' + endTs + '">' +
+            '<div class="camp-countdown-item"><div class="camp-countdown-num">' + d + '</div><div class="camp-countdown-label">Gün</div></div>' +
+            '<div class="camp-countdown-item"><div class="camp-countdown-num">' + h + '</div><div class="camp-countdown-label">Saat</div></div>' +
+            '<div class="camp-countdown-item"><div class="camp-countdown-num">' + m + '</div><div class="camp-countdown-label">Dəq</div></div>' +
+            '<div class="camp-countdown-item"><div class="camp-countdown-num">' + s + '</div><div class="camp-countdown-label">San</div></div>' +
+        '</div>';
+    }
+
+    function renderCampCard(c) {
+        var expired = isCampExpired(c);
+        var claimed = c.claimedCount || 0;
+        var max = c.maxCoupons || 1;
+        var pct = Math.min(100, Math.round((claimed / max) * 100));
+        var alreadyClaimed = localStorage.getItem('camp_claimed_' + c.id);
+
+        var html = '<div class="camp-card" data-camp-id="' + c.id + '">';
+        if (expired) html += '<div class="camp-ended-overlay"><div class="camp-ended-text">BİTİB</div></div>';
+        if (c.image) html += '<div class="camp-card-img" style="background-image:url(' + c.image + ');"><div class="camp-discount-badge">-' + c.discountPercent + '%</div></div>';
+        html += '<div class="camp-card-body">';
+        html += '<div class="camp-card-title">' + (c.title || '') + '</div>';
+        if (c.desc) html += '<div class="camp-card-desc">' + c.desc + '</div>';
+        if (!expired && c.endTimestamp) html += campCountdownHtml(c.endTimestamp);
+        html += '<div class="camp-progress-wrap"><div class="camp-progress-bar"><div class="camp-progress-fill" style="width:' + pct + '%;"></div></div>';
+        html += '<div class="camp-progress-text"><span>' + claimed + ' / ' + max + ' kupon alınıb</span><span>' + (max - claimed) + ' qalıb</span></div></div>';
+        if (!expired && !alreadyClaimed) {
+            html += '<button class="camp-claim-btn" onclick="openCampClaimModal(\'' + c.id + '\',\'' + (c.title || '').replace(/'/g, "\\'") + '\',' + c.discountPercent + ')"><i class="fas fa-ticket-alt"></i> Kuponu al</button>';
+        } else if (alreadyClaimed) {
+            html += '<button class="camp-claim-btn" disabled><i class="fas fa-check"></i> Kupon alınıb</button>';
+        }
+        html += '</div></div>';
+        return html;
+    }
+
+    async function fetchAnnouncementsAndCampaigns() {
+        var section = document.getElementById('announcementsSection');
+        var leftCol = document.getElementById('annSplitLeft');
+        var rightCol = document.getElementById('annSplitRight');
+        var annGrid = document.getElementById('annSplitGrid');
+        var campGrid = document.getElementById('campSplitGrid');
+        if (!section) return;
+
         try {
-            const res = await fetch('https://hekim-sayti-comments-default-rtdb.firebaseio.com/announcements.json');
-            const data = await res.json();
-            if (!data) { annSectionAll = []; renderAnnSectionPage(); return; }
-            annSectionAll = Object.values(data)
-                .filter(a => a.active !== false)
-                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-            annSectionPage = 0;
-            renderAnnSectionPage();
-            // Hide section if no announcements
-            const section = document.getElementById('announcementsSection');
-            if (section && annSectionAll.length === 0) section.style.display = 'none';
-        } catch(e) {}
+            var [annRes, campRes] = await Promise.all([
+                fetch(FIREBASE_URL + '/announcements.json'),
+                fetch(FIREBASE_URL + '/campaigns.json')
+            ]);
+            var annData = await annRes.json();
+            var campData = await campRes.json();
+
+            // Filter and sort announcements
+            var announcements = annData ? Object.values(annData).filter(function(a) { return a.active !== false; }).sort(function(a, b) { return (b.timestamp || 0) - (a.timestamp || 0); }) : [];
+
+            // Filter and sort campaigns
+            var campaigns = campData ? Object.entries(campData).map(function(e) { return Object.assign({ id: e[0] }, e[1]); }).filter(function(c) { return c.active !== false; }).sort(function(a, b) { return (b.timestamp || 0) - (a.timestamp || 0); }) : [];
+
+            var hasAnn = announcements.length > 0;
+            var hasCamp = campaigns.length > 0;
+
+            // Hide whole section if nothing
+            if (!hasAnn && !hasCamp) { section.style.display = 'none'; return; }
+            section.style.display = '';
+
+            // Left: Announcements (max 2)
+            if (hasAnn && leftCol && annGrid) {
+                leftCol.style.display = '';
+                annGrid.innerHTML = announcements.slice(0, 2).map(renderAnnCard).join('');
+            } else if (leftCol) {
+                leftCol.style.display = 'none';
+            }
+
+            // Right: Campaigns (max 2)
+            if (hasCamp && rightCol && campGrid) {
+                rightCol.style.display = '';
+                campGrid.innerHTML = campaigns.slice(0, 2).map(renderCampCard).join('');
+                startCampCountdowns();
+            } else if (rightCol) {
+                rightCol.style.display = 'none';
+            }
+        } catch(e) {
+            if (section) section.style.display = 'none';
+        }
     }
 
-    const annPrevBtn = document.getElementById('annSectionPrev');
-    const annNextBtn = document.getElementById('annSectionNext');
-    if (annPrevBtn) annPrevBtn.addEventListener('click', function() {
-        if (annSectionPage > 0) { annSectionPage--; renderAnnSectionPage(); }
-    });
-    if (annNextBtn) annNextBtn.addEventListener('click', function() {
-        const totalPages = Math.ceil(annSectionAll.length / ANN_SECTION_PER_PAGE);
-        if (annSectionPage < totalPages - 1) { annSectionPage++; renderAnnSectionPage(); }
-    });
+    // Countdown timer
+    var campCountdownInterval = null;
+    function startCampCountdowns() {
+        if (campCountdownInterval) clearInterval(campCountdownInterval);
+        campCountdownInterval = setInterval(function() {
+            document.querySelectorAll('.camp-countdown').forEach(function(el) {
+                var endTs = parseInt(el.dataset.end);
+                var diff = Math.max(0, endTs - Date.now());
+                if (diff <= 0) { el.innerHTML = '<div class="camp-countdown-item"><div class="camp-countdown-num" style="color:#e74c3c;">Bitdi</div></div>'; return; }
+                var nums = el.querySelectorAll('.camp-countdown-num');
+                if (nums.length >= 4) {
+                    nums[0].textContent = Math.floor(diff / 86400000);
+                    nums[1].textContent = Math.floor((diff % 86400000) / 3600000);
+                    nums[2].textContent = Math.floor((diff % 3600000) / 60000);
+                    nums[3].textContent = Math.floor((diff % 60000) / 1000);
+                }
+            });
+        }, 1000);
+    }
 
-    fetchAnnouncements();
+    // Claim modal
+    window.openCampClaimModal = function(campId, title, discount) {
+        if (localStorage.getItem('camp_claimed_' + campId)) { alert('Bu kampaniyadan artıq kupon almısınız.'); return; }
+        var overlay = document.createElement('div');
+        overlay.className = 'camp-modal-overlay';
+        overlay.innerHTML = '<div class="camp-modal">' +
+            '<h3>' + title + '</h3>' +
+            '<div class="camp-modal-discount">-' + discount + '% ENDİRİM</div>' +
+            '<input type="text" id="campClaimName" placeholder="Ad *">' +
+            '<input type="text" id="campClaimSurname" placeholder="Soyad *">' +
+            '<input type="tel" id="campClaimPhone" placeholder="Telefon nömrəsi * (məs: +994501234567)">' +
+            '<button class="camp-modal-submit" id="campClaimSubmit"><i class="fas fa-ticket-alt"></i> Kuponu al</button>' +
+            '<button class="camp-modal-cancel" onclick="this.closest(\'.camp-modal-overlay\').remove()">Ləğv et</button>' +
+            '<p id="campClaimError" style="color:#e74c3c;font-size:0.82rem;text-align:center;margin-top:8px;min-height:1em;"></p>' +
+        '</div>';
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+
+        document.getElementById('campClaimSubmit').addEventListener('click', async function() {
+            var name = document.getElementById('campClaimName').value.trim();
+            var surname = document.getElementById('campClaimSurname').value.trim();
+            var phone = document.getElementById('campClaimPhone').value.trim();
+            var errEl = document.getElementById('campClaimError');
+            if (!name || !surname || !phone) { errEl.textContent = 'Bütün sahələri doldurun!'; return; }
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yüklənir...';
+            errEl.textContent = '';
+            try {
+                var res = await fetch('/api/claim-coupon', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ campaignId: campId, name: name, surname: surname, phone: phone })
+                });
+                var data = await res.json();
+                if (data.success) {
+                    localStorage.setItem('camp_claimed_' + campId, data.couponCode);
+                    overlay.innerHTML = '<div class="camp-modal">' +
+                        '<h3 style="text-align:center;color:#27ae60;"><i class="fas fa-check-circle"></i> Təbriklər!</h3>' +
+                        '<p style="text-align:center;color:#666;margin:8px 0;">Sizin ' + data.discount + '% endirim kuponunuz:</p>' +
+                        '<div class="camp-success-code"><span>' + data.couponCode + '</span></div>' +
+                        '<button class="camp-copy-btn" onclick="navigator.clipboard.writeText(\'' + data.couponCode + '\');this.textContent=\'Kopyalandı!\'"><i class="fas fa-copy"></i> Kodu kopyala</button>' +
+                        '<p style="text-align:center;font-size:0.78rem;color:#999;margin-top:12px;">Bu kodu WhatsApp-da Şahsəddin İmanlıya göstərin və ya canlı seans zamanı telefonda göstərin.</p>' +
+                        '<button class="camp-modal-cancel" onclick="this.closest(\'.camp-modal-overlay\').remove()" style="margin-top:12px;">Bağla</button>' +
+                    '</div>';
+                    // Update card button
+                    var card = document.querySelector('[data-camp-id="' + campId + '"]');
+                    if (card) { var btn = card.querySelector('.camp-claim-btn'); if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-check"></i> Kupon alınıb'; } }
+                } else {
+                    errEl.textContent = data.error || 'Xəta baş verdi';
+                    this.disabled = false;
+                    this.innerHTML = '<i class="fas fa-ticket-alt"></i> Kuponu al';
+                }
+            } catch(e) {
+                errEl.textContent = 'Bağlantı xətası';
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-ticket-alt"></i> Kuponu al';
+            }
+        });
+    };
+
+    fetchAnnouncementsAndCampaigns();
 
     // === REVIEWS SECTION ===
     const REVIEWS_PER_PAGE = 6;

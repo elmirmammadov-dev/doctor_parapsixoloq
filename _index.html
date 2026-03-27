@@ -218,24 +218,27 @@
     </nav>
 
     <main>
-    <!-- Announcements Section -->
+    <!-- Announcements & Campaigns Section -->
     <section class="announcements-section" id="announcementsSection">
         <div class="container">
             <div class="ann-section-header">
-                <span class="section-tag">Elanlar</span>
+                <span class="section-tag" data-i18n="ann_tag">ELANLAR</span>
                 <h2 class="section-title" data-i18n="ann_section_title">Elanlar və Kampaniyalar</h2>
                 <div class="section-line" style="background:#e74c3c;"></div>
             </div>
-            <div class="ann-section-grid" id="annSectionGrid">
-                <noscript><p>Elanları görmək üçün JavaScript-i aktiv edin. / <a href="/elanlar">Elanlar səhifəsinə keçin</a></p></noscript>
-            </div>
-            <div class="ann-section-pagination" id="annSectionPagination" style="display:none;">
-                <button id="annSectionPrev"><i class="fas fa-chevron-left"></i></button>
-                <span id="annSectionPageInfo">1 / 1</span>
-                <button id="annSectionNext"><i class="fas fa-chevron-right"></i></button>
-            </div>
-            <div style="text-align:center;">
-                <a href="/elanlar" class="ann-section-view-all"><i class="fas fa-th-list"></i> <span data-i18n="ann_view_all">Ətraflı bax</span></a>
+            <div class="ann-camp-split" id="annCampSplit">
+                <!-- LEFT: Elanlar -->
+                <div class="ann-split-col" id="annSplitLeft">
+                    <h3 class="ann-split-title"><i class="fas fa-bullhorn"></i> <span data-i18n="ann_left_title">Elanlar</span></h3>
+                    <div class="ann-split-grid" id="annSplitGrid"></div>
+                    <a href="/elanlar" class="ann-split-more"><i class="fas fa-th-list"></i> <span data-i18n="ann_view_all">Ətraflı bax</span></a>
+                </div>
+                <!-- RIGHT: Kampaniyalar -->
+                <div class="ann-split-col" id="annSplitRight">
+                    <h3 class="ann-split-title" style="color:#e74c3c;"><i class="fas fa-gift"></i> <span data-i18n="camp_right_title">Kampaniyalar</span></h3>
+                    <div class="camp-split-grid" id="campSplitGrid"></div>
+                    <a href="/kampaniyalar" class="ann-split-more"><i class="fas fa-gift"></i> <span data-i18n="camp_view_all">Hamısına bax</span></a>
+                </div>
             </div>
         </div>
     </section>

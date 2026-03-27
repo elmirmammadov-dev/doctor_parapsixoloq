@@ -115,6 +115,9 @@ document.addEventListener("DOMContentLoaded", function() {
             annUploading: 'Şəkil yüklənir...',
             annSaving: 'Saxlanılır...',
             annDeleteConfirm: 'Bu elanı silmək istəyirsiniz?',
+            tabCampaigns: 'Kampaniyalar',
+            campSaved: 'Kampaniya yadda saxlandı!',
+            campDeleteConfirm: 'Bu kampaniyanı silmək istəyirsiniz?',
             labelTitle: 'Başlıq',
             labelDate: 'Tarix',
             labelImage: 'Şəkil',
@@ -417,6 +420,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('tabStats').style.display = tab === 'stats' ? 'block' : 'none';
         document.getElementById('tabReviews').style.display = tab === 'reviews' ? 'block' : 'none';
         document.getElementById('tabAnnouncements').style.display = tab === 'announcements' ? 'block' : 'none';
+        document.getElementById('tabCampaigns').style.display = tab === 'campaigns' ? 'block' : 'none';
 
         if (tab === 'articles') loadAdminArticles();
         if (tab === 'comments') loadAdminComments();
@@ -424,6 +428,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (tab === 'stats') loadAdminStats();
         if (tab === 'reviews') loadAdminReviews();
         if (tab === 'announcements') loadAdminAnnouncements();
+        if (tab === 'campaigns') loadAdminCampaigns();
     }
 
     // === ADMIN REVIEWS ===
@@ -3408,6 +3413,265 @@ document.addEventListener("DOMContentLoaded", function() {
         adminDb.ref('announcements/' + id).remove().then(() => {
             loadAdminAnnouncements();
         });
+    };
+
+    // ========== CAMPAIGNS ==========
+    let campEditId = null;
+    let campImageUrl = null;
+
+    function generateCouponCode() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let code = '';
+        for (let i = 0; i < 8; i++) code += chars[Math.floor(Math.random() * chars.length)];
+        return code;
+    }
+
+    document.getElementById('campAutoCode').addEventListener('click', function() {
+        document.getElementById('campCouponCode').value = generateCouponCode();
+    });
+
+    // Campaign image preview
+    const campImgInput = document.getElementById('campImageFile');
+    if (campImgInput) {
+        campImgInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            document.getElementById('campImageName').textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const wrap = document.getElementById('campCoverPreviewWrap');
+                const card = document.getElementById('campCoverPreviewCard');
+                card.style.backgroundImage = 'url(' + ev.target.result + ')';
+                wrap.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Active toggle visual
+    const campActiveCheck = document.getElementById('campActive');
+    if (campActiveCheck) {
+        campActiveCheck.addEventListener('change', function() {
+            var slider = document.getElementById('campActiveSlider');
+            var knob = document.getElementById('campActiveKnob');
+            slider.style.background = this.checked ? '#4cd964' : '#ccc';
+            knob.style.left = this.checked ? '22px' : '2px';
+        });
+    }
+
+    // Save campaign
+    document.getElementById('campSaveBtn').addEventListener('click', async function() {
+        const msg = document.getElementById('campMsg');
+        const title = document.getElementById('campTitle').value.trim();
+        const desc = document.getElementById('campDesc').value.trim();
+        const discount = parseInt(document.getElementById('campDiscount').value) || 10;
+        const maxCoupons = parseInt(document.getElementById('campMaxCoupons').value) || 50;
+        const durationValue = parseInt(document.getElementById('campDurationValue').value) || 24;
+        const durationUnit = document.getElementById('campDurationUnit').value;
+        const couponCode = document.getElementById('campCouponCode').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+        const active = document.getElementById('campActive').checked;
+
+        if (!title) { msg.textContent = 'Başlıq tələb olunur!'; msg.style.color = '#e74c3c'; return; }
+        if (!couponCode) { msg.textContent = 'Kupon kodu tələb olunur!'; msg.style.color = '#e74c3c'; return; }
+
+        msg.textContent = 'Saxlanılır...'; msg.style.color = 'var(--gold)';
+        this.disabled = true;
+
+        try {
+            // Upload image if selected
+            const imgFile = document.getElementById('campImageFile').files[0];
+            if (imgFile) {
+                msg.textContent = 'Şəkil yüklənir...';
+                const imgResult = await uploadToImgBB(imgFile);
+                campImageUrl = imgResult.url;
+            }
+
+            // Calculate duration in minutes and end timestamp
+            let durationMinutes = durationValue;
+            if (durationUnit === 'hours') durationMinutes = durationValue * 60;
+            if (durationUnit === 'days') durationMinutes = durationValue * 60 * 24;
+
+            const now = Date.now();
+            const slug = title.toLowerCase()
+                .replace(/ə/g, 'e').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ü/g, 'u')
+                .replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g')
+                .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+            const campData = {
+                title: title,
+                desc: desc,
+                slug: slug,
+                discountPercent: discount,
+                maxCoupons: maxCoupons,
+                couponCode: couponCode,
+                durationMinutes: durationMinutes,
+                active: active,
+                timestamp: now
+            };
+
+            if (campImageUrl) campData.image = campImageUrl;
+
+            if (campEditId) {
+                // Update - keep original start/end if not changing duration
+                const existingSnap = await adminDb.ref('campaigns/' + campEditId).once('value');
+                const existing = existingSnap.val() || {};
+                if (!campData.image && existing.image) campData.image = existing.image;
+                campData.startTimestamp = existing.startTimestamp || now;
+                campData.endTimestamp = campData.startTimestamp + durationMinutes * 60 * 1000;
+                campData.claimedCount = existing.claimedCount || 0;
+                await adminDb.ref('campaigns/' + campEditId).update(campData);
+            } else {
+                // Create new
+                campData.startTimestamp = now;
+                campData.endTimestamp = now + durationMinutes * 60 * 1000;
+                campData.claimedCount = 0;
+                await adminDb.ref('campaigns').push(campData);
+            }
+
+            msg.textContent = adminT('campSaved') || 'Kampaniya yadda saxlandı!';
+            msg.style.color = '#27ae60';
+            resetCampForm();
+            loadAdminCampaigns();
+        } catch(e) {
+            msg.textContent = 'Xəta: ' + e.message;
+            msg.style.color = '#e74c3c';
+        } finally {
+            this.disabled = false;
+        }
+    });
+
+    function resetCampForm() {
+        campEditId = null;
+        campImageUrl = null;
+        document.getElementById('campTitle').value = '';
+        document.getElementById('campDesc').value = '';
+        document.getElementById('campDiscount').value = '10';
+        document.getElementById('campMaxCoupons').value = '50';
+        document.getElementById('campDurationValue').value = '24';
+        document.getElementById('campDurationUnit').value = 'hours';
+        document.getElementById('campCouponCode').value = '';
+        document.getElementById('campActive').checked = true;
+        document.getElementById('campImageFile').value = '';
+        document.getElementById('campImageName').textContent = '';
+        document.getElementById('campCoverPreviewWrap').style.display = 'none';
+        var slider = document.getElementById('campActiveSlider');
+        var knob = document.getElementById('campActiveKnob');
+        if (slider) slider.style.background = '#4cd964';
+        if (knob) knob.style.left = '22px';
+    }
+
+    function loadAdminCampaigns() {
+        const listEl = document.getElementById('campList');
+        const countEl = document.getElementById('campCount');
+        if (!listEl) return;
+        listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> Yüklənir...</p>';
+
+        adminDb.ref('campaigns').orderByChild('timestamp').once('value', function(snap) {
+            const camps = [];
+            snap.forEach(function(child) { camps.push({ id: child.key, ...child.val() }); });
+            camps.reverse();
+            if (countEl) countEl.textContent = camps.length + ' kampaniya';
+            if (!camps.length) { listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;">Hələ kampaniya yoxdur.</p>'; return; }
+
+            listEl.innerHTML = camps.map(function(c) {
+                const isExpired = (c.endTimestamp && Date.now() > c.endTimestamp) || (c.claimedCount >= c.maxCoupons);
+                const statusColor = !c.active ? '#999' : isExpired ? '#e74c3c' : '#27ae60';
+                const statusText = !c.active ? 'Gizli' : isExpired ? 'Bitib' : 'Aktiv';
+                const imgThumb = c.image ? '<img src="' + c.image + '" style="width:60px;height:40px;object-fit:cover;border-radius:6px;margin-right:10px;">' : '';
+                return '<div style="display:flex;align-items:center;padding:12px;border:1px solid #eee;border-radius:10px;margin-bottom:8px;background:#fff;">' +
+                    imgThumb +
+                    '<div style="flex:1;min-width:0;">' +
+                        '<div style="font-weight:600;font-size:0.88rem;color:var(--text-primary);">' + (c.title || '') + '</div>' +
+                        '<div style="font-size:0.75rem;color:#999;margin-top:2px;">' +
+                            '<span style="color:' + statusColor + ';font-weight:600;">' + statusText + '</span> · ' +
+                            c.discountPercent + '% endirim · ' + (c.claimedCount || 0) + '/' + c.maxCoupons + ' kupon · Kod: <b>' + c.couponCode + '</b>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div style="display:flex;gap:4px;flex-shrink:0;">' +
+                        '<button onclick="viewCampClaims(\'' + c.id + '\')" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.72rem;color:#666;" title="Kuponlar"><i class="fas fa-users"></i></button>' +
+                        '<button onclick="editCampaign(\'' + c.id + '\')" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.72rem;color:var(--gold);" title="Redaktə"><i class="fas fa-edit"></i></button>' +
+                        '<button onclick="toggleCampaign(\'' + c.id + '\',' + !c.active + ')" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.72rem;color:' + (c.active ? '#e74c3c' : '#27ae60') + ';" title="' + (c.active ? 'Gizlət' : 'Göstər') + '"><i class="fas fa-' + (c.active ? 'eye-slash' : 'eye') + '"></i></button>' +
+                        '<button onclick="deleteCampaign(\'' + c.id + '\')" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.72rem;color:#e74c3c;" title="Sil"><i class="fas fa-trash"></i></button>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        });
+    }
+
+    window.editCampaign = async function(id) {
+        const snap = await adminDb.ref('campaigns/' + id).once('value');
+        const c = snap.val();
+        if (!c) return;
+        campEditId = id;
+        campImageUrl = c.image || null;
+        document.getElementById('campTitle').value = c.title || '';
+        document.getElementById('campDesc').value = c.desc || '';
+        document.getElementById('campDiscount').value = c.discountPercent || 10;
+        document.getElementById('campMaxCoupons').value = c.maxCoupons || 50;
+        document.getElementById('campCouponCode').value = c.couponCode || '';
+        document.getElementById('campActive').checked = c.active !== false;
+
+        // Restore duration
+        var mins = c.durationMinutes || 1440;
+        if (mins % 1440 === 0) { document.getElementById('campDurationValue').value = mins / 1440; document.getElementById('campDurationUnit').value = 'days'; }
+        else if (mins % 60 === 0) { document.getElementById('campDurationValue').value = mins / 60; document.getElementById('campDurationUnit').value = 'hours'; }
+        else { document.getElementById('campDurationValue').value = mins; document.getElementById('campDurationUnit').value = 'minutes'; }
+
+        // Restore image
+        if (c.image) {
+            var card = document.getElementById('campCoverPreviewCard');
+            card.style.backgroundImage = 'url(' + c.image + ')';
+            document.getElementById('campCoverPreviewWrap').style.display = 'block';
+        }
+
+        // Toggle visual
+        var slider = document.getElementById('campActiveSlider');
+        var knob = document.getElementById('campActiveKnob');
+        slider.style.background = c.active !== false ? '#4cd964' : '#ccc';
+        knob.style.left = c.active !== false ? '22px' : '2px';
+
+        document.getElementById('campSaveBtn').innerHTML = '<i class="fas fa-save"></i> Dəyişiklikləri saxla';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.toggleCampaign = function(id, active) {
+        adminDb.ref('campaigns/' + id + '/active').set(active).then(function() { loadAdminCampaigns(); });
+    };
+
+    window.deleteCampaign = function(id) {
+        if (!confirm(adminT('campDeleteConfirm') || 'Bu kampaniyanı silmək istəyirsiniz?')) return;
+        Promise.all([
+            adminDb.ref('campaigns/' + id).remove(),
+            adminDb.ref('campaignClaims/' + id).remove(),
+            adminDb.ref('campaignClaimIndex/' + id).remove()
+        ]).then(function() { loadAdminCampaigns(); });
+    };
+
+    window.viewCampClaims = async function(id) {
+        const snap = await adminDb.ref('campaignClaims/' + id).once('value');
+        const claims = snap.val();
+        if (!claims) { alert('Bu kampaniyada hələ kupon alınmayıb.'); return; }
+        const list = Object.values(claims).sort(function(a, b) { return (b.claimedAt || 0) - (a.claimedAt || 0); });
+        let html = '<div style="max-height:60vh;overflow-y:auto;padding:10px;">';
+        html += '<table style="width:100%;border-collapse:collapse;font-size:0.82rem;">';
+        html += '<tr style="background:#f5f5f5;"><th style="padding:8px;text-align:left;">Ad Soyad</th><th style="padding:8px;text-align:left;">Telefon</th><th style="padding:8px;text-align:left;">Tarix</th></tr>';
+        list.forEach(function(cl) {
+            var d = cl.claimedAt ? new Date(cl.claimedAt) : null;
+            var dateStr = d ? d.toLocaleDateString('az') + ' ' + d.toLocaleTimeString('az', {hour:'2-digit',minute:'2-digit'}) : '';
+            html += '<tr style="border-bottom:1px solid #eee;"><td style="padding:8px;">' + (cl.name || '') + ' ' + (cl.surname || '') + '</td><td style="padding:8px;">' + (cl.phone || '') + '</td><td style="padding:8px;">' + dateStr + '</td></tr>';
+        });
+        html += '</table></div>';
+
+        // Show in a simple modal
+        var modal = document.createElement('div');
+        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
+        modal.innerHTML = '<div style="background:#fff;border-radius:16px;max-width:600px;width:90%;max-height:80vh;overflow:hidden;">' +
+            '<div style="padding:16px 20px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;">' +
+                '<h3 style="margin:0;font-size:1rem;">Kupon alanlar (' + list.length + ' nəfər)</h3>' +
+                '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="border:none;background:none;font-size:1.2rem;cursor:pointer;color:#999;">&times;</button>' +
+            '</div>' + html + '</div>';
+        document.body.appendChild(modal);
+        modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
     };
 
 });

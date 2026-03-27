@@ -100,6 +100,14 @@ module.exports = async (req, res) => {
             }
         } catch(e) {}
 
+        // Add campaigns page
+        xml += `
+    <url>
+        <loc>${SITE_URL}/kampaniyalar</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+    </url>`;
+
         xml += '\n</urlset>';
 
         res.setHeader('Content-Type', 'application/xml; charset=utf-8');
