@@ -189,7 +189,7 @@ window.__POST_DATA__ = ${JSON.stringify(JSON.stringify(preloadData))};</script>
         }
 
         // Set cache headers
-        res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+        res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.status(200).send(html);
 

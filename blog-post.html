@@ -1875,6 +1875,15 @@
                     const langKey = currentLang === 'ru' ? 'ru' : 'az';
                     bodyHtml = (langKey === 'ru' && preloaded.htmlRu) ? preloaded.htmlRu : (preloaded.htmlAz || '');
                     if (!bodyHtml) bodyHtml = f.content ? renderRichText(f.content) : '';
+                    // Always fetch fresh SEO data to get latest cover image
+                    try {
+                        const freshSeoSnap = await db.ref('articleSeo/' + postId).once('value');
+                        const freshSeo = freshSeoSnap.val() || {};
+                        if (freshSeo.coverImage) {
+                            imgUrl = freshSeo.coverImage;
+                            Object.assign(seoData, freshSeo);
+                        }
+                    } catch(e) {}
                 } else {
                     // Fallback: fetch from APIs (language switch etc.)
                     const res = await fetch(
