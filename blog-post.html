@@ -1872,6 +1872,7 @@
                     f = preloaded.fields;
                     seoData = preloaded.seo || {};
                     imgUrl = preloaded.imageUrl || '';
+                    console.log('[BLOG DEBUG] SSR preloaded imageUrl:', preloaded.imageUrl);
                     const langKey = currentLang === 'ru' ? 'ru' : 'az';
                     bodyHtml = (langKey === 'ru' && preloaded.htmlRu) ? preloaded.htmlRu : (preloaded.htmlAz || '');
                     if (!bodyHtml) bodyHtml = f.content ? renderRichText(f.content) : '';
@@ -1879,11 +1880,12 @@
                     try {
                         const freshSeoSnap = await db.ref('articleSeo/' + postId).once('value');
                         const freshSeo = freshSeoSnap.val() || {};
+                        console.log('[BLOG DEBUG] Firebase-dən təzə coverImage:', freshSeo.coverImage || 'YOX');
                         if (freshSeo.coverImage) {
                             imgUrl = freshSeo.coverImage;
                             Object.assign(seoData, freshSeo);
                         }
-                    } catch(e) {}
+                    } catch(e) { console.error('[BLOG DEBUG] Firebase xəta:', e); }
                 } else {
                     // Fallback: fetch from APIs (language switch etc.)
                     const res = await fetch(
@@ -1923,6 +1925,7 @@
                 const seoKeyword = (isRu && seoData.keywordRu) ? seoData.keywordRu : (seoData.keyword || '');
                 const seoImageAlt = (isRu && seoData.imageAltRu) ? seoData.imageAltRu : (seoData.imageAlt || f.title);
 
+                console.log('[BLOG DEBUG] Final imgUrl (bu render olunacaq):', imgUrl);
                 let imgHtml = imgUrl ? `<img class="blog-detail-image" src="${imgUrl}" alt="${seoImageAlt}">` : '';
 
                 const postTexts = POST_TEXTS[currentLang] || POST_TEXTS.az;
