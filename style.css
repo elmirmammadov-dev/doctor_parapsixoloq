@@ -3180,7 +3180,7 @@ img {
 .hero-headline-bg {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: #4a8c5c;
+    background: url('/hero-bg.webp') center/cover no-repeat;
     z-index: 0;
 }
 /* Geometric mandala patterns */
@@ -3217,6 +3217,14 @@ img {
 @keyframes heroMandalaSpin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+}
+/* Green overlay on background image */
+.hero-headline-bg::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(58,110,72,0.82);
+    z-index: 0;
 }
 /* Shimmer overlay */
 .hero-headline-bg::before {
@@ -3258,7 +3266,7 @@ img {
     animation: heroFadeUp 1s ease-out 0.2s both;
     text-shadow: 0 2px 20px rgba(0,0,0,0.2);
 }
-.hero-headline-quote-wrap {
+blockquote.hero-headline-quote-wrap {
     display: flex;
     align-items: center;
     justify-content: center;
