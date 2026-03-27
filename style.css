@@ -3175,12 +3175,12 @@ img {
     padding: 80px 0 55px;
     overflow: hidden;
     text-align: center;
-    background: #1a3c2a;
+    background: #4a8c5c;
 }
 .hero-headline-bg {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: #1a3c2a;
+    background: #4a8c5c;
     z-index: 0;
 }
 /* Geometric mandala patterns */
