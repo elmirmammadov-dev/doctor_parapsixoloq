@@ -99,6 +99,12 @@ module.exports = async (req, res) => {
             return res.status(500).json({ error: 'Kupon alma uğursuz oldu, yenidən cəhd edin' });
         }
 
+        // Generate unique coupon code per user
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let suffix = '';
+        for (let i = 0; i < 5; i++) suffix += chars[Math.floor(Math.random() * chars.length)];
+        const uniqueCode = (campaign.couponCode || 'KUPON') + '-' + suffix;
+
         // Save claim record
         const claimData = {
             name: name.trim(),
@@ -106,7 +112,7 @@ module.exports = async (req, res) => {
             phone: phoneTrimmed,
             ip: ip,
             fingerprint: fingerprint || null,
-            couponCode: campaign.couponCode,
+            couponCode: uniqueCode,
             claimedAt: Date.now()
         };
         await fetch(`${FIREBASE_DB_URL}/campaignClaims/${campaignId}.json`, {
@@ -139,9 +145,9 @@ module.exports = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            couponCode: campaign.couponCode,
+            couponCode: uniqueCode,
             discount: campaign.discountPercent,
-            message: `Təbrik edirik! ${campaign.discountPercent}% endirim kuponunuz: ${campaign.couponCode}`
+            message: `Təbrik edirik! ${campaign.discountPercent}% endirim kuponunuz: ${uniqueCode}`
         });
 
     } catch (err) {
