@@ -2422,7 +2422,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 // Upload cover image to ImgBB if provided
                 let coverDeleteUrl = null;
-                console.log('[ADMIN DEBUG] imageFile:', imageFile ? imageFile.name : 'YOX - yeni şəkil seçilməyib');
                 if (imageFile) {
                     // Delete old image from ImgBB if editing
                     if (editingEntryId) {
@@ -2436,7 +2435,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     const imgResult = await uploadToImgBB(imageFile);
                     coverImageUrl = imgResult.url;
                     coverDeleteUrl = imgResult.deleteUrl;
-                    console.log('[ADMIN DEBUG] Yeni şəkil URL:', coverImageUrl);
                 }
 
                 // Convert HTML to Contentful rich text
@@ -2470,7 +2468,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         seoObj.coverImage = coverImageUrl;
                         seoObj.coverDeleteUrl = coverDeleteUrl || null;
                     }
-                    console.log('[ADMIN DEBUG] Firebase-ə yazılan seoObj:', JSON.stringify(seoObj));
                     if (articleSlug) seoObj.slug = articleSlug;
                     if (metaDescRu) seoObj.metaDescRu = metaDescRu;
                     if (keywordRu) seoObj.keywordRu = keywordRu;
