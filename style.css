@@ -3613,7 +3613,7 @@ blockquote.hero-headline-quote-wrap {
 }
 .camp-card-img {
     width: 100%;
-    aspect-ratio: 3/1;
+    aspect-ratio: 16/9;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
