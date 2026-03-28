@@ -3297,7 +3297,7 @@ blockquote.hero-headline-quote-wrap {
 }
 .ann-section-card-img {
     width: 100%;
-    aspect-ratio: 3/2;
+    aspect-ratio: 2/1;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -3481,7 +3481,7 @@ blockquote.hero-headline-quote-wrap {
 }
 .camp-card-img {
     width: 100%;
-    aspect-ratio: 3/2;
+    aspect-ratio: 2/1;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
