@@ -862,7 +862,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const zoom = a.coverZoom || 1;
         const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
         const aTitle = a['title_' + currentLang] || a.title;
-        const aDesc = a['desc_' + currentLang] || a.desc;
+        const aShortDesc = a['shortDesc_' + currentLang] || a['desc_' + currentLang] || a.desc;
         const annHref = a.slug ? '/elanlar/' + a.slug : (a.link || '');
         const tag = annHref ? 'a' : 'div';
         const href = annHref ? ' href="' + annHref + '"' : '';
@@ -871,7 +871,7 @@ document.addEventListener('DOMContentLoaded', () => {
             '<div class="ann-section-card-body">' +
                 '<div class="ann-section-card-date">' + (a.date || '') + '</div>' +
                 '<div class="ann-section-card-title">' + aTitle + '</div>' +
-                (aDesc ? '<div class="ann-section-card-desc">' + aDesc + '</div>' : '') +
+                (aShortDesc ? '<div class="ann-section-card-desc">' + aShortDesc + '</div>' : '') +
                 '<span class="ann-section-card-link">Daha ətraflı <i class="fas fa-arrow-right"></i></span>' +
             '</div>' +
         '</' + tag + '>';
@@ -879,7 +879,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderAnnCardSmall(a) {
         const aTitle = a['title_' + currentLang] || a.title;
-        const aDesc = a['desc_' + currentLang] || a.desc;
+        const aShortDesc = a['shortDesc_' + currentLang] || a['desc_' + currentLang] || a.desc;
         const annHref = a.slug ? '/elanlar/' + a.slug : (a.link || '');
         const tag = annHref ? 'a' : 'div';
         const href = annHref ? ' href="' + annHref + '"' : '';
@@ -887,7 +887,7 @@ document.addEventListener('DOMContentLoaded', () => {
             '<div class="ann-section-card-body">' +
                 '<div class="ann-section-card-date">' + (a.date || '') + '</div>' +
                 '<div class="ann-section-card-title">' + aTitle + '</div>' +
-                (aDesc ? '<div class="ann-section-card-desc">' + aDesc + '</div>' : '') +
+                (aShortDesc ? '<div class="ann-section-card-desc">' + aShortDesc + '</div>' : '') +
                 '<span class="ann-section-card-link ann-link-upper">DAHA ƏTRAFLI</span>' +
             '</div>' +
         '</' + tag + '>';

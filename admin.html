@@ -437,6 +437,8 @@
                                     <input type="text" id="annTitle_az" placeholder="Elanın başlığı" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:8px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
                                     <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Açıqlama (AZ)</label>
                                     <textarea id="annDesc_az" placeholder="Qısa açıqlama yazın..." rows="3" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                                    <label style="font-weight:600;font-size:0.72rem;color:#999;display:block;margin:8px 0 4px;"><i class="fas fa-home" style="margin-right:4px;"></i>Ana səhifə üçün qısa mətn (AZ)</label>
+                                    <textarea id="annShortDesc_az" placeholder="Ana səhifədə görünəcək qısa mətn (boş qalsa açıqlama kəsilərək göstərilər)" rows="2" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.85rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
                                 </div>
                                 <!-- RU -->
                                 <div class="ann-lang-panel" data-ann-lang-panel="ru" style="display:none;">
@@ -444,6 +446,8 @@
                                     <input type="text" id="annTitle_ru" placeholder="Заголовок объявления" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:8px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
                                     <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Описание (RU)</label>
                                     <textarea id="annDesc_ru" placeholder="Краткое описание..." rows="3" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                                    <label style="font-weight:600;font-size:0.72rem;color:#999;display:block;margin:8px 0 4px;"><i class="fas fa-home" style="margin-right:4px;"></i>Краткий текст для главной (RU)</label>
+                                    <textarea id="annShortDesc_ru" placeholder="Текст для главной страницы (если пусто, описание будет обрезано)" rows="2" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.85rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
                                 </div>
                                 <!-- EN -->
                                 <div class="ann-lang-panel" data-ann-lang-panel="en" style="display:none;">
@@ -451,6 +455,8 @@
                                     <input type="text" id="annTitle_en" placeholder="Announcement title" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:8px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
                                     <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Description (EN)</label>
                                     <textarea id="annDesc_en" placeholder="Short description..." rows="3" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                                    <label style="font-weight:600;font-size:0.72rem;color:#999;display:block;margin:8px 0 4px;"><i class="fas fa-home" style="margin-right:4px;"></i>Short text for homepage (EN)</label>
+                                    <textarea id="annShortDesc_en" placeholder="Text shown on homepage (if empty, description will be truncated)" rows="2" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.85rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
                                 </div>
                                 <!-- TR -->
                                 <div class="ann-lang-panel" data-ann-lang-panel="tr" style="display:none;">
@@ -458,6 +464,8 @@
                                     <input type="text" id="annTitle_tr" placeholder="Duyuru başlığı" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:8px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
                                     <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Açıklama (TR)</label>
                                     <textarea id="annDesc_tr" placeholder="Kısa açıklama yazın..." rows="3" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                                    <label style="font-weight:600;font-size:0.72rem;color:#999;display:block;margin:8px 0 4px;"><i class="fas fa-home" style="margin-right:4px;"></i>Ana sayfa için kısa metin (TR)</label>
+                                    <textarea id="annShortDesc_tr" placeholder="Ana sayfada görünecek kısa metin (boş kalırsa açıklama kısaltılır)" rows="2" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.85rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
                                 </div>
                             </div>
                             <div>

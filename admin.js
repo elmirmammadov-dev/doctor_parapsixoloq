@@ -3292,12 +3292,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 slug: annSlug,
                 title_az: title,
                 desc_az: desc,
+                shortDesc_az: document.getElementById('annShortDesc_az').value.trim(),
                 title_ru: document.getElementById('annTitle_ru').value.trim(),
                 desc_ru: document.getElementById('annDesc_ru').value.trim(),
+                shortDesc_ru: document.getElementById('annShortDesc_ru').value.trim(),
                 title_en: document.getElementById('annTitle_en').value.trim(),
                 desc_en: document.getElementById('annDesc_en').value.trim(),
+                shortDesc_en: document.getElementById('annShortDesc_en').value.trim(),
                 title_tr: document.getElementById('annTitle_tr').value.trim(),
                 desc_tr: document.getElementById('annDesc_tr').value.trim(),
+                shortDesc_tr: document.getElementById('annShortDesc_tr').value.trim(),
                 link: link,
                 image: imageUrl,
                 coverPos: annPosX.toFixed(1) + '% ' + annPosY.toFixed(1) + '%',
@@ -3320,6 +3324,7 @@ document.addEventListener("DOMContentLoaded", function() {
             ['az','ru','en','tr'].forEach(function(l) {
                 document.getElementById('annTitle_' + l).value = '';
                 document.getElementById('annDesc_' + l).value = '';
+                document.getElementById('annShortDesc_' + l).value = '';
             });
             document.getElementById('annLink').value = '';
             document.getElementById('annDate').value = '';
@@ -3375,12 +3380,16 @@ document.addEventListener("DOMContentLoaded", function() {
             annEditId = id;
             document.getElementById('annTitle_az').value = item.title_az || item.title || '';
             document.getElementById('annDesc_az').value = item.desc_az || item.desc || '';
+            document.getElementById('annShortDesc_az').value = item.shortDesc_az || '';
             document.getElementById('annTitle_ru').value = item.title_ru || '';
             document.getElementById('annDesc_ru').value = item.desc_ru || '';
+            document.getElementById('annShortDesc_ru').value = item.shortDesc_ru || '';
             document.getElementById('annTitle_en').value = item.title_en || '';
             document.getElementById('annDesc_en').value = item.desc_en || '';
+            document.getElementById('annShortDesc_en').value = item.shortDesc_en || '';
             document.getElementById('annTitle_tr').value = item.title_tr || '';
             document.getElementById('annDesc_tr').value = item.desc_tr || '';
+            document.getElementById('annShortDesc_tr').value = item.shortDesc_tr || '';
             // Reset lang tabs to AZ
             document.querySelectorAll('.ann-lang-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.annLang === 'az'); });
             document.querySelectorAll('.ann-lang-panel').forEach(function(p) { p.style.display = p.dataset.annLangPanel === 'az' ? '' : 'none'; });
