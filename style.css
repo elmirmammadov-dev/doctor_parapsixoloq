@@ -3456,6 +3456,10 @@ blockquote.hero-headline-quote-wrap {
 .ann-card-small .ann-section-card-desc {
     font-size: 0.75rem;
     margin-bottom: 8px;
+    -webkit-line-clamp: unset;
+    display: block;
+    overflow: visible;
+    line-height: 1.6;
 }
 
 /* View All button */
