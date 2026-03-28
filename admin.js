@@ -3421,16 +3421,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Unique coupon code names - each name used only once
     const couponNames = [
-        'ENDIRIM', 'YENI', 'SEHER', 'AURA', 'QELBI', 'ULDUZ', 'BAHAR', 'GUNES', 'SEVGI', 'UMID',
-        'SAFLIK', 'SHEFA', 'RAHMET', 'BEREKET', 'ISIQ', 'GUZEL', 'MUTLU', 'HEDIYE', 'FIRSAT', 'SANS',
-        'CINAR', 'DENIZ', 'BULUD', 'MELEK', 'GIZLI', 'ATLAS', 'ZUMRUD', 'MIRVARI', 'IPEK', 'CICEK',
-        'QARANFIL', 'NARMIN', 'FERAH', 'HUZUR', 'ELIXIR', 'NICAT', 'KAIZEN', 'ROYAL', 'ZIRVE', 'LOTUS',
-        'SAFIR', 'BRILYANT', 'ALTIN', 'GUMUS', 'MERCAN', 'YAKUT', 'KEHRIBAR', 'NEFER', 'OZAN', 'DUYGU',
-        'NERGIZ', 'LALEZAR', 'ILHAM', 'NUBAR', 'TURAL', 'ORXAN', 'VEFA', 'ZINHAR', 'TERANNUM', 'MUNIS',
-        'XEYAL', 'SEVINC', 'NIGAR', 'GULNAR', 'AFET', 'PERVIN', 'LAMAN', 'TURKAN', 'AYSEL', 'NURAY',
-        'SHAHIN', 'TURAN', 'CAVID', 'RUFAT', 'ELNUR', 'ROVSHAN', 'SAMIR', 'FARID', 'KAMRAN', 'TAHIR',
-        'HIKMET', 'ZEKA', 'DEMET', 'GONCA', 'BENOVSHA', 'YASEMEN', 'SUNBUL', 'NISAN', 'PAYIZ', 'YAGIS',
-        'GOKKUSAGI', 'GUNESH', 'SAKIT', 'DALGA', 'BULAQ', 'SHAMAL', 'KESHF', 'SIRR', 'NEMRE', 'RAYIHE'
+        'ENDIRIM', 'SHEFA', 'SEHER', 'ULDUZ', 'BAHAR', 'GUNES', 'SEVGI', 'UMID', 'SAGLIK', 'BEREKET',
+        'ISIQ', 'GOZEL', 'HEDIYYE', 'FURSET', 'SANS', 'CINAR', 'DENIZ', 'BULUD', 'MELEK', 'SIRR',
+        'ZUMRUD', 'MIRVARI', 'IPEK', 'CICEK', 'QARANFIL', 'NARMIN', 'FERAH', 'HUZUR', 'NICAT', 'ZIRVE',
+        'SAFIR', 'ALTIN', 'GUMUS', 'MERCAN', 'YAKUT', 'KEHRIBAR', 'DUYGU', 'ILHAM', 'VEFA', 'XEYAL',
+        'SEVINC', 'BULAQ', 'PAYIZ', 'SHAMAL', 'GONCA', 'BENOVSHE', 'YASEMEN', 'SUNBUL', 'DALGA', 'RAHMET',
+        'NERGIZ', 'NOVRUZ', 'MUBAREK', 'QENIME', 'OVQAT', 'ZERIF', 'REHBER', 'DEQIQ', 'MUJDE', 'EHSAN',
+        'TESIR', 'MEQSED', 'MUDRIK', 'QAYGI', 'LEZIZ', 'NEZAKET', 'INAM', 'DOSTLUQ', 'MEHEBBAT', 'SEADET',
+        'RIFAHE', 'KESHF', 'HEKIM', 'CANLI', 'TEZE', 'UZVU', 'YASHIL', 'TEMIZ', 'GUCLUI', 'DERMAN',
+        'VITALI', 'SIRDASH', 'ARZUI', 'OVLAD', 'MEHSUL', 'MUGAM', 'KERPIC', 'MOHTESHEM', 'TAPINTI', 'LAYIQ',
+        'NEMUNE', 'XOSBEXT', 'MUSHFIQ', 'NAXISH', 'MEDEN', 'ZERGER', 'USTUN', 'KAMIL', 'YARAŞIQ', 'SEÇME'
     ];
 
     // Shuffle array (Fisher-Yates)
