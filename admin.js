@@ -3730,10 +3730,35 @@ document.addEventListener("DOMContentLoaded", function() {
             if (!camps.length) { listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;">Hələ kampaniya yoxdur.</p>'; return; }
 
             listEl.innerHTML = camps.map(function(c) {
-                const isExpired = (c.endTimestamp && Date.now() > c.endTimestamp) || (c.claimedCount >= c.maxCoupons);
+                const now = Date.now();
+                const isExpired = (c.endTimestamp && now > c.endTimestamp) || (c.claimedCount >= c.maxCoupons);
                 const statusColor = !c.active ? '#999' : isExpired ? '#e74c3c' : '#27ae60';
                 const statusText = !c.active ? 'Gizli' : isExpired ? 'Bitib' : 'Aktiv';
                 const imgThumb = c.image ? '<img src="' + c.image + '" style="width:60px;height:40px;object-fit:cover;border-radius:6px;margin-right:10px;">' : '';
+
+                // Calculate remaining time
+                var timeInfo = '';
+                if (c.endTimestamp) {
+                    if (now > c.endTimestamp) {
+                        timeInfo = '<span style="color:#e74c3c;"><i class="fas fa-clock"></i> Vaxt bitib</span>';
+                    } else {
+                        var diff = c.endTimestamp - now;
+                        var days = Math.floor(diff / 86400000);
+                        var hours = Math.floor((diff % 86400000) / 3600000);
+                        var mins = Math.floor((diff % 3600000) / 60000);
+                        if (days > 0) timeInfo = '<span style="color:#27ae60;"><i class="fas fa-clock"></i> ' + days + 'g ' + hours + 's qalıb</span>';
+                        else if (hours > 0) timeInfo = '<span style="color:#e67e22;"><i class="fas fa-clock"></i> ' + hours + 's ' + mins + 'd qalıb</span>';
+                        else timeInfo = '<span style="color:#e74c3c;"><i class="fas fa-clock"></i> ' + mins + ' dəq qalıb</span>';
+                    }
+                }
+
+                // End time display
+                var endTimeStr = '';
+                if (c.endTimestamp) {
+                    var endDate = new Date(c.endTimestamp);
+                    endTimeStr = ' · Bitmə: ' + endDate.toLocaleDateString('az') + ' ' + endDate.toLocaleTimeString('az', {hour:'2-digit', minute:'2-digit'});
+                }
+
                 return '<div style="display:flex;align-items:center;padding:12px;border:1px solid #eee;border-radius:10px;margin-bottom:8px;background:#fff;">' +
                     imgThumb +
                     '<div style="flex:1;min-width:0;">' +
@@ -3741,10 +3766,14 @@ document.addEventListener("DOMContentLoaded", function() {
                         '<div style="font-size:0.75rem;color:#999;margin-top:2px;">' +
                             '<span style="color:' + statusColor + ';font-weight:600;">' + statusText + '</span> · ' +
                             c.discountPercent + '% endirim · ' + (c.claimedCount || 0) + '/' + c.maxCoupons + ' kupon · ' + (c.couponCodes ? c.couponCodes.length + ' unikal kod' : (c.couponCode ? 'Kod: <b>' + c.couponCode + '</b>' : '')) +
+                            endTimeStr +
                         '</div>' +
+                        (timeInfo ? '<div style="font-size:0.72rem;margin-top:3px;">' + timeInfo + '</div>' : '') +
                     '</div>' +
                     '<div style="display:flex;gap:4px;flex-shrink:0;">' +
                         '<button onclick="viewCampClaims(\'' + c.id + '\')" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.72rem;color:#666;" title="Kuponlar"><i class="fas fa-users"></i></button>' +
+                        '<button onclick="extendCampaignTime(\'' + c.id + '\')" style="padding:6px 10px;border:1px solid #27ae60;border-radius:6px;background:#fff;cursor:pointer;font-size:0.72rem;color:#27ae60;" title="Vaxtı uzat"><i class="fas fa-plus-circle"></i></button>' +
+                        (!isExpired && c.active ? '<button onclick="expireCampaign(\'' + c.id + '\')" style="padding:6px 10px;border:1px solid #e67e22;border-radius:6px;background:#fff;cursor:pointer;font-size:0.72rem;color:#e67e22;" title="Vaxtı bitir"><i class="fas fa-hourglass-end"></i></button>' : '') +
                         '<button onclick="editCampaign(\'' + c.id + '\')" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.72rem;color:var(--gold);" title="Redaktə"><i class="fas fa-edit"></i></button>' +
                         '<button onclick="toggleCampaign(\'' + c.id + '\',' + !c.active + ')" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.72rem;color:' + (c.active ? '#e74c3c' : '#27ae60') + ';" title="' + (c.active ? 'Gizlət' : 'Göstər') + '"><i class="fas fa-' + (c.active ? 'eye-slash' : 'eye') + '"></i></button>' +
                         '<button onclick="deleteCampaign(\'' + c.id + '\')" style="padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.72rem;color:#e74c3c;" title="Sil"><i class="fas fa-trash"></i></button>' +
@@ -3815,6 +3844,67 @@ document.addEventListener("DOMContentLoaded", function() {
             adminDb.ref('campaignClaims/' + id).remove(),
             adminDb.ref('campaignClaimIndex/' + id).remove()
         ]).then(function() { loadAdminCampaigns(); });
+    };
+
+    // Expire campaign immediately
+    window.expireCampaign = function(id) {
+        if (!confirm('Bu kampaniyanın vaxtını indi bitirmək istəyirsiniz?')) return;
+        adminDb.ref('campaigns/' + id + '/endTimestamp').set(Date.now()).then(function() { loadAdminCampaigns(); });
+    };
+
+    // Extend campaign time
+    window.extendCampaignTime = function(id) {
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;';
+
+        var box = document.createElement('div');
+        box.style.cssText = 'background:#fff;border-radius:16px;padding:30px;max-width:400px;width:90%;text-align:center;';
+
+        var title = document.createElement('h3');
+        title.style.cssText = 'margin:0 0 16px;font-size:1rem;color:#333;';
+        title.innerHTML = '<i class="fas fa-clock" style="color:var(--gold);"></i> Vaxtı uzat';
+        box.appendChild(title);
+
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;gap:8px;margin-bottom:16px;';
+        row.innerHTML = '<input type="number" id="extendValue" min="1" value="1" style="flex:1;padding:10px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;text-align:center;">' +
+            '<select id="extendUnit" style="flex:1;padding:10px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;background:#fff;">' +
+            '<option value="60">Saat</option><option value="1440">Gün</option><option value="1">Dəqiqə</option></select>';
+        box.appendChild(row);
+
+        var btnRow = document.createElement('div');
+        btnRow.style.cssText = 'display:flex;gap:8px;justify-content:center;';
+
+        var saveBtn = document.createElement('button');
+        saveBtn.innerHTML = '<i class="fas fa-check"></i> Uzat';
+        saveBtn.style.cssText = 'padding:10px 24px;background:var(--gold);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;';
+        saveBtn.onclick = function() {
+            var val = parseInt(document.getElementById('extendValue').value) || 1;
+            var unit = parseInt(document.getElementById('extendUnit').value) || 60;
+            var addMs = val * unit * 60 * 1000;
+            adminDb.ref('campaigns/' + id).once('value', function(snap) {
+                var camp = snap.val();
+                if (!camp) return;
+                var currentEnd = camp.endTimestamp || Date.now();
+                var newEnd = Math.max(currentEnd, Date.now()) + addMs;
+                adminDb.ref('campaigns/' + id + '/endTimestamp').set(newEnd).then(function() {
+                    overlay.remove();
+                    loadAdminCampaigns();
+                });
+            });
+        };
+        btnRow.appendChild(saveBtn);
+
+        var cancelBtn = document.createElement('button');
+        cancelBtn.innerHTML = '<i class="fas fa-times"></i> Bağla';
+        cancelBtn.style.cssText = 'padding:10px 24px;background:#f0f0f0;color:#666;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;';
+        cancelBtn.onclick = function() { overlay.remove(); };
+        btnRow.appendChild(cancelBtn);
+
+        box.appendChild(btnRow);
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
     };
 
     window.viewCampClaims = function(id) {
