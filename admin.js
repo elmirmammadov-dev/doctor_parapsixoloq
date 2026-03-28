@@ -3817,55 +3817,50 @@ document.addEventListener("DOMContentLoaded", function() {
         ]).then(function() { loadAdminCampaigns(); });
     };
 
-    window.viewCampClaims = async function(id) {
-        console.log('viewCampClaims called with id:', id);
-        try {
-            const snap = await adminDb.ref('campaignClaims/' + id).once('value');
-            const claims = snap.val();
-            console.log('claims:', claims);
-            if (!claims) {
-                // Show empty state in modal instead of alert
-                var emptyModal = document.createElement('div');
-                emptyModal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
-                emptyModal.innerHTML = '<div style="background:#fff;border-radius:16px;padding:40px;text-align:center;max-width:400px;width:90%;">' +
-                    '<i class="fas fa-inbox" style="font-size:3rem;color:#ddd;margin-bottom:16px;display:block;"></i>' +
-                    '<h3 style="margin:0 0 8px;color:#333;">Hələ kupon alınmayıb</h3>' +
-                    '<p style="margin:0 0 20px;color:#999;font-size:0.85rem;">Bu kampaniyada hələ heç kim kupon almayıb.</p>' +
-                    '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="padding:8px 24px;background:var(--gold);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Bağla</button>' +
-                '</div>';
-                document.body.appendChild(emptyModal);
-                emptyModal.addEventListener('click', function(e) { if (e.target === emptyModal) emptyModal.remove(); });
-                return;
-            }
-            const list = Object.values(claims).sort(function(a, b) { return (b.claimedAt || 0) - (a.claimedAt || 0); });
-            let html = '<div style="max-height:60vh;overflow-y:auto;padding:10px;">';
-            html += '<table style="width:100%;border-collapse:collapse;font-size:0.82rem;">';
-            html += '<tr style="background:#f5f5f5;"><th style="padding:8px;text-align:left;">Ad Soyad</th><th style="padding:8px;text-align:left;">Kupon</th><th style="padding:8px;text-align:left;">Telefon</th><th style="padding:8px;text-align:left;">Tarix</th></tr>';
-            list.forEach(function(cl) {
-                var d = cl.claimedAt ? new Date(cl.claimedAt) : null;
-                var dateStr = d ? d.toLocaleDateString('az') + ' ' + d.toLocaleTimeString('az', {hour:'2-digit',minute:'2-digit'}) : '';
-                html += '<tr style="border-bottom:1px solid #eee;">' +
-                    '<td style="padding:8px;">' + (cl.name || '') + ' ' + (cl.surname || '') + '</td>' +
-                    '<td style="padding:8px;font-weight:700;color:var(--gold);">' + (cl.couponCode || '-') + '</td>' +
-                    '<td style="padding:8px;">' + (cl.phone || '') + '</td>' +
-                    '<td style="padding:8px;">' + dateStr + '</td></tr>';
-            });
-            html += '</table></div>';
+    window.viewCampClaims = function(id) {
+        var restUrl = window.FIREBASE_REST || 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
+        fetch(restUrl + '/campaignClaims/' + id + '.json')
+            .then(function(r) { return r.json(); })
+            .then(function(claims) {
+                var modal = document.createElement('div');
+                modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
 
-            // Show in a simple modal
-            var modal = document.createElement('div');
-            modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
-            modal.innerHTML = '<div style="background:#fff;border-radius:16px;max-width:700px;width:95%;max-height:80vh;overflow:hidden;">' +
-                '<div style="padding:16px 20px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;">' +
-                    '<h3 style="margin:0;font-size:1rem;">Kupon alanlar (' + list.length + ' nəfər)</h3>' +
-                    '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="border:none;background:none;font-size:1.2rem;cursor:pointer;color:#999;">&times;</button>' +
-                '</div>' + html + '</div>';
-            document.body.appendChild(modal);
-            modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
-        } catch(e) {
-            console.error('viewCampClaims error:', e);
-            alert('Xəta: ' + e.message);
-        }
+                if (!claims) {
+                    modal.innerHTML = '<div style="background:#fff;border-radius:16px;padding:40px;text-align:center;max-width:400px;width:90%;">' +
+                        '<i class="fas fa-inbox" style="font-size:3rem;color:#ddd;margin-bottom:16px;display:block;"></i>' +
+                        '<h3 style="margin:0 0 8px;color:#333;">Hələ kupon alınmayıb</h3>' +
+                        '<p style="margin:0 0 20px;color:#999;font-size:0.85rem;">Bu kampaniyada hələ heç kim kupon almayıb.</p>' +
+                        '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="padding:8px 24px;background:var(--gold);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Bağla</button>' +
+                    '</div>';
+                } else {
+                    var list = Object.values(claims).sort(function(a, b) { return (b.claimedAt || 0) - (a.claimedAt || 0); });
+                    var html = '<div style="max-height:60vh;overflow-y:auto;padding:10px;">';
+                    html += '<table style="width:100%;border-collapse:collapse;font-size:0.82rem;">';
+                    html += '<tr style="background:#f5f5f5;"><th style="padding:8px;text-align:left;">Ad Soyad</th><th style="padding:8px;text-align:left;">Kupon</th><th style="padding:8px;text-align:left;">Telefon</th><th style="padding:8px;text-align:left;">Tarix</th></tr>';
+                    list.forEach(function(cl) {
+                        var d = cl.claimedAt ? new Date(cl.claimedAt) : null;
+                        var dateStr = d ? d.toLocaleDateString('az') + ' ' + d.toLocaleTimeString('az', {hour:'2-digit',minute:'2-digit'}) : '';
+                        html += '<tr style="border-bottom:1px solid #eee;">' +
+                            '<td style="padding:8px;">' + (cl.name || '') + ' ' + (cl.surname || '') + '</td>' +
+                            '<td style="padding:8px;font-weight:700;color:var(--gold);">' + (cl.couponCode || '-') + '</td>' +
+                            '<td style="padding:8px;">' + (cl.phone || '') + '</td>' +
+                            '<td style="padding:8px;">' + dateStr + '</td></tr>';
+                    });
+                    html += '</table></div>';
+                    modal.innerHTML = '<div style="background:#fff;border-radius:16px;max-width:700px;width:95%;max-height:80vh;overflow:hidden;">' +
+                        '<div style="padding:16px 20px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;">' +
+                            '<h3 style="margin:0;font-size:1rem;">Kupon alanlar (' + list.length + ' nəfər)</h3>' +
+                            '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="border:none;background:none;font-size:1.2rem;cursor:pointer;color:#999;">&times;</button>' +
+                        '</div>' + html + '</div>';
+                }
+
+                document.body.appendChild(modal);
+                modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+            })
+            .catch(function(e) {
+                console.error('viewCampClaims error:', e);
+                alert('Xəta: ' + e.message);
+            });
     };
 
 });
