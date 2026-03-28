@@ -264,9 +264,21 @@
                         <div class="ann-notify-icon"><i class="fas fa-bell"></i></div>
                         <div class="ann-notify-text">
                             <strong data-i18n="notify_title">Yeniliklərdən xəbərdar ol</strong>
-                            <span data-i18n="notify_desc">Yeni kampaniyalar başlədiqində dərhal bildiriş al.</span>
+                            <span data-i18n="notify_desc">Yeni kampaniyalar başladıqda dərhal bildiriş al.</span>
                         </div>
                     </div>
+                    <!-- Email subscription -->
+                    <div class="notify-subscribe-wrap" id="notifySubscribeWrap">
+                        <form class="notify-email-form" id="notifyEmailForm" autocomplete="off">
+                            <input type="email" id="notifyEmailInput" placeholder="E-mail ünvanınız" required>
+                            <button type="submit" id="notifyEmailBtn"><i class="fas fa-paper-plane"></i> <span data-i18n="notify_subscribe">Abunə ol</span></button>
+                        </form>
+                        <p class="notify-msg" id="notifyMsg"></p>
+                    </div>
+                    <!-- Push notification -->
+                    <button class="notify-push-btn" id="notifyPushBtn" style="display:none;">
+                        <i class="fas fa-bell"></i> <span data-i18n="notify_push">Bildirişləri aktivləşdir</span>
+                    </button>
                 </div>
             </div>
         </div>

@@ -1479,5 +1479,88 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // === CAMPAIGN NOTIFICATION SUBSCRIPTION ===
+    var notifyForm = document.getElementById('notifyEmailForm');
+    var notifyMsg = document.getElementById('notifyMsg');
+    var notifyPushBtn = document.getElementById('notifyPushBtn');
+
+    // Show push button if browser supports notifications
+    if ('Notification' in window && notifyPushBtn) {
+        if (Notification.permission === 'granted') {
+            notifyPushBtn.style.display = 'inline-flex';
+            notifyPushBtn.innerHTML = '<i class="fas fa-check-circle"></i> Bildirişlər aktivdir';
+            notifyPushBtn.disabled = true;
+            notifyPushBtn.style.opacity = '0.6';
+        } else if (Notification.permission !== 'denied') {
+            notifyPushBtn.style.display = 'inline-flex';
+        }
+    }
+
+    // Email subscription
+    if (notifyForm) {
+        notifyForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var email = document.getElementById('notifyEmailInput').value.trim();
+            if (!email) return;
+            notifyMsg.textContent = '...';
+            notifyMsg.style.color = 'var(--gold)';
+
+            var db = firebase.database();
+            var safeKey = email.replace(/\./g, ',');
+            db.ref('campaign_subscribers/' + safeKey).once('value').then(function(snap) {
+                if (snap.exists()) {
+                    notifyMsg.textContent = 'Bu email artıq abunədir!';
+                    notifyMsg.style.color = '#e67e22';
+                    return;
+                }
+                return db.ref('campaign_subscribers/' + safeKey).set({
+                    email: email,
+                    subscribedAt: Date.now(),
+                    lang: currentLang
+                }).then(function() {
+                    notifyMsg.textContent = 'Abunəliyiniz aktivləşdirildi!';
+                    notifyMsg.style.color = '#27ae60';
+                    document.getElementById('notifyEmailInput').value = '';
+                    localStorage.setItem('campSubscribed', '1');
+                });
+            }).catch(function(err) {
+                notifyMsg.textContent = 'Xəta baş verdi, yenidən cəhd edin.';
+                notifyMsg.style.color = '#e74c3c';
+            });
+        });
+
+        // If already subscribed, show message
+        if (localStorage.getItem('campSubscribed')) {
+            notifyMsg.textContent = 'Siz artıq abunəsiniz ✓';
+            notifyMsg.style.color = '#27ae60';
+        }
+    }
+
+    // Push notification permission
+    if (notifyPushBtn && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+        notifyPushBtn.addEventListener('click', function() {
+            Notification.requestPermission().then(function(permission) {
+                if (permission === 'granted') {
+                    notifyPushBtn.innerHTML = '<i class="fas fa-check-circle"></i> Bildirişlər aktivdir';
+                    notifyPushBtn.disabled = true;
+                    notifyPushBtn.style.opacity = '0.6';
+                    localStorage.setItem('campPushEnabled', '1');
+                    // Save push subscriber to Firebase
+                    var db = firebase.database();
+                    var pushId = 'push_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+                    db.ref('campaign_push_subscribers/' + pushId).set({
+                        enabledAt: Date.now(),
+                        userAgent: navigator.userAgent,
+                        lang: currentLang
+                    });
+                    new Notification('Bildirişlər aktivdir!', {
+                        body: 'Yeni kampaniyalar haqqında xəbərdar olacaqsınız.',
+                        icon: '/icon-192.png'
+                    });
+                }
+            });
+        });
+    }
+
 
 });

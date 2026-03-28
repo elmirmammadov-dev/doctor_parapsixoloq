@@ -3813,7 +3813,45 @@ document.addEventListener("DOMContentLoaded", function() {
                 '</div>';
             }).join('');
         });
+
+        // Load campaign subscribers
+        loadCampSubscribers();
     }
+
+    function loadCampSubscribers() {
+        var subListEl = document.getElementById('campSubList');
+        var subCountEl = document.getElementById('campSubCount');
+        if (!subListEl) return;
+
+        adminDb.ref('campaign_subscribers').once('value', function(snap) {
+            var subs = snap.val();
+            if (!subs) {
+                subListEl.innerHTML = '<p style="text-align:center;color:#999;font-size:0.82rem;">Hələ abunəçi yoxdur.</p>';
+                if (subCountEl) subCountEl.textContent = '0';
+                return;
+            }
+            var entries = Object.values(subs);
+            if (subCountEl) subCountEl.textContent = entries.length + ' abunəçi';
+            subListEl.innerHTML = entries.map(function(s) {
+                var date = new Date(s.subscribedAt).toLocaleDateString('az');
+                return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid #f0f0f0;font-size:0.8rem;">' +
+                    '<span style="color:var(--text-primary);font-weight:500;">' + (s.email || '') + '</span>' +
+                    '<span style="color:#999;font-size:0.7rem;">' + date + ' · ' + (s.lang || 'az').toUpperCase() + '</span>' +
+                '</div>';
+            }).join('');
+        });
+    }
+
+    window.copyCampEmails = function() {
+        adminDb.ref('campaign_subscribers').once('value', function(snap) {
+            var subs = snap.val();
+            if (!subs) { alert('Abunəçi yoxdur.'); return; }
+            var emails = Object.values(subs).map(function(s) { return s.email; }).filter(Boolean).join(', ');
+            navigator.clipboard.writeText(emails).then(function() {
+                alert(Object.values(subs).length + ' email kopyalandı!');
+            });
+        });
+    };
 
     window.editCampaign = async function(id) {
         const snap = await adminDb.ref('campaigns/' + id).once('value');

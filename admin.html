@@ -646,6 +646,20 @@
                     <div id="campList" style="overflow-y:auto;max-height:50vh;">
                         <p style="text-align:center;color:#999;padding:20px 0;">Yüklənir...</p>
                     </div>
+
+                    <!-- Campaign Subscribers -->
+                    <div style="margin-top:24px;border-top:2px solid #eee;padding-top:16px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                            <h4 style="margin:0;font-size:0.95rem;color:var(--text-primary);display:flex;align-items:center;gap:8px;">
+                                <i class="fas fa-envelope" style="color:var(--gold);"></i> Kampaniya Abunəçiləri
+                            </h4>
+                            <span id="campSubCount" style="font-size:0.85rem;color:var(--gold);font-weight:600;">0</span>
+                        </div>
+                        <div id="campSubList" style="max-height:200px;overflow-y:auto;margin-bottom:12px;">
+                            <p style="text-align:center;color:#999;font-size:0.82rem;">Yüklənir...</p>
+                        </div>
+                        <button type="button" id="campCopyEmails" style="padding:8px 16px;border:1.5px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;font-size:0.78rem;margin-right:8px;" onclick="copyCampEmails()"><i class="fas fa-copy"></i> Emailləri kopyala</button>
+                    </div>
                 </div>
 
             </div>
