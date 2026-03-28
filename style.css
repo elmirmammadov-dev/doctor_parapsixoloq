@@ -3416,6 +3416,11 @@ blockquote.hero-headline-quote-wrap {
     overflow-wrap: break-word;
     margin-bottom: 10px;
 }
+.ann-desc-full {
+    -webkit-line-clamp: unset;
+    display: block;
+    overflow: visible;
+}
 .ann-section-card-link {
     color: var(--gold, #1a3c2a);
     font-size: 0.82rem;
