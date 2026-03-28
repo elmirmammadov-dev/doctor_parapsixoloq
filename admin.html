@@ -538,7 +538,7 @@
                             <input type="number" id="campDiscount" min="5" max="90" value="10" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
                         </div>
                         <div style="flex:1;min-width:120px;">
-                            <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;">Kupon sayı (nəfər)</label>
+                            <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;">Avto-yarat sayı <span style="font-weight:400;font-size:0.72rem;color:#999;">(neçə kod yaradılsın)</span></label>
                             <input type="number" id="campMaxCoupons" min="1" max="10000" value="50" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
                         </div>
                     </div>
@@ -559,12 +559,13 @@
                         </div>
                     </div>
 
-                    <!-- Coupon Code Row -->
+                    <!-- Coupon Codes Row -->
                     <div style="margin-bottom:12px;">
-                        <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;">Kupon kodu prefiksi <span style="font-weight:400;font-size:0.75rem;color:#999;">(hər şəxsə unikal kod: PREFİKS-XXXXX)</span></label>
-                        <div style="display:flex;gap:8px;">
-                            <input type="text" id="campCouponCode" placeholder="Məs: ENDIRIM20" style="flex:1;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;text-transform:uppercase;letter-spacing:1px;font-weight:700;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
-                            <button type="button" id="campAutoCode" style="padding:10px 16px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;white-space:nowrap;font-size:0.8rem;transition:all 0.3s;" onmouseover="this.style.background='var(--gold)';this.style.color='#fff'" onmouseout="this.style.background='#fff';this.style.color='var(--gold)'"><i class="fas fa-random"></i> Avtomatik</button>
+                        <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;">Kupon kodları <span style="font-weight:400;font-size:0.75rem;color:#999;">(hər sətirə bir unikal kod yazın)</span></label>
+                        <textarea id="campCouponCodes" placeholder="Məs:&#10;ENDIRIM20&#10;YENI20&#10;SEHER20&#10;QELBINSESI&#10;AURA2" rows="6" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;text-transform:uppercase;letter-spacing:1px;font-weight:700;box-sizing:border-box;resize:vertical;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                        <div style="display:flex;gap:8px;margin-top:6px;align-items:center;">
+                            <button type="button" id="campAutoCode" style="padding:8px 16px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;white-space:nowrap;font-size:0.8rem;transition:all 0.3s;" onmouseover="this.style.background='var(--gold)';this.style.color='#fff'" onmouseout="this.style.background='#fff';this.style.color='var(--gold)'"><i class="fas fa-random"></i> Avtomatik yarat</button>
+                            <span id="campCodeCount" style="font-size:0.75rem;color:#999;"></span>
                         </div>
                     </div>
 

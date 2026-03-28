@@ -3419,16 +3419,50 @@ document.addEventListener("DOMContentLoaded", function() {
     let campEditId = null;
     let campImageUrl = null;
 
-    function generateCouponCode() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let code = '';
-        for (let i = 0; i < 8; i++) code += chars[Math.floor(Math.random() * chars.length)];
-        return code;
+    // Unique coupon code name pools for auto-generation
+    const couponNamePools = [
+        ['ENDIRIM', 'YENI', 'SEHER', 'AURA', 'QELBI', 'ULDUZ', 'BAHAR', 'GUNES', 'SEVGI', 'UMID',
+         'SAFLIK', 'SHEFA', 'RAHMET', 'BEREKET', 'ISIQ', 'GUZEL', 'MUTLU', 'HEDIYE', 'FIRSAT', 'SANS',
+         'CINAR', 'DENIZ', 'BULUD', 'MELEK', 'GIZLI', 'ATLAS', 'ZUMRUD', 'MIRVARI', 'IPEK', 'CICEK',
+         'QARANFIL', 'NARMIN', 'FERAH', 'HUZUR', 'ELIXIR', 'NICAT', 'KAIZEN', 'ROYAL', 'ZIRVE', 'LOTUS',
+         'SAFIR', 'BRILYANT', 'ALTIN', 'GUMUS', 'MERCAN', 'YAKUT', 'KEHRIBAR', 'NEFER', 'OZAN', 'DUYGU'],
+        ['5', '10', '15', '20', '25', '30', '']
+    ];
+
+    function generateUniqueCouponCodes(count) {
+        const codes = new Set();
+        const names = couponNamePools[0];
+        const suffixes = couponNamePools[1];
+        // Generate unique combinations
+        for (let i = 0; i < names.length && codes.size < count; i++) {
+            for (let j = 0; j < suffixes.length && codes.size < count; j++) {
+                codes.add(names[i] + suffixes[j]);
+            }
+        }
+        // If still need more, add random 2-digit numbers
+        while (codes.size < count) {
+            const name = names[Math.floor(Math.random() * names.length)];
+            const num = Math.floor(Math.random() * 100);
+            codes.add(name + num);
+        }
+        return Array.from(codes);
     }
 
     document.getElementById('campAutoCode').addEventListener('click', function() {
-        document.getElementById('campCouponCode').value = generateCouponCode();
+        const maxCoupons = parseInt(document.getElementById('campMaxCoupons').value) || 50;
+        const codes = generateUniqueCouponCodes(maxCoupons);
+        document.getElementById('campCouponCodes').value = codes.join('\n');
+        updateCodeCount();
     });
+
+    function updateCodeCount() {
+        const textarea = document.getElementById('campCouponCodes');
+        const codes = textarea.value.split('\n').map(c => c.trim()).filter(c => c.length > 0);
+        const countEl = document.getElementById('campCodeCount');
+        if (countEl) countEl.textContent = codes.length + ' kod daxil edilib';
+    }
+
+    document.getElementById('campCouponCodes').addEventListener('input', updateCodeCount);
 
     // Campaign image preview with drag + zoom
     const campImgInput = document.getElementById('campImageFile');
@@ -3559,11 +3593,14 @@ document.addEventListener("DOMContentLoaded", function() {
         const maxCoupons = parseInt(document.getElementById('campMaxCoupons').value) || 50;
         const durationValue = parseInt(document.getElementById('campDurationValue').value) || 24;
         const durationUnit = document.getElementById('campDurationUnit').value;
-        const couponCode = document.getElementById('campCouponCode').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+        const couponCodesRaw = document.getElementById('campCouponCodes').value.trim();
+        const couponCodes = couponCodesRaw.split('\n').map(c => c.trim().toUpperCase().replace(/[^A-Z0-9]/g, '')).filter(c => c.length > 0);
+        // Remove duplicates
+        const uniqueCouponCodes = [...new Set(couponCodes)];
         const active = document.getElementById('campActive').checked;
 
         if (!title) { msg.textContent = 'Başlıq tələb olunur!'; msg.style.color = '#e74c3c'; return; }
-        if (!couponCode) { msg.textContent = 'Kupon kodu tələb olunur!'; msg.style.color = '#e74c3c'; return; }
+        if (uniqueCouponCodes.length === 0) { msg.textContent = 'Ən azı bir kupon kodu daxil edin!'; msg.style.color = '#e74c3c'; return; }
 
         msg.textContent = 'Saxlanılır...'; msg.style.color = 'var(--gold)';
         this.disabled = true;
@@ -3593,8 +3630,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 desc: desc,
                 slug: slug,
                 discountPercent: discount,
-                maxCoupons: maxCoupons,
-                couponCode: couponCode,
+                maxCoupons: uniqueCouponCodes.length,
+                couponCodes: uniqueCouponCodes,
                 durationMinutes: durationMinutes,
                 active: active,
                 timestamp: now
@@ -3642,7 +3679,9 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('campMaxCoupons').value = '50';
         document.getElementById('campDurationValue').value = '24';
         document.getElementById('campDurationUnit').value = 'hours';
-        document.getElementById('campCouponCode').value = '';
+        document.getElementById('campCouponCodes').value = '';
+        var codeCountEl = document.getElementById('campCodeCount');
+        if (codeCountEl) codeCountEl.textContent = '';
         document.getElementById('campActive').checked = true;
         document.getElementById('campImageFile').value = '';
         document.getElementById('campImageName').textContent = '';
@@ -3679,7 +3718,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         '<div style="font-weight:600;font-size:0.88rem;color:var(--text-primary);">' + (c.title || '') + '</div>' +
                         '<div style="font-size:0.75rem;color:#999;margin-top:2px;">' +
                             '<span style="color:' + statusColor + ';font-weight:600;">' + statusText + '</span> · ' +
-                            c.discountPercent + '% endirim · ' + (c.claimedCount || 0) + '/' + c.maxCoupons + ' kupon · Kod: <b>' + c.couponCode + '</b>' +
+                            c.discountPercent + '% endirim · ' + (c.claimedCount || 0) + '/' + c.maxCoupons + ' kupon · ' + (c.couponCodes ? c.couponCodes.length + ' unikal kod' : (c.couponCode ? 'Kod: <b>' + c.couponCode + '</b>' : '')) +
                         '</div>' +
                     '</div>' +
                     '<div style="display:flex;gap:4px;flex-shrink:0;">' +
@@ -3703,7 +3742,15 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('campDesc').value = c.desc || '';
         document.getElementById('campDiscount').value = c.discountPercent || 10;
         document.getElementById('campMaxCoupons').value = c.maxCoupons || 50;
-        document.getElementById('campCouponCode').value = c.couponCode || '';
+        // Support both old single couponCode and new couponCodes array
+        if (c.couponCodes && Array.isArray(c.couponCodes)) {
+            document.getElementById('campCouponCodes').value = c.couponCodes.join('\n');
+        } else if (c.couponCode) {
+            document.getElementById('campCouponCodes').value = c.couponCode;
+        } else {
+            document.getElementById('campCouponCodes').value = '';
+        }
+        updateCodeCount();
         document.getElementById('campActive').checked = c.active !== false;
 
         // Restore duration

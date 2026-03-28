@@ -69,6 +69,7 @@ module.exports = async (req, res) => {
         // Increment claimedCount with ETag for race condition safety
         const countUrl = `${FIREBASE_DB_URL}/campaigns/${campaignId}/claimedCount.json`;
         let claimed = false;
+        let claimedIndex = 0;
         for (let attempt = 0; attempt < 5; attempt++) {
             const countRes = await fetch(countUrl, { headers: { 'X-Firebase-ETag': 'true' } });
             const etag = countRes.headers.get('etag');
@@ -86,6 +87,7 @@ module.exports = async (req, res) => {
 
             if (putRes.status === 200) {
                 claimed = true;
+                claimedIndex = currentCount; // 0-based index of this claim
                 break;
             }
             // 412 = ETag mismatch, retry
@@ -99,11 +101,18 @@ module.exports = async (req, res) => {
             return res.status(500).json({ error: 'Kupon alma uğursuz oldu, yenidən cəhd edin' });
         }
 
-        // Generate unique coupon code per user
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let suffix = '';
-        for (let i = 0; i < 5; i++) suffix += chars[Math.floor(Math.random() * chars.length)];
-        const uniqueCode = (campaign.couponCode || 'KUPON') + '-' + suffix;
+        // Get the unique coupon code for this participant from the predefined list
+        const couponCodes = campaign.couponCodes || [];
+        let uniqueCode;
+        if (couponCodes.length > 0 && claimedIndex < couponCodes.length) {
+            uniqueCode = couponCodes[claimedIndex];
+        } else {
+            // Fallback for old campaigns with single couponCode
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let suffix = '';
+            for (let i = 0; i < 5; i++) suffix += chars[Math.floor(Math.random() * chars.length)];
+            uniqueCode = (campaign.couponCode || 'KUPON') + '-' + suffix;
+        }
 
         // Save claim record
         const claimData = {
