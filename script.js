@@ -927,12 +927,41 @@ document.addEventListener('DOMContentLoaded', () => {
         return html;
     }
 
-    async function fetchAnnouncementsAndCampaigns() {
+    var cachedAnnouncements = [];
+    var cachedCampaigns = [];
+
+    function renderAnnSectionPage() {
         var section = document.getElementById('announcementsSection');
         var leftCol = document.getElementById('annSplitLeft');
         var rightCol = document.getElementById('annSplitRight');
         var annGrid = document.getElementById('annSplitGrid');
         var campGrid = document.getElementById('campSplitGrid');
+        if (!section) return;
+
+        var hasAnn = cachedAnnouncements.length > 0;
+        var hasCamp = cachedCampaigns.length > 0;
+
+        if (!hasAnn && !hasCamp) { section.style.display = 'none'; return; }
+        section.style.display = '';
+
+        if (hasAnn && leftCol && annGrid) {
+            leftCol.style.display = '';
+            annGrid.innerHTML = cachedAnnouncements.slice(0, 2).map(renderAnnCard).join('');
+        } else if (leftCol) {
+            leftCol.style.display = 'none';
+        }
+
+        if (hasCamp && rightCol && campGrid) {
+            rightCol.style.display = '';
+            campGrid.innerHTML = cachedCampaigns.slice(0, 2).map(renderCampCard).join('');
+            startCampCountdowns();
+        } else if (rightCol) {
+            rightCol.style.display = 'none';
+        }
+    }
+
+    async function fetchAnnouncementsAndCampaigns() {
+        var section = document.getElementById('announcementsSection');
         if (!section) return;
 
         try {
@@ -943,35 +972,11 @@ document.addEventListener('DOMContentLoaded', () => {
             var annData = await annRes.json();
             var campData = await campRes.json();
 
-            // Filter and sort announcements
-            var announcements = annData ? Object.values(annData).filter(function(a) { return a.active !== false; }).sort(function(a, b) { return (b.timestamp || 0) - (a.timestamp || 0); }) : [];
+            cachedAnnouncements = annData ? Object.values(annData).filter(function(a) { return a.active !== false; }).sort(function(a, b) { return (b.timestamp || 0) - (a.timestamp || 0); }) : [];
 
-            // Filter and sort campaigns
-            var campaigns = campData ? Object.entries(campData).map(function(e) { return Object.assign({ id: e[0] }, e[1]); }).filter(function(c) { return c.active !== false; }).sort(function(a, b) { return (b.timestamp || 0) - (a.timestamp || 0); }) : [];
+            cachedCampaigns = campData ? Object.entries(campData).map(function(e) { return Object.assign({ id: e[0] }, e[1]); }).filter(function(c) { return c.active !== false; }).sort(function(a, b) { return (b.timestamp || 0) - (a.timestamp || 0); }) : [];
 
-            var hasAnn = announcements.length > 0;
-            var hasCamp = campaigns.length > 0;
-
-            // Hide whole section if nothing
-            if (!hasAnn && !hasCamp) { section.style.display = 'none'; return; }
-            section.style.display = '';
-
-            // Left: Announcements (max 2)
-            if (hasAnn && leftCol && annGrid) {
-                leftCol.style.display = '';
-                annGrid.innerHTML = announcements.slice(0, 2).map(renderAnnCard).join('');
-            } else if (leftCol) {
-                leftCol.style.display = 'none';
-            }
-
-            // Right: Campaigns (max 2)
-            if (hasCamp && rightCol && campGrid) {
-                rightCol.style.display = '';
-                campGrid.innerHTML = campaigns.slice(0, 2).map(renderCampCard).join('');
-                startCampCountdowns();
-            } else if (rightCol) {
-                rightCol.style.display = 'none';
-            }
+            renderAnnSectionPage();
         } catch(e) {
             if (section) section.style.display = 'none';
         }
