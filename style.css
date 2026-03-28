@@ -66,7 +66,7 @@
 .disclaimer-title {
     font-family: var(--font-display);
     font-size: 2rem;
-    color: var(--gold, #2d8157);
+    color: var(--gold, #1a3c2a);
     margin-bottom: 20px;
     display: flex;
     align-items: center;
@@ -86,7 +86,7 @@
 }
 
 .disclaimer-text strong {
-    color: var(--gold, #2d8157);
+    color: var(--gold, #1a3c2a);
 }
 
 .disclaimer-accept {
@@ -149,17 +149,17 @@
     --bg-secondary: #f0f7f3;
     --bg-card: #ffffff;
     --bg-card-hover: #e8f2ec;
-    --gold: #2d8157;
-    --gold-light: #3a9968;
-    --gold-dark: #1f5e3d;
+    --gold: #1a3c2a;
+    --gold-light: #24503a;
+    --gold-dark: #122b1e;
     --text-primary: #0d0c22;
     --text-secondary: #3d3d4e;
     --text-muted: #5a5470;
-    --border-color: rgba(45, 129, 87, 0.2);
+    --border-color: rgba(26, 60, 42, 0.2);
     --border-color-light: rgba(0, 0, 0, 0.06);
-    --gradient-gold: linear-gradient(135deg, #2d8157, #3a9968, #2d8157);
+    --gradient-gold: linear-gradient(135deg, #1a3c2a, #24503a, #1a3c2a);
     --gradient-bg: linear-gradient(180deg, #ffffff 0%, #f0f7f3 50%, #ffffff 100%);
-    --shadow-gold: 0 0 30px rgba(45, 129, 87, 0.15);
+    --shadow-gold: 0 0 30px rgba(26, 60, 42, 0.15);
     --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.08);
     --font-display: 'Montserrat', sans-serif;
     --font-body: 'Inter', sans-serif;
@@ -2028,7 +2028,7 @@ img {
     position: absolute;
     bottom: calc(100% + 12px);
     left: 0;
-    background: linear-gradient(145deg, #1a3c2a, #2d8157);
+    background: linear-gradient(145deg, #1a3c2a, #24503a);
     border-radius: 14px;
     padding: 14px 16px;
     width: 200px;
@@ -2045,7 +2045,7 @@ img {
     left: 24px;
     width: 14px;
     height: 14px;
-    background: #2d8157;
+    background: #1a3c2a;
     transform: rotate(45deg);
 }
 
@@ -4574,8 +4574,8 @@ blockquote.hero-headline-quote-wrap {
 .blog-post-card.most-read {
     transform: translateY(-18px) scale(1.03);
     box-shadow:
-        0 0 0 2px #2d8157,
-        0 20px 40px rgba(45, 129, 87, 0.18),
+        0 0 0 2px #1a3c2a,
+        0 20px 40px rgba(26, 60, 42, 0.18),
         0 8px 16px rgba(0, 0, 0, 0.08);
     border: none;
     position: relative;
@@ -4600,7 +4600,7 @@ blockquote.hero-headline-quote-wrap {
     display: block;
     margin-top: -18px;
     transform: translateY(-2px) scale(1.03);
-    background: linear-gradient(135deg, #1a6b42 0%, #2d8157 40%, #1a6b42 60%, #145234 100%);
+    background: linear-gradient(135deg, #1a3c2a 0%, #24503a 40%, #1a3c2a 60%, #122b1e 100%);
     background-size: 200% 100%;
     animation: shimmerBadge 2s ease-in-out infinite;
     color: #fff;
@@ -4643,7 +4643,7 @@ blockquote.hero-headline-quote-wrap {
     position: absolute;
     inset: -2px;
     border-radius: 14px;
-    background: linear-gradient(135deg, #3a9968, #6fcf97, #2d8157, #6fcf97, #3a9968);
+    background: linear-gradient(135deg, #24503a, #4a8c5c, #1a3c2a, #4a8c5c, #24503a);
     z-index: -1;
     animation: shimmerBorderWeek 4s ease-in-out infinite;
     background-size: 300% 300%;
@@ -4671,7 +4671,7 @@ blockquote.hero-headline-quote-wrap {
     top: -10px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, #3a9968 0%, #6fcf97 40%, #3a9968 60%, #1f5e3d 100%);
+    background: linear-gradient(135deg, #24503a 0%, #4a8c5c 40%, #24503a 60%, #122b1e 100%);
     background-size: 200% 100%;
     animation: shimmerBadgeWeek 2.5s ease-in-out infinite;
     color: #fff;
