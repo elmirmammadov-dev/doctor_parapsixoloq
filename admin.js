@@ -3818,10 +3818,25 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     window.viewCampClaims = async function(id) {
+        console.log('viewCampClaims called with id:', id);
         try {
             const snap = await adminDb.ref('campaignClaims/' + id).once('value');
             const claims = snap.val();
-            if (!claims) { alert('Bu kampaniyada hələ kupon alınmayıb.'); return; }
+            console.log('claims:', claims);
+            if (!claims) {
+                // Show empty state in modal instead of alert
+                var emptyModal = document.createElement('div');
+                emptyModal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
+                emptyModal.innerHTML = '<div style="background:#fff;border-radius:16px;padding:40px;text-align:center;max-width:400px;width:90%;">' +
+                    '<i class="fas fa-inbox" style="font-size:3rem;color:#ddd;margin-bottom:16px;display:block;"></i>' +
+                    '<h3 style="margin:0 0 8px;color:#333;">Hələ kupon alınmayıb</h3>' +
+                    '<p style="margin:0 0 20px;color:#999;font-size:0.85rem;">Bu kampaniyada hələ heç kim kupon almayıb.</p>' +
+                    '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="padding:8px 24px;background:var(--gold);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Bağla</button>' +
+                '</div>';
+                document.body.appendChild(emptyModal);
+                emptyModal.addEventListener('click', function(e) { if (e.target === emptyModal) emptyModal.remove(); });
+                return;
+            }
             const list = Object.values(claims).sort(function(a, b) { return (b.claimedAt || 0) - (a.claimedAt || 0); });
             let html = '<div style="max-height:60vh;overflow-y:auto;padding:10px;">';
             html += '<table style="width:100%;border-collapse:collapse;font-size:0.82rem;">';
