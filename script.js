@@ -942,7 +942,6 @@ document.addEventListener('DOMContentLoaded', () => {
             var cBgSize = cZoom <= 1 ? 'cover' : (cZoom * 100) + '%';
             html += '<div class="camp-card-img" style="background-image:url(' + c.image + ');background-position:' + cPos + ';background-size:' + cBgSize + ';">';
             html += '<div class="camp-discount-badge">-' + c.discountPercent + '%</div>';
-            if (!expired && c.endTimestamp) html += campInlineTimerHtml(c.endTimestamp);
             html += '</div>';
         }
         var campTitle = c['title_' + currentLang] || c.title || '';
@@ -950,6 +949,7 @@ document.addEventListener('DOMContentLoaded', () => {
         html += '<div class="camp-card-body">';
         html += '<div class="camp-card-title">' + campTitle + '</div>';
         if (campDesc) html += '<div class="camp-card-desc">' + campDesc + '</div>';
+        if (!expired && c.endTimestamp) html += campCountdownHtml(c.endTimestamp);
         html += '<div class="camp-progress-wrap">';
         html += '<div class="camp-progress-info"><span>Kupon alınıb</span><strong>' + claimed + '/' + max + ' kupon</strong></div>';
         html += '<div class="camp-progress-bar"><div class="camp-progress-fill" style="width:' + pct + '%;"></div></div></div>';

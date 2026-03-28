@@ -3556,21 +3556,7 @@ blockquote.hero-headline-quote-wrap {
     padding: 4px 12px;
     border-radius: 20px;
 }
-.camp-card-timer-inline {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: #e74c3c;
-    background: rgba(255,255,255,0.9);
-    padding: 4px 10px;
-    border-radius: 20px;
-}
-.camp-card-timer-inline span { margin: 0 1px; }
+.camp-card-timer-inline { display: none; }
 .camp-card-body {
     padding: 14px 16px 16px;
 }
@@ -3593,7 +3579,35 @@ blockquote.hero-headline-quote-wrap {
     margin-bottom: 10px;
 }
 .camp-countdown {
-    display: none;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 8px 0;
+}
+.camp-countdown-item {
+    text-align: center;
+    background: transparent;
+    border-radius: 0;
+    padding: 0 10px;
+    min-width: auto;
+    border-right: 1px solid #eee;
+}
+.camp-countdown-item:last-child {
+    border-right: none;
+}
+.camp-countdown-num {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #e74c3c;
+    line-height: 1.2;
+}
+.camp-countdown-label {
+    font-size: 0.6rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
 }
 .camp-progress-wrap {
     margin-bottom: 10px;
