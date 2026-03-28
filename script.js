@@ -472,12 +472,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (sessionStorage.getItem('disclaimerAccepted') && disclaimerOverlay) {
         disclaimerOverlay.classList.add('hidden');
+    } else if (disclaimerOverlay) {
+        document.body.style.overflow = 'hidden';
     }
 
     function closeDisclaimer() {
         if (disclaimerOverlay) {
             disclaimerOverlay.classList.add('hidden');
             sessionStorage.setItem('disclaimerAccepted', '1');
+            document.body.style.overflow = '';
         }
     }
 
