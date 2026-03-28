@@ -429,6 +429,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (tab === 'reviews') loadAdminReviews();
         if (tab === 'announcements') loadAdminAnnouncements();
         if (tab === 'campaigns') loadAdminCampaigns();
+        if (tab === 'subscribers') loadFullSubscribers();
     }
 
     // === ADMIN REVIEWS ===
@@ -3856,6 +3857,71 @@ document.addEventListener("DOMContentLoaded", function() {
             navigator.clipboard.writeText(emails).then(function() {
                 alert(Object.values(subs).length + ' email kopyalandı!');
             });
+        });
+    };
+
+    function loadFullSubscribers() {
+        var listEl = document.getElementById('subsFullList');
+        var totalEl = document.getElementById('subTotalCount');
+        var todayEl = document.getElementById('subTodayCount');
+        if (!listEl) return;
+        listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> Yüklənir...</p>';
+
+        adminDb.ref('campaign_subscribers').once('value', function(snap) {
+            var subs = snap.val();
+            if (!subs) {
+                listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;">Hələ abunəçi yoxdur.</p>';
+                if (totalEl) totalEl.textContent = '0';
+                if (todayEl) todayEl.textContent = '0';
+                return;
+            }
+            var entries = Object.entries(subs);
+            var todayStart = new Date(); todayStart.setHours(0,0,0,0);
+            var todayCount = 0;
+
+            if (totalEl) totalEl.textContent = entries.length;
+
+            listEl.innerHTML = entries.sort(function(a, b) {
+                return (b[1].subscribedAt || 0) - (a[1].subscribedAt || 0);
+            }).map(function(e) {
+                var key = e[0], s = e[1];
+                var d = new Date(s.subscribedAt);
+                if (d >= todayStart) todayCount++;
+                var dateStr = d.toLocaleDateString('az') + ' ' + d.toLocaleTimeString('az', {hour:'2-digit', minute:'2-digit'});
+                return '<div style="display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid #f0f0f0;font-size:0.82rem;">' +
+                    '<span style="flex:2;color:var(--text-primary);font-weight:500;overflow:hidden;text-overflow:ellipsis;">' + (s.email || '') + '</span>' +
+                    '<span style="flex:1;text-align:center;"><span style="background:#f0f7f3;padding:2px 8px;border-radius:6px;font-size:0.7rem;font-weight:600;color:var(--gold);">' + (s.lang || 'az').toUpperCase() + '</span></span>' +
+                    '<span style="flex:1;text-align:center;color:#999;font-size:0.75rem;">' + dateStr + '</span>' +
+                    '<span style="flex:0.5;text-align:center;"><button onclick="deleteSubscriber(\'' + key + '\')" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-size:0.82rem;" title="Sil"><i class="fas fa-trash"></i></button></span>' +
+                '</div>';
+            }).join('');
+
+            if (todayEl) todayEl.textContent = todayCount;
+        });
+    }
+
+    window.deleteSubscriber = function(key) {
+        if (!confirm('Bu abunəçini silmək istəyirsiniz?')) return;
+        adminDb.ref('campaign_subscribers/' + key).remove().then(function() {
+            loadFullSubscribers();
+            loadCampSubscribers();
+        });
+    };
+
+    window.exportSubsCsv = function() {
+        adminDb.ref('campaign_subscribers').once('value', function(snap) {
+            var subs = snap.val();
+            if (!subs) { alert('Abunəçi yoxdur.'); return; }
+            var csv = 'Email,Dil,Tarix\n';
+            Object.values(subs).forEach(function(s) {
+                var d = new Date(s.subscribedAt).toISOString();
+                csv += (s.email || '') + ',' + (s.lang || 'az') + ',' + d + '\n';
+            });
+            var blob = new Blob([csv], { type: 'text/csv' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'kampaniya_abunecileri.csv';
+            a.click();
         });
     };
 

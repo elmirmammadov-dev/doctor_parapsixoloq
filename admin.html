@@ -69,6 +69,9 @@
                     <button class="admin-tab-btn" data-tab="campaigns" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
                         <i class="fas fa-gift"></i> <span data-admin-i18n="tabCampaigns">Kampaniyalar</span>
                     </button>
+                    <button class="admin-tab-btn" data-tab="subscribers" style="flex:1;padding:10px;border:2px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-size:0.8rem;">
+                        <i class="fas fa-envelope"></i> Abunəçilər
+                    </button>
                 </div>
 
                 <!-- Contentful tab — New Article Form -->
@@ -659,6 +662,39 @@
                             <p style="text-align:center;color:#999;font-size:0.82rem;">Yüklənir...</p>
                         </div>
                         <button type="button" id="campCopyEmails" style="padding:8px 16px;border:1.5px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;font-size:0.78rem;margin-right:8px;" onclick="copyCampEmails()"><i class="fas fa-copy"></i> Emailləri kopyala</button>
+                    </div>
+                </div>
+
+                <!-- Subscribers Tab -->
+                <div class="admin-tab-content" id="tabSubscribers" style="display:none;">
+                    <h3 style="margin-bottom:16px;color:var(--text-primary);font-size:1rem;"><i class="fas fa-envelope" style="color:var(--gold);"></i> Kampaniya Abunəçiləri</h3>
+
+                    <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+                        <div style="flex:1;min-width:120px;padding:16px;background:#f0f7f3;border-radius:12px;text-align:center;">
+                            <div id="subTotalCount" style="font-size:1.6rem;font-weight:800;color:var(--gold);">0</div>
+                            <div style="font-size:0.75rem;color:#999;margin-top:4px;">Ümumi abunəçi</div>
+                        </div>
+                        <div style="flex:1;min-width:120px;padding:16px;background:#fff3f3;border-radius:12px;text-align:center;">
+                            <div id="subTodayCount" style="font-size:1.6rem;font-weight:800;color:#e74c3c;">0</div>
+                            <div style="font-size:0.75rem;color:#999;margin-top:4px;">Bu gün</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:8px;margin-bottom:16px;">
+                        <button type="button" onclick="copyCampEmails()" style="padding:10px 18px;border:1.5px solid var(--gold);border-radius:10px;background:#fff;color:var(--gold);font-weight:600;cursor:pointer;font-size:0.82rem;"><i class="fas fa-copy"></i> Bütün emailləri kopyala</button>
+                        <button type="button" onclick="exportSubsCsv()" style="padding:10px 18px;border:1.5px solid #27ae60;border-radius:10px;background:#fff;color:#27ae60;font-weight:600;cursor:pointer;font-size:0.82rem;"><i class="fas fa-file-csv"></i> CSV yüklə</button>
+                    </div>
+
+                    <div style="border:1px solid #eee;border-radius:12px;overflow:hidden;">
+                        <div style="display:flex;padding:10px 14px;background:#f8f9fa;font-size:0.75rem;font-weight:700;color:#666;border-bottom:1px solid #eee;">
+                            <span style="flex:2;">Email</span>
+                            <span style="flex:1;text-align:center;">Dil</span>
+                            <span style="flex:1;text-align:center;">Tarix</span>
+                            <span style="flex:0.5;text-align:center;">Sil</span>
+                        </div>
+                        <div id="subsFullList" style="max-height:60vh;overflow-y:auto;">
+                            <p style="text-align:center;color:#999;padding:20px 0;font-size:0.82rem;">Yüklənir...</p>
+                        </div>
                     </div>
                 </div>
 
