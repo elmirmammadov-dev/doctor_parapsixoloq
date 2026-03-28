@@ -3269,35 +3269,100 @@ blockquote.hero-headline-quote-wrap {
 
 /* === ANNOUNCEMENTS SECTION (Homepage) === */
 .announcements-section {
-    background: var(--bg-primary, #f8f9fa);
-    padding: 40px 0 30px;
+    background: #fff;
+    padding: 50px 0 40px;
 }
-.ann-section-header {
-    text-align: center;
-    margin-bottom: 20px;
+.ann-main-title {
+    font-family: var(--font-display, 'Montserrat', sans-serif);
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-primary, #1a1a2e);
+    margin: 0 0 12px;
 }
-.ann-section-grid {
+.ann-main-line {
+    width: 50px;
+    height: 3px;
+    background: var(--gold, #1a3c2a);
+    margin-bottom: 32px;
+}
+
+/* === SPLIT LAYOUT: Elanlar + Kampaniyalar === */
+.ann-camp-split {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 40px;
+    align-items: start;
 }
+.ann-split-col {
+    min-width: 0;
+}
+.ann-split-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 12px;
+}
+.ann-split-title {
+    font-family: var(--font-display, 'Montserrat', sans-serif);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary, #1a1a2e);
+    margin: 0;
+}
+.camp-title-color { color: var(--gold, #1a3c2a); }
+.camp-title-icon { color: var(--gold, #1a3c2a); font-size: 1rem; }
+.ann-split-subtitle {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #999;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+.ann-split-grid,
+.camp-split-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.ann-split-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+    color: var(--gold, #1a3c2a);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+.ann-split-more:hover {
+    gap: 10px;
+}
+.camp-more {
+    color: var(--gold, #1a3c2a);
+}
+
+/* Announcement Card - Redesigned */
 .ann-section-card {
     background: #fff;
-    border-radius: 14px;
+    border-radius: 16px;
     overflow: hidden;
     text-decoration: none;
     color: inherit;
     transition: all 0.35s;
     position: relative;
-    border: 2px solid #e74c3c;
+    border: none;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 .ann-section-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 36px rgba(231,76,60,0.18);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.1);
 }
 .ann-section-card-img {
     width: 100%;
-    aspect-ratio: 2/1;
+    aspect-ratio: 16/9;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -3305,179 +3370,72 @@ blockquote.hero-headline-quote-wrap {
 }
 .ann-section-badge {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    background: #e74c3c;
+    top: 12px;
+    left: 12px;
+    background: var(--gold, #1a3c2a);
     color: #fff;
-    font-size: 0.55rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    padding: 3px 9px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
     border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(231,76,60,0.45);
     text-transform: uppercase;
 }
 .ann-section-card-body {
-    padding: 10px 14px 12px;
+    padding: 16px 18px 18px;
+}
+.ann-section-card-date {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--gold, #1a3c2a);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+.ann-section-card-date::before {
+    display: none;
 }
 .ann-section-card-title {
     font-family: var(--font-display);
-    font-size: 0.82rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--text-primary, #1a1a2e);
-    line-height: 1.3;
-    margin-bottom: 4px;
+    line-height: 1.4;
+    margin-bottom: 6px;
     word-break: break-word;
     overflow-wrap: break-word;
 }
 .ann-section-card-desc {
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     color: #666;
-    line-height: 1.5;
+    line-height: 1.6;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     word-break: break-word;
     overflow-wrap: break-word;
-}
-.ann-section-card-date {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.65rem;
-    color: #e74c3c;
-    margin-top: 6px;
-    font-weight: 600;
-}
-.ann-section-card-date::before {
-    content: '';
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: #e74c3c;
-}
-.ann-section-pagination {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    margin-top: 32px;
-}
-.ann-section-pagination button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid rgba(26,26,46,0.15);
-    background: #fff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    color: #666;
-    transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-.ann-section-pagination button:hover {
-    border-color: #e74c3c;
-    color: #e74c3c;
-}
-.ann-section-pagination button:disabled {
-    opacity: 0.25;
-    cursor: default;
-}
-.ann-section-pagination span {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #999;
-}
-.ann-section-view-all {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 28px;
-    padding: 12px 28px;
-    background: #c5e84d;
-    color: #1a3c2a;
-    font-size: 0.88rem;
-    font-weight: 700;
-    text-decoration: none;
-    border-radius: 50px;
-    transition: all 0.3s;
-    box-shadow: 0 4px 16px rgba(197,232,77,0.3);
-}
-.ann-section-view-all:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(197,232,77,0.45);
-}
-@media (max-width: 1024px) {
-    .ann-section-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 600px) {
-    .ann-section-grid { grid-template-columns: 1fr; }
-    .announcements-section { padding: 50px 0; }
-}
-
-/* === SPLIT LAYOUT: Elanlar + Kampaniyalar === */
-.ann-camp-split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    align-items: start;
-}
-.ann-split-col {
-    min-width: 0;
-}
-.ann-split-title {
-    font-family: var(--font-display, 'Montserrat', sans-serif);
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--text-primary, #1a1a2e);
     margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
-.ann-split-title i { color: #e74c3c; }
-.ann-split-grid,
-.camp-split-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.ann-split-more {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 16px;
-    padding: 10px 22px;
-    background: #c5e84d;
-    color: #1a3c2a;
+.ann-section-card-link {
+    color: var(--gold, #1a3c2a);
     font-size: 0.82rem;
-    font-weight: 700;
+    font-weight: 600;
     text-decoration: none;
-    border-radius: 50px;
-    transition: all 0.3s;
-    box-shadow: 0 3px 12px rgba(197,232,77,0.3);
-}
-.ann-split-more:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 18px rgba(197,232,77,0.45);
 }
 
-/* Campaign Card */
+/* Campaign Card - Redesigned */
 .camp-card {
     background: #fff;
-    border-radius: 14px;
+    border-radius: 16px;
     overflow: hidden;
-    border: 2px solid var(--gold, #c5a637);
+    border: 1px solid #eee;
     transition: all 0.35s;
     position: relative;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }
 .camp-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(197,166,55,0.18);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
 }
 .camp-card-img {
     width: 100%;
@@ -3489,19 +3447,32 @@ blockquote.hero-headline-quote-wrap {
 }
 .camp-discount-badge {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    top: 10px;
+    left: 10px;
+    background: var(--gold, #1a3c2a);
     color: #fff;
-    font-size: 0.9rem;
-    font-weight: 800;
-    padding: 4px 10px;
-    border-radius: 8px;
-    box-shadow: 0 3px 12px rgba(231,76,60,0.5);
-    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
 }
+.camp-card-timer-inline {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #e74c3c;
+    background: rgba(255,255,255,0.9);
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+.camp-card-timer-inline span { margin: 0 1px; }
 .camp-card-body {
-    padding: 12px 16px 14px;
+    padding: 14px 16px 16px;
 }
 .camp-card-title {
     font-family: var(--font-display, 'Montserrat', sans-serif);
@@ -3512,81 +3483,68 @@ blockquote.hero-headline-quote-wrap {
     margin-bottom: 4px;
 }
 .camp-card-desc {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: #666;
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 .camp-countdown {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 6px;
-}
-.camp-countdown-item {
-    text-align: center;
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 6px 10px;
-    min-width: 44px;
-}
-.camp-countdown-num {
-    font-size: 1.15rem;
-    font-weight: 800;
-    color: #e74c3c;
-    line-height: 1;
-}
-.camp-countdown-label {
-    font-size: 0.62rem;
-    color: #999;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 2px;
+    display: none;
 }
 .camp-progress-wrap {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+}
+.camp-progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    color: #999;
+    margin-bottom: 5px;
+}
+.camp-progress-info strong {
+    color: var(--text-primary, #1a1a2e);
+    font-weight: 600;
 }
 .camp-progress-bar {
-    height: 7px;
+    height: 5px;
     background: #eee;
     border-radius: 3px;
     overflow: hidden;
 }
 .camp-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #e74c3c, #c5a637);
+    background: var(--gold, #1a3c2a);
     border-radius: 3px;
     transition: width 0.5s;
 }
 .camp-progress-text {
-    font-size: 0.75rem;
-    color: #999;
-    margin-top: 4px;
-    display: flex;
-    justify-content: space-between;
+    display: none;
 }
 .camp-claim-btn {
     width: 100%;
-    padding: 10px;
+    padding: 11px;
     border: none;
     border-radius: 10px;
-    background: linear-gradient(135deg, var(--gold, #c5a637), #d4b445);
+    background: #d4a017;
     color: #fff;
     font-weight: 700;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.3s;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
 }
 .camp-claim-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(197,166,55,0.4);
+    background: #c49315;
+    box-shadow: 0 4px 14px rgba(212,160,23,0.35);
 }
 .camp-claim-btn:disabled {
-    background: #ccc;
+    background: #e0e0e0;
+    color: #999;
     cursor: default;
     transform: none;
     box-shadow: none;
@@ -3594,20 +3552,20 @@ blockquote.hero-headline-quote-wrap {
 .camp-ended-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.55);
+    background: rgba(0,0,0,0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 14px;
+    border-radius: 16px;
     z-index: 2;
 }
 .camp-ended-text {
-    background: #e74c3c;
+    background: rgba(0,0,0,0.7);
     color: #fff;
-    padding: 10px 28px;
-    border-radius: 10px;
+    padding: 8px 24px;
+    border-radius: 8px;
     font-weight: 800;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     letter-spacing: 1px;
     text-transform: uppercase;
 }

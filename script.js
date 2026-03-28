@@ -869,9 +869,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return '<' + tag + ' class="ann-section-card"' + href + ' style="text-decoration:none;color:inherit;">' +
             (a.image ? '<div class="ann-section-card-img" style="background-image:url(' + a.image + ');background-position:' + pos + ';background-size:' + bgSize + ';">' + (a.showBadge !== false ? '<span class="ann-section-badge">YENİ</span>' : '') + '</div>' : '') +
             '<div class="ann-section-card-body">' +
+                '<div class="ann-section-card-date">' + (a.date || '') + '</div>' +
                 '<div class="ann-section-card-title">' + aTitle + '</div>' +
                 (aDesc ? '<div class="ann-section-card-desc">' + aDesc + '</div>' : '') +
-                '<div class="ann-section-card-date">' + (a.date || '') + '</div>' +
+                '<span class="ann-section-card-link">Daha ətraflı <i class="fas fa-arrow-right"></i></span>' +
             '</div>' +
         '</' + tag + '>';
     }
@@ -895,6 +896,21 @@ document.addEventListener('DOMContentLoaded', () => {
         return html;
     }
 
+    function campInlineTimerHtml(endTs) {
+        var diff = Math.max(0, endTs - Date.now());
+        if (diff <= 0) return '<span class="camp-card-timer-inline" style="color:#e74c3c;">BİTİB</span>';
+        var d = Math.floor(diff / 86400000);
+        var h = Math.floor((diff % 86400000) / 3600000);
+        var m = Math.floor((diff % 3600000) / 60000);
+        var s = Math.floor((diff % 60000) / 1000);
+        var parts = [];
+        if (d > 0) parts.push(d + ' GÜN');
+        parts.push(h + ' SAAT');
+        parts.push(m + ' DƏQ');
+        parts.push(s + ' SAN');
+        return '<span class="camp-card-timer-inline" data-camp-timer="' + endTs + '"><i class="far fa-clock" style="margin-right:3px;"></i> BİTMƏ VAXTİ: <span style="margin-left:4px;">' + parts.join(' ') + '</span></span>';
+    }
+
     function renderCampCard(c) {
         var expired = isCampExpired(c);
         var claimed = c.claimedCount || 0;
@@ -908,18 +924,21 @@ document.addEventListener('DOMContentLoaded', () => {
             var cPos = c.coverPos || '50% 50%';
             var cZoom = c.coverZoom || 1;
             var cBgSize = cZoom <= 1 ? 'cover' : (cZoom * 100) + '%';
-            html += '<div class="camp-card-img" style="background-image:url(' + c.image + ');background-position:' + cPos + ';background-size:' + cBgSize + ';"><div class="camp-discount-badge">-' + c.discountPercent + '%</div></div>';
+            html += '<div class="camp-card-img" style="background-image:url(' + c.image + ');background-position:' + cPos + ';background-size:' + cBgSize + ';">';
+            html += '<div class="camp-discount-badge">-' + c.discountPercent + '%</div>';
+            if (!expired && c.endTimestamp) html += campInlineTimerHtml(c.endTimestamp);
+            html += '</div>';
         }
         var campTitle = c['title_' + currentLang] || c.title || '';
         var campDesc = c['desc_' + currentLang] || c.desc || '';
         html += '<div class="camp-card-body">';
         html += '<div class="camp-card-title">' + campTitle + '</div>';
         if (campDesc) html += '<div class="camp-card-desc">' + campDesc + '</div>';
-        if (!expired && c.endTimestamp) html += campCountdownHtml(c.endTimestamp);
-        html += '<div class="camp-progress-wrap"><div class="camp-progress-bar"><div class="camp-progress-fill" style="width:' + pct + '%;"></div></div>';
-        html += '<div class="camp-progress-text"><span>' + claimed + ' / ' + max + ' kupon alınıb</span><span>' + (max - claimed) + ' qalıb</span></div></div>';
+        html += '<div class="camp-progress-wrap">';
+        html += '<div class="camp-progress-info"><span>Kupon alınıb</span><strong>' + claimed + '/' + max + ' kupon</strong></div>';
+        html += '<div class="camp-progress-bar"><div class="camp-progress-fill" style="width:' + pct + '%;"></div></div></div>';
         if (!expired && !alreadyClaimed) {
-            html += '<button class="camp-claim-btn" onclick="openCampClaimModal(\'' + c.id + '\',\'' + (c.title || '').replace(/'/g, "\\'") + '\',' + c.discountPercent + ')"><i class="fas fa-ticket-alt"></i> Kuponu al</button>';
+            html += '<button class="camp-claim-btn" onclick="openCampClaimModal(\'' + c.id + '\',\'' + (campTitle).replace(/'/g, "\\'") + '\',' + c.discountPercent + ')">Kuponu əldə et</button>';
         } else if (alreadyClaimed) {
             html += '<button class="camp-claim-btn" disabled><i class="fas fa-check"></i> Kupon alınıb</button>';
         }
