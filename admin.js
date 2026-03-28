@@ -3821,44 +3821,70 @@ document.addEventListener("DOMContentLoaded", function() {
         fetch('https://hekim-sayti-comments-default-rtdb.firebaseio.com/campaignClaims/' + id + '.json')
             .then(function(r) { return r.json(); })
             .then(function(claims) {
-                var modal = document.createElement('div');
-                modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
+                var overlay = document.createElement('div');
+                overlay.id = 'campClaimsOverlay';
+                overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;';
+
+                var box = document.createElement('div');
+                box.style.cssText = 'background:#fff;border-radius:16px;max-width:700px;width:95%;max-height:80vh;overflow:hidden;';
 
                 if (!claims) {
-                    modal.innerHTML = '<div style="background:#fff;border-radius:16px;padding:40px;text-align:center;max-width:400px;width:90%;">' +
-                        '<i class="fas fa-inbox" style="font-size:3rem;color:#ddd;margin-bottom:16px;display:block;"></i>' +
+                    box.style.cssText = 'background:#fff;border-radius:16px;padding:40px;text-align:center;max-width:400px;width:90%;';
+                    box.innerHTML = '<i class="fas fa-inbox" style="font-size:3rem;color:#ddd;margin-bottom:16px;display:block;"></i>' +
                         '<h3 style="margin:0 0 8px;color:#333;">Hələ kupon alınmayıb</h3>' +
-                        '<p style="margin:0 0 20px;color:#999;font-size:0.85rem;">Bu kampaniyada hələ heç kim kupon almayıb.</p>' +
-                        '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="padding:8px 24px;background:var(--gold);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Bağla</button>' +
-                    '</div>';
+                        '<p style="margin:0 0 20px;color:#999;font-size:0.85rem;">Bu kampaniyada hələ heç kim kupon almayıb.</p>';
+                    var closeBtn1 = document.createElement('button');
+                    closeBtn1.textContent = 'Bağla';
+                    closeBtn1.style.cssText = 'padding:8px 24px;background:var(--gold);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;';
+                    closeBtn1.onclick = function() { overlay.remove(); };
+                    box.appendChild(closeBtn1);
                 } else {
                     var list = Object.values(claims).sort(function(a, b) { return (b.claimedAt || 0) - (a.claimedAt || 0); });
-                    var html = '<div style="max-height:60vh;overflow-y:auto;padding:10px;">';
-                    html += '<table style="width:100%;border-collapse:collapse;font-size:0.82rem;">';
+
+                    // Header
+                    var header = document.createElement('div');
+                    header.style.cssText = 'padding:16px 20px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;';
+                    var title = document.createElement('h3');
+                    title.style.cssText = 'margin:0;font-size:1rem;';
+                    title.textContent = 'Kupon alanlar (' + list.length + ' nəfər)';
+                    var closeBtn2 = document.createElement('button');
+                    closeBtn2.innerHTML = '&times;';
+                    closeBtn2.style.cssText = 'border:none;background:none;font-size:1.5rem;cursor:pointer;color:#999;';
+                    closeBtn2.onclick = function() { overlay.remove(); };
+                    header.appendChild(title);
+                    header.appendChild(closeBtn2);
+                    box.appendChild(header);
+
+                    // Table
+                    var tableWrap = document.createElement('div');
+                    tableWrap.style.cssText = 'max-height:60vh;overflow-y:auto;padding:10px;';
+                    var html = '<table style="width:100%;border-collapse:collapse;font-size:0.82rem;">';
                     html += '<tr style="background:#f5f5f5;"><th style="padding:8px;text-align:left;">Ad Soyad</th><th style="padding:8px;text-align:left;">Kupon</th><th style="padding:8px;text-align:left;">Telefon</th><th style="padding:8px;text-align:left;">Tarix</th></tr>';
                     list.forEach(function(cl) {
                         var d = cl.claimedAt ? new Date(cl.claimedAt) : null;
-                        var dateStr = d ? d.toLocaleDateString('az') + ' ' + d.toLocaleTimeString('az', {hour:'2-digit',minute:'2-digit'}) : '';
+                        var dateStr = d ? d.toLocaleDateString('az') + ' ' + d.toLocaleTimeString('az', {hour:'2-digit', minute:'2-digit'}) : '';
                         html += '<tr style="border-bottom:1px solid #eee;">' +
                             '<td style="padding:8px;">' + (cl.name || '') + ' ' + (cl.surname || '') + '</td>' +
                             '<td style="padding:8px;font-weight:700;color:var(--gold);">' + (cl.couponCode || '-') + '</td>' +
                             '<td style="padding:8px;">' + (cl.phone || '') + '</td>' +
                             '<td style="padding:8px;">' + dateStr + '</td></tr>';
                     });
-                    html += '</table></div>';
-                    modal.innerHTML = '<div style="background:#fff;border-radius:16px;max-width:700px;width:95%;max-height:80vh;overflow:hidden;">' +
-                        '<div style="padding:16px 20px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;">' +
-                            '<h3 style="margin:0;font-size:1rem;">Kupon alanlar (' + list.length + ' nəfər)</h3>' +
-                            '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="border:none;background:none;font-size:1.2rem;cursor:pointer;color:#999;">&times;</button>' +
-                        '</div>' + html + '</div>';
+                    html += '</table>';
+                    tableWrap.innerHTML = html;
+                    box.appendChild(tableWrap);
                 }
 
-                document.body.appendChild(modal);
-                modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+                overlay.appendChild(box);
+                document.body.appendChild(overlay);
+                overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
             })
             .catch(function(e) {
                 console.error('viewCampClaims error:', e);
-                alert('Xəta: ' + e.message);
+                var errOverlay = document.createElement('div');
+                errOverlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;';
+                errOverlay.innerHTML = '<div style="background:#fff;padding:30px;border-radius:16px;text-align:center;"><p style="color:#e74c3c;">Xəta: ' + e.message + '</p></div>';
+                errOverlay.onclick = function() { errOverlay.remove(); };
+                document.body.appendChild(errOverlay);
             });
     };
 
