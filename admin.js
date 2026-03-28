@@ -3818,7 +3818,7 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     window.viewCampClaims = function(id) {
-        fetch(FIREBASE_REST + '/campaignClaims/' + id + '.json')
+        fetch('https://hekim-sayti-comments-default-rtdb.firebaseio.com/campaignClaims/' + id + '.json')
             .then(function(r) { return r.json(); })
             .then(function(claims) {
                 var modal = document.createElement('div');
