@@ -8,6 +8,9 @@ function escapeHtml(str) {
 
 module.exports = async (req, res) => {
     try {
+        const lang = req.query.lang || 'az';
+        const L = (c, field) => c[field + '_' + lang] || c[field] || '';
+
         const campRes = await fetch(`${FIREBASE_DB_URL}/campaigns.json`);
         const campData = await campRes.json();
 
@@ -22,8 +25,8 @@ module.exports = async (req, res) => {
         // JSON-LD for SEO
         const jsonLdItems = campaigns.map(c => ({
             "@type": "Offer",
-            "name": escapeHtml(c.title || ''),
-            "description": escapeHtml(c.desc || ''),
+            "name": escapeHtml(L(c, 'title')),
+            "description": escapeHtml(L(c, 'desc')),
             "discount": c.discountPercent + '%',
             "validThrough": c.endTimestamp ? new Date(c.endTimestamp).toISOString() : '',
             "url": siteUrl + '/kampaniyalar',
@@ -42,8 +45,8 @@ module.exports = async (req, res) => {
                     <div style="position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;font-size:1.1rem;font-weight:800;padding:6px 14px;border-radius:10px;box-shadow:0 3px 12px rgba(231,76,60,0.5);">-${c.discountPercent}%</div>
                 </div>` : ''}
                 <div style="padding:16px;">
-                    <h3 style="font-size:1rem;font-weight:700;margin:0 0 8px;">${escapeHtml(c.title || '')}</h3>
-                    ${c.desc ? `<p style="font-size:0.85rem;color:#666;margin:0 0 12px;line-height:1.5;">${escapeHtml(c.desc)}</p>` : ''}
+                    <h3 style="font-size:1rem;font-weight:700;margin:0 0 8px;">${escapeHtml(L(c, 'title'))}</h3>
+                    ${L(c, 'desc') ? `<p style="font-size:0.85rem;color:#666;margin:0 0 12px;line-height:1.5;">${escapeHtml(L(c, 'desc'))}</p>` : ''}
                     <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:#999;">
                         <span>${claimed} / ${max} kupon alınıb</span>
                         <span>${max - claimed} qalıb</span>
@@ -51,7 +54,7 @@ module.exports = async (req, res) => {
                     <div style="height:6px;background:#eee;border-radius:3px;margin:6px 0 12px;overflow:hidden;">
                         <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#e74c3c,#c5a637);border-radius:3px;"></div>
                     </div>
-                    ${!expired ? `<button class="camp-claim-btn" onclick="openCampClaimModal('${c.id}','${escapeHtml(c.title || '').replace(/'/g, "\\'")}',${c.discountPercent})" style="width:100%;padding:10px;border:none;border-radius:10px;background:linear-gradient(135deg,#c5a637,#d4b445);color:#fff;font-weight:700;font-size:0.88rem;cursor:pointer;">
+                    ${!expired ? `<button class="camp-claim-btn" onclick="openCampClaimModal('${c.id}','${escapeHtml(L(c, 'title')).replace(/'/g, "\\'")}',${c.discountPercent})" style="width:100%;padding:10px;border:none;border-radius:10px;background:linear-gradient(135deg,#c5a637,#d4b445);color:#fff;font-weight:700;font-size:0.88rem;cursor:pointer;">
                         <i class="fas fa-ticket-alt"></i> Kuponu al
                     </button>` : ''}
                 </div>

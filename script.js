@@ -910,9 +910,11 @@ document.addEventListener('DOMContentLoaded', () => {
             var cBgSize = cZoom <= 1 ? 'cover' : (cZoom * 100) + '%';
             html += '<div class="camp-card-img" style="background-image:url(' + c.image + ');background-position:' + cPos + ';background-size:' + cBgSize + ';"><div class="camp-discount-badge">-' + c.discountPercent + '%</div></div>';
         }
+        var campTitle = c['title_' + currentLang] || c.title || '';
+        var campDesc = c['desc_' + currentLang] || c.desc || '';
         html += '<div class="camp-card-body">';
-        html += '<div class="camp-card-title">' + (c.title || '') + '</div>';
-        if (c.desc) html += '<div class="camp-card-desc">' + c.desc + '</div>';
+        html += '<div class="camp-card-title">' + campTitle + '</div>';
+        if (campDesc) html += '<div class="camp-card-desc">' + campDesc + '</div>';
         if (!expired && c.endTimestamp) html += campCountdownHtml(c.endTimestamp);
         html += '<div class="camp-progress-wrap"><div class="camp-progress-bar"><div class="camp-progress-fill" style="width:' + pct + '%;"></div></div>';
         html += '<div class="camp-progress-text"><span>' + claimed + ' / ' + max + ' kupon alınıb</span><span>' + (max - claimed) + ' qalıb</span></div></div>';

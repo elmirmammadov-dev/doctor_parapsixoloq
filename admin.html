@@ -519,16 +519,42 @@
                 <div class="admin-tab-content" id="tabCampaigns" style="display:none;">
                     <h3 style="margin-bottom:16px;color:var(--text-primary);font-size:1rem;"><i class="fas fa-gift" style="color:var(--gold);"></i> Yeni kampaniya əlavə et</h3>
 
-                    <!-- Campaign Title -->
+                    <!-- Campaign Language Tabs -->
                     <div style="margin-bottom:12px;">
-                        <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;">Kampaniya başlığı</label>
-                        <input type="text" id="campTitle" placeholder="Məs: Yeni il endirimi" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
-                    </div>
-
-                    <!-- Campaign Description -->
-                    <div style="margin-bottom:12px;">
-                        <label style="font-weight:600;font-size:0.85rem;color:var(--text-primary);margin-bottom:4px;display:block;">Təsvir</label>
-                        <textarea id="campDesc" rows="3" placeholder="Kampaniya haqqında qısa məlumat..." style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                        <div id="campLangTabs" style="display:flex;gap:4px;margin-bottom:8px;">
+                            <button type="button" class="camp-lang-tab active" data-camp-lang="az" style="padding:6px 14px;border:1.5px solid #ddd;border-radius:8px;background:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:0.2s;">🇦🇿 AZ</button>
+                            <button type="button" class="camp-lang-tab" data-camp-lang="ru" style="padding:6px 14px;border:1.5px solid #ddd;border-radius:8px;background:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:0.2s;">🇷🇺 RU</button>
+                            <button type="button" class="camp-lang-tab" data-camp-lang="en" style="padding:6px 14px;border:1.5px solid #ddd;border-radius:8px;background:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:0.2s;">🇬🇧 EN</button>
+                            <button type="button" class="camp-lang-tab" data-camp-lang="tr" style="padding:6px 14px;border:1.5px solid #ddd;border-radius:8px;background:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:0.2s;">🇹🇷 TR</button>
+                        </div>
+                        <!-- AZ -->
+                        <div class="camp-lang-panel" data-camp-lang-panel="az">
+                            <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Başlıq (AZ)</label>
+                            <input type="text" id="campTitle_az" placeholder="Məs: Yeni il endirimi" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:8px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                            <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Təsvir (AZ)</label>
+                            <textarea id="campDesc_az" rows="3" placeholder="Kampaniya haqqında qısa məlumat..." style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                        </div>
+                        <!-- RU -->
+                        <div class="camp-lang-panel" data-camp-lang-panel="ru" style="display:none;">
+                            <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Заголовок (RU)</label>
+                            <input type="text" id="campTitle_ru" placeholder="Название кампании" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:8px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                            <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Описание (RU)</label>
+                            <textarea id="campDesc_ru" rows="3" placeholder="Краткое описание кампании..." style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                        </div>
+                        <!-- EN -->
+                        <div class="camp-lang-panel" data-camp-lang-panel="en" style="display:none;">
+                            <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Title (EN)</label>
+                            <input type="text" id="campTitle_en" placeholder="Campaign title" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:8px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                            <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Description (EN)</label>
+                            <textarea id="campDesc_en" rows="3" placeholder="Short campaign description..." style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                        </div>
+                        <!-- TR -->
+                        <div class="camp-lang-panel" data-camp-lang-panel="tr" style="display:none;">
+                            <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Başlık (TR)</label>
+                            <input type="text" id="campTitle_tr" placeholder="Kampanya başlığı" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:8px;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'">
+                            <label style="font-weight:600;font-size:0.8rem;color:#555;display:block;margin-bottom:4px;">Açıklama (TR)</label>
+                            <textarea id="campDesc_tr" rows="3" placeholder="Kısa kampanya açıklaması..." style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#ddd'"></textarea>
+                        </div>
                     </div>
 
                     <!-- Discount & Coupons Row -->

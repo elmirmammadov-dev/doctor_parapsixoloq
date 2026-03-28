@@ -3225,6 +3225,15 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
+    // Campaign language tab switching
+    document.querySelectorAll('.camp-lang-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            var lang = this.dataset.campLang;
+            document.querySelectorAll('.camp-lang-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.campLang === lang); });
+            document.querySelectorAll('.camp-lang-panel').forEach(function(p) { p.style.display = p.dataset.campLangPanel === lang ? '' : 'none'; });
+        });
+    });
+
     async function uploadAnnImage(file) {
         const formData = new FormData();
         formData.append('image', file);
@@ -3609,8 +3618,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // Save campaign
     document.getElementById('campSaveBtn').addEventListener('click', async function() {
         const msg = document.getElementById('campMsg');
-        const title = document.getElementById('campTitle').value.trim();
-        const desc = document.getElementById('campDesc').value.trim();
+        const title = document.getElementById('campTitle_az').value.trim();
+        const desc = document.getElementById('campDesc_az').value.trim();
         const discount = parseInt(document.getElementById('campDiscount').value) || 10;
         const maxCoupons = parseInt(document.getElementById('campMaxCoupons').value) || 50;
         const durationValue = parseInt(document.getElementById('campDurationValue').value) || 24;
@@ -3650,6 +3659,14 @@ document.addEventListener("DOMContentLoaded", function() {
             const campData = {
                 title: title,
                 desc: desc,
+                title_az: title,
+                desc_az: desc,
+                title_ru: document.getElementById('campTitle_ru').value.trim(),
+                desc_ru: document.getElementById('campDesc_ru').value.trim(),
+                title_en: document.getElementById('campTitle_en').value.trim(),
+                desc_en: document.getElementById('campDesc_en').value.trim(),
+                title_tr: document.getElementById('campTitle_tr').value.trim(),
+                desc_tr: document.getElementById('campDesc_tr').value.trim(),
                 slug: slug,
                 discountPercent: discount,
                 maxCoupons: uniqueCouponCodes.length,
@@ -3695,8 +3712,14 @@ document.addEventListener("DOMContentLoaded", function() {
     function resetCampForm() {
         campEditId = null;
         campImageUrl = null;
-        document.getElementById('campTitle').value = '';
-        document.getElementById('campDesc').value = '';
+        document.getElementById('campTitle_az').value = '';
+        document.getElementById('campDesc_az').value = '';
+        document.getElementById('campTitle_ru').value = '';
+        document.getElementById('campDesc_ru').value = '';
+        document.getElementById('campTitle_en').value = '';
+        document.getElementById('campDesc_en').value = '';
+        document.getElementById('campTitle_tr').value = '';
+        document.getElementById('campDesc_tr').value = '';
         document.getElementById('campDiscount').value = '10';
         document.getElementById('campMaxCoupons').value = '50';
         document.getElementById('campDurationValue').value = '24';
@@ -3789,8 +3812,14 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!c) return;
         campEditId = id;
         campImageUrl = c.image || null;
-        document.getElementById('campTitle').value = c.title || '';
-        document.getElementById('campDesc').value = c.desc || '';
+        document.getElementById('campTitle_az').value = c.title_az || c.title || '';
+        document.getElementById('campDesc_az').value = c.desc_az || c.desc || '';
+        document.getElementById('campTitle_ru').value = c.title_ru || '';
+        document.getElementById('campDesc_ru').value = c.desc_ru || '';
+        document.getElementById('campTitle_en').value = c.title_en || '';
+        document.getElementById('campDesc_en').value = c.desc_en || '';
+        document.getElementById('campTitle_tr').value = c.title_tr || '';
+        document.getElementById('campDesc_tr').value = c.desc_tr || '';
         document.getElementById('campDiscount').value = c.discountPercent || 10;
         document.getElementById('campMaxCoupons').value = c.maxCoupons || 50;
         // Support both old single couponCode and new couponCodes array
