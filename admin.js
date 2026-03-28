@@ -3419,33 +3419,55 @@ document.addEventListener("DOMContentLoaded", function() {
     let campEditId = null;
     let campImageUrl = null;
 
-    // Unique coupon code name pools for auto-generation
-    const couponNamePools = [
-        ['ENDIRIM', 'YENI', 'SEHER', 'AURA', 'QELBI', 'ULDUZ', 'BAHAR', 'GUNES', 'SEVGI', 'UMID',
-         'SAFLIK', 'SHEFA', 'RAHMET', 'BEREKET', 'ISIQ', 'GUZEL', 'MUTLU', 'HEDIYE', 'FIRSAT', 'SANS',
-         'CINAR', 'DENIZ', 'BULUD', 'MELEK', 'GIZLI', 'ATLAS', 'ZUMRUD', 'MIRVARI', 'IPEK', 'CICEK',
-         'QARANFIL', 'NARMIN', 'FERAH', 'HUZUR', 'ELIXIR', 'NICAT', 'KAIZEN', 'ROYAL', 'ZIRVE', 'LOTUS',
-         'SAFIR', 'BRILYANT', 'ALTIN', 'GUMUS', 'MERCAN', 'YAKUT', 'KEHRIBAR', 'NEFER', 'OZAN', 'DUYGU'],
-        ['5', '10', '15', '20', '25', '30', '']
+    // Unique coupon code names - each name used only once
+    const couponNames = [
+        'ENDIRIM', 'YENI', 'SEHER', 'AURA', 'QELBI', 'ULDUZ', 'BAHAR', 'GUNES', 'SEVGI', 'UMID',
+        'SAFLIK', 'SHEFA', 'RAHMET', 'BEREKET', 'ISIQ', 'GUZEL', 'MUTLU', 'HEDIYE', 'FIRSAT', 'SANS',
+        'CINAR', 'DENIZ', 'BULUD', 'MELEK', 'GIZLI', 'ATLAS', 'ZUMRUD', 'MIRVARI', 'IPEK', 'CICEK',
+        'QARANFIL', 'NARMIN', 'FERAH', 'HUZUR', 'ELIXIR', 'NICAT', 'KAIZEN', 'ROYAL', 'ZIRVE', 'LOTUS',
+        'SAFIR', 'BRILYANT', 'ALTIN', 'GUMUS', 'MERCAN', 'YAKUT', 'KEHRIBAR', 'NEFER', 'OZAN', 'DUYGU',
+        'NERGIZ', 'LALEZAR', 'ILHAM', 'NUBAR', 'TURAL', 'ORXAN', 'VEFA', 'ZINHAR', 'TERANNUM', 'MUNIS',
+        'XEYAL', 'SEVINC', 'NIGAR', 'GULNAR', 'AFET', 'PERVIN', 'LAMAN', 'TURKAN', 'AYSEL', 'NURAY',
+        'SHAHIN', 'TURAN', 'CAVID', 'RUFAT', 'ELNUR', 'ROVSHAN', 'SAMIR', 'FARID', 'KAMRAN', 'TAHIR',
+        'HIKMET', 'ZEKA', 'DEMET', 'GONCA', 'BENOVSHA', 'YASEMEN', 'SUNBUL', 'NISAN', 'PAYIZ', 'YAGIS',
+        'GOKKUSAGI', 'GUNESH', 'SAKIT', 'DALGA', 'BULAQ', 'SHAMAL', 'KESHF', 'SIRR', 'NEMRE', 'RAYIHE'
     ];
 
+    // Shuffle array (Fisher-Yates)
+    function shuffleArray(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
     function generateUniqueCouponCodes(count) {
-        const codes = new Set();
-        const names = couponNamePools[0];
-        const suffixes = couponNamePools[1];
-        // Generate unique combinations
-        for (let i = 0; i < names.length && codes.size < count; i++) {
-            for (let j = 0; j < suffixes.length && codes.size < count; j++) {
-                codes.add(names[i] + suffixes[j]);
+        const shuffledNames = shuffleArray(couponNames);
+        const codes = [];
+        const usedCodes = new Set();
+
+        for (let i = 0; i < count; i++) {
+            if (i < shuffledNames.length) {
+                // Each name gets a random number (1-99)
+                const num = Math.floor(Math.random() * 99) + 1;
+                const code = shuffledNames[i] + num;
+                codes.push(code);
+                usedCodes.add(code);
+            } else {
+                // If we need more than available names, reuse names with different numbers
+                let code;
+                do {
+                    const name = couponNames[Math.floor(Math.random() * couponNames.length)];
+                    const num = Math.floor(Math.random() * 999) + 1;
+                    code = name + num;
+                } while (usedCodes.has(code));
+                codes.push(code);
+                usedCodes.add(code);
             }
         }
-        // If still need more, add random 2-digit numbers
-        while (codes.size < count) {
-            const name = names[Math.floor(Math.random() * names.length)];
-            const num = Math.floor(Math.random() * 100);
-            codes.add(name + num);
-        }
-        return Array.from(codes);
+        return codes;
     }
 
     document.getElementById('campAutoCode').addEventListener('click', function() {
