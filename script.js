@@ -857,7 +857,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     var browserFingerprint = getBrowserFingerprint();
 
-    function renderAnnCard(a) {
+    function renderAnnCardLarge(a) {
         const pos = a.coverPos || '50% 50%';
         const zoom = a.coverZoom || 1;
         const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
@@ -866,13 +866,29 @@ document.addEventListener('DOMContentLoaded', () => {
         const annHref = a.slug ? '/elanlar/' + a.slug : (a.link || '');
         const tag = annHref ? 'a' : 'div';
         const href = annHref ? ' href="' + annHref + '"' : '';
-        return '<' + tag + ' class="ann-section-card"' + href + ' style="text-decoration:none;color:inherit;">' +
+        return '<' + tag + ' class="ann-section-card ann-card-large"' + href + ' style="text-decoration:none;color:inherit;">' +
             (a.image ? '<div class="ann-section-card-img" style="background-image:url(' + a.image + ');background-position:' + pos + ';background-size:' + bgSize + ';">' + (a.showBadge !== false ? '<span class="ann-section-badge">YENİ</span>' : '') + '</div>' : '') +
             '<div class="ann-section-card-body">' +
                 '<div class="ann-section-card-date">' + (a.date || '') + '</div>' +
                 '<div class="ann-section-card-title">' + aTitle + '</div>' +
                 (aDesc ? '<div class="ann-section-card-desc">' + aDesc + '</div>' : '') +
                 '<span class="ann-section-card-link">Daha ətraflı <i class="fas fa-arrow-right"></i></span>' +
+            '</div>' +
+        '</' + tag + '>';
+    }
+
+    function renderAnnCardSmall(a) {
+        const aTitle = a['title_' + currentLang] || a.title;
+        const aDesc = a['desc_' + currentLang] || a.desc;
+        const annHref = a.slug ? '/elanlar/' + a.slug : (a.link || '');
+        const tag = annHref ? 'a' : 'div';
+        const href = annHref ? ' href="' + annHref + '"' : '';
+        return '<' + tag + ' class="ann-section-card ann-card-small"' + href + ' style="text-decoration:none;color:inherit;">' +
+            '<div class="ann-section-card-body">' +
+                '<div class="ann-section-card-date">' + (a.date || '') + '</div>' +
+                '<div class="ann-section-card-title">' + aTitle + '</div>' +
+                (aDesc ? '<div class="ann-section-card-desc">' + aDesc + '</div>' : '') +
+                '<span class="ann-section-card-link ann-link-upper">DAHA ƏTRAFLI</span>' +
             '</div>' +
         '</' + tag + '>';
     }
@@ -965,7 +981,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (hasAnn && leftCol && annGrid) {
             leftCol.style.display = '';
-            annGrid.innerHTML = cachedAnnouncements.slice(0, 2).map(renderAnnCard).join('');
+            var annHtml = '';
+            if (cachedAnnouncements.length > 0) {
+                annHtml += renderAnnCardLarge(cachedAnnouncements[0]);
+            }
+            if (cachedAnnouncements.length > 1) {
+                annHtml += '<div class="ann-small-row">';
+                annHtml += cachedAnnouncements.slice(1, 3).map(renderAnnCardSmall).join('');
+                annHtml += '</div>';
+            }
+            annGrid.innerHTML = annHtml;
         } else if (leftCol) {
             leftCol.style.display = 'none';
         }
