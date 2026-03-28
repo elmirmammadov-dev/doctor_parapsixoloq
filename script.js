@@ -1505,28 +1505,32 @@ document.addEventListener('DOMContentLoaded', () => {
             notifyMsg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gözləyin...';
             notifyMsg.style.color = 'var(--gold)';
 
-            var db = firebase.database();
+            var fbUrl = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
             var safeKey = email.replace(/\./g, ',');
-            db.ref('campaign_subscribers/' + safeKey).once('value').then(function(snap) {
-                if (snap.exists()) {
-                    notifyMsg.textContent = 'Bu email artıq abunədir!';
-                    notifyMsg.style.color = '#e67e22';
-                    return;
-                }
-                return db.ref('campaign_subscribers/' + safeKey).set({
-                    email: email,
-                    subscribedAt: Date.now(),
-                    lang: currentLang
-                }).then(function() {
-                    notifyMsg.textContent = 'Abunəliyiniz aktivləşdirildi!';
-                    notifyMsg.style.color = '#27ae60';
-                    document.getElementById('notifyEmailInput').value = '';
-                    localStorage.setItem('campSubscribed', '1');
+
+            fetch(fbUrl + '/campaign_subscribers/' + safeKey + '.json')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data && data.email) {
+                        notifyMsg.textContent = 'Bu email artıq abunədir!';
+                        notifyMsg.style.color = '#e67e22';
+                        return;
+                    }
+                    return fetch(fbUrl + '/campaign_subscribers/' + safeKey + '.json', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: email, subscribedAt: Date.now(), lang: currentLang })
+                    }).then(function() {
+                        notifyMsg.textContent = 'Abunəliyiniz aktivləşdirildi!';
+                        notifyMsg.style.color = '#27ae60';
+                        document.getElementById('notifyEmailInput').value = '';
+                        localStorage.setItem('campSubscribed', '1');
+                    });
+                })
+                .catch(function(err) {
+                    notifyMsg.textContent = 'Xəta baş verdi, yenidən cəhd edin.';
+                    notifyMsg.style.color = '#e74c3c';
                 });
-            }).catch(function(err) {
-                notifyMsg.textContent = 'Xəta baş verdi, yenidən cəhd edin.';
-                notifyMsg.style.color = '#e74c3c';
-            });
         });
 
         // If already subscribed, show message
