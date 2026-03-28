@@ -1502,7 +1502,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             var email = document.getElementById('notifyEmailInput').value.trim();
             if (!email) return;
-            notifyMsg.textContent = '...';
+            notifyMsg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gözləyin...';
             notifyMsg.style.color = 'var(--gold)';
 
             var db = firebase.database();
