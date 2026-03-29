@@ -4157,7 +4157,7 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log('Email göndərilir ' + emails.length + ' abunəçiyə:', emails);
 
             var sent = 0, failed = 0;
-            var campUrl = 'https://www.sahseddinimanli.com/kampaniyalar';
+            var campUrl = 'https://hekim2026yenidizayn.vercel.app/kampaniyalar';
 
             emails.forEach(function(email) {
                 emailjs.send(_dk(0), _dk(1), {
