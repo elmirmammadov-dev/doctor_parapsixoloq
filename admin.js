@@ -3471,19 +3471,35 @@ document.addEventListener("DOMContentLoaded", function() {
     let campEditId = null;
     let campImageUrl = null;
 
-    // Unique coupon code names - each name used only once
-    const couponNames = [
-        'ENDIRIM', 'SHEFA', 'SEHER', 'ULDUZ', 'BAHAR', 'GUNES', 'SEVGI', 'UMID', 'SAGLIK', 'BEREKET',
-        'ISIQ', 'GOZEL', 'HEDIYYE', 'FURSET', 'SANS', 'CINAR', 'DENIZ', 'BULUD', 'MELEK', 'SIRR',
-        'ZUMRUD', 'MIRVARI', 'IPEK', 'CICEK', 'QARANFIL', 'NARMIN', 'FERAH', 'HUZUR', 'NICAT', 'ZIRVE',
-        'SAFIR', 'ALTIN', 'GUMUS', 'MERCAN', 'YAKUT', 'KEHRIBAR', 'DUYGU', 'ILHAM', 'VEFA', 'XEYAL',
-        'SEVINC', 'BULAQ', 'PAYIZ', 'SHAMAL', 'GONCA', 'BENOVSHE', 'YASEMEN', 'SUNBUL', 'DALGA', 'RAHMET',
-        'NERGIZ', 'NOVRUZ', 'MUBAREK', 'QENIME', 'OVQAT', 'ZERIF', 'REHBER', 'DEQIQ', 'MUJDE', 'EHSAN',
-        'TESIR', 'MEQSED', 'MUDRIK', 'QAYGI', 'LEZIZ', 'NEZAKET', 'INAM', 'DOSTLUQ', 'MEHEBBAT', 'SEADET',
-        'RIFAHE', 'KESHF', 'HEKIM', 'CANLI', 'TEZE', 'UZVU', 'YASHIL', 'TEMIZ', 'GUCLUI', 'DERMAN',
-        'VITALI', 'SIRDASH', 'ARZUI', 'OVLAD', 'MEHSUL', 'MUGAM', 'KERPIC', 'MOHTESHEM', 'TAPINTI', 'LAYIQ',
-        'NEMUNE', 'XOSBEXT', 'MUSHFIQ', 'NAXISH', 'MEDEN', 'ZERGER', 'USTUN', 'KAMIL', 'YARAŞIQ', 'SEÇME'
-    ];
+    // Unique coupon code names per language
+    var couponNamesPerLang = {
+        az: ['ENDIRIM', 'SHEFA', 'SEHER', 'ULDUZ', 'BAHAR', 'GUNES', 'SEVGI', 'UMID', 'SAGLIK', 'BEREKET',
+            'ISIQ', 'GOZEL', 'HEDIYYE', 'FURSET', 'SANS', 'CINAR', 'DENIZ', 'BULUD', 'MELEK', 'SIRR',
+            'ZUMRUD', 'MIRVARI', 'IPEK', 'CICEK', 'QARANFIL', 'NARMIN', 'FERAH', 'HUZUR', 'NICAT', 'ZIRVE',
+            'SAFIR', 'ALTIN', 'GUMUS', 'MERCAN', 'YAKUT', 'KEHRIBAR', 'DUYGU', 'ILHAM', 'VEFA', 'XEYAL',
+            'SEVINC', 'BULAQ', 'PAYIZ', 'SHAMAL', 'GONCA', 'BENOVSHE', 'YASEMEN', 'SUNBUL', 'DALGA', 'RAHMET',
+            'NERGIZ', 'NOVRUZ', 'MUBAREK', 'QENIME', 'ZERIF', 'REHBER', 'MUJDE', 'EHSAN', 'HEKIM', 'DERMAN',
+            'DOSTLUQ', 'MEHEBBAT', 'SEADET', 'KESHF', 'CANLI', 'TEZE', 'YASHIL', 'TEMIZ', 'XOSBEXT', 'MUSHFIQ'],
+        ru: ['SKIDKA', 'ZDRAVE', 'RASSVET', 'ZVEZDA', 'VESNA', 'SOLNCE', 'LUBOV', 'NADEZHDA', 'ZDOROVYE', 'BLAGOST',
+            'SVET', 'KRASOTA', 'PODAROK', 'SHANS', 'UDACHA', 'KEDR', 'MORE', 'OBLAKO', 'ANGEL', 'TAYNA',
+            'IZUMRUD', 'ZHEMCHUG', 'SHELK', 'CVETOK', 'GVOZDIKA', 'NEZHNAYA', 'RADOST', 'POKOY', 'VERSHINA', 'SAFIR',
+            'ZOLOTO', 'SEREBRO', 'KORALL', 'RUBIN', 'YANTAR', 'CHUVSTVO', 'VDOHNOV', 'VERNOST', 'MECHTA', 'SCHASTYE',
+            'RODNIK', 'OSEN', 'VETER', 'BUTONI', 'FIALKA', 'JASMIN', 'GIACINT', 'VOLNA', 'MILOST', 'NARCISS',
+            'NAVRUZ', 'BLAGOSLOV', 'CELITEL', 'LEKARSTVO', 'DRUZHBA', 'LYUBOV', 'OTKRITIE', 'ZHIZN', 'ZELENIY', 'CHISTIY'],
+        en: ['DISCOUNT', 'HEALING', 'DAWN', 'STAR', 'SPRING', 'SUNSHINE', 'LOVE', 'HOPE', 'HEALTH', 'BLESSING',
+            'LIGHT', 'BEAUTY', 'GIFT', 'CHANCE', 'LUCKY', 'CEDAR', 'OCEAN', 'CLOUD', 'ANGEL', 'SECRET',
+            'EMERALD', 'PEARL', 'SILK', 'FLOWER', 'ROSE', 'GENTLE', 'JOY', 'PEACE', 'SUMMIT', 'SAPPHIRE',
+            'GOLDEN', 'SILVER', 'CORAL', 'RUBY', 'AMBER', 'FEELING', 'INSPIRE', 'FAITH', 'DREAM', 'BLISS',
+            'STREAM', 'AUTUMN', 'BREEZE', 'BLOOM', 'VIOLET', 'JASMINE', 'LILY', 'WAVE', 'GRACE', 'LOTUS',
+            'HEALER', 'REMEDY', 'FRIEND', 'AMORE', 'SPIRIT', 'FRESH', 'GREEN', 'PURE', 'ENERGY', 'BRIGHT'],
+        tr: ['INDIRIM', 'SIFA', 'SEHER', 'YILDIZ', 'BAHAR', 'GUNES', 'SEVGI', 'UMUT', 'SAGLIK', 'BEREKET',
+            'ISIK', 'GUZEL', 'HEDIYE', 'FIRSAT', 'SANS', 'CINAR', 'DENIZ', 'BULUT', 'MELEK', 'SIR',
+            'ZUMRUT', 'INCI', 'IPEK', 'CICEK', 'KARANFIL', 'NARIN', 'FERAH', 'HUZUR', 'KURTULIS', 'ZIRVE',
+            'SAFIR', 'ALTIN', 'GUMUS', 'MERCAN', 'YAKUT', 'KEHRIBAR', 'DUYGU', 'ILHAM', 'VEFA', 'HAYAL',
+            'SEVINC', 'PINAR', 'SONBAHAR', 'RUZGAR', 'GONCA', 'MENEKSE', 'YASEMIN', 'SUMBUL', 'DALGA', 'RAHMET',
+            'NERGIS', 'NEVRUZ', 'MUBAREK', 'SIFACI', 'DERMAN', 'DOSTLUK', 'MUHABBET', 'MUTLULUK', 'KESIF', 'TEMIZ']
+    };
+    var couponNames = couponNamesPerLang.az;
 
     // Shuffle array (Fisher-Yates)
     function shuffleArray(arr) {
@@ -3495,23 +3511,22 @@ document.addEventListener("DOMContentLoaded", function() {
         return a;
     }
 
-    function generateUniqueCouponCodes(count) {
-        const shuffledNames = shuffleArray(couponNames);
+    function generateUniqueCouponCodes(count, lang) {
+        var names = couponNamesPerLang[lang] || couponNamesPerLang.az;
+        const shuffledNames = shuffleArray(names);
         const codes = [];
         const usedCodes = new Set();
 
         for (let i = 0; i < count; i++) {
             if (i < shuffledNames.length) {
-                // Each name gets a random number (1-99)
                 const num = Math.floor(Math.random() * 99) + 1;
                 const code = shuffledNames[i] + num;
                 codes.push(code);
                 usedCodes.add(code);
             } else {
-                // If we need more than available names, reuse names with different numbers
                 let code;
                 do {
-                    const name = couponNames[Math.floor(Math.random() * couponNames.length)];
+                    const name = names[Math.floor(Math.random() * names.length)];
                     const num = Math.floor(Math.random() * 999) + 1;
                     code = name + num;
                 } while (usedCodes.has(code));
@@ -3542,9 +3557,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.getElementById('campAutoCode').addEventListener('click', function() {
         const maxCoupons = parseInt(document.getElementById('campMaxCoupons').value) || 50;
-        var langs = ['az', 'ru', 'en', 'tr'];
-        langs.forEach(function(lang) {
-            var codes = generateUniqueCouponCodes(maxCoupons);
+        ['az', 'ru', 'en', 'tr'].forEach(function(lang) {
+            var codes = generateUniqueCouponCodes(maxCoupons, lang);
             document.getElementById('campCouponCodes_' + lang).value = codes.join('\n');
         });
         updateCodeCount();
