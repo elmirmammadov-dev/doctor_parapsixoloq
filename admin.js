@@ -3522,21 +3522,44 @@ document.addEventListener("DOMContentLoaded", function() {
         return codes;
     }
 
+    // Coupon lang tabs
+    var activeCouponLang = 'az';
+    document.querySelectorAll('.camp-coupon-lang-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            activeCouponLang = this.dataset.couponLang;
+            document.querySelectorAll('.camp-coupon-lang-tab').forEach(function(t) {
+                var isActive = t.dataset.couponLang === activeCouponLang;
+                t.style.background = isActive ? 'var(--gold)' : '#fff';
+                t.style.color = isActive ? '#fff' : '#666';
+                t.style.borderColor = isActive ? 'var(--gold)' : '#ddd';
+            });
+            document.querySelectorAll('.camp-coupon-panel').forEach(function(p) {
+                p.style.display = p.dataset.couponPanel === activeCouponLang ? '' : 'none';
+            });
+            updateCodeCount();
+        });
+    });
+
     document.getElementById('campAutoCode').addEventListener('click', function() {
         const maxCoupons = parseInt(document.getElementById('campMaxCoupons').value) || 50;
-        const codes = generateUniqueCouponCodes(maxCoupons);
-        document.getElementById('campCouponCodes').value = codes.join('\n');
+        var langs = ['az', 'ru', 'en', 'tr'];
+        langs.forEach(function(lang) {
+            var codes = generateUniqueCouponCodes(maxCoupons);
+            document.getElementById('campCouponCodes_' + lang).value = codes.join('\n');
+        });
         updateCodeCount();
     });
 
     function updateCodeCount() {
-        const textarea = document.getElementById('campCouponCodes');
-        const codes = textarea.value.split('\n').map(c => c.trim()).filter(c => c.length > 0);
-        const countEl = document.getElementById('campCodeCount');
-        if (countEl) countEl.textContent = codes.length + ' kod daxil edilib';
+        var textarea = document.getElementById('campCouponCodes_' + activeCouponLang);
+        var codes = textarea.value.split('\n').map(function(c) { return c.trim(); }).filter(function(c) { return c.length > 0; });
+        var countEl = document.getElementById('campCodeCount');
+        if (countEl) countEl.textContent = codes.length + ' kod (' + activeCouponLang.toUpperCase() + ')';
     }
 
-    document.getElementById('campCouponCodes').addEventListener('input', updateCodeCount);
+    ['az','ru','en','tr'].forEach(function(lang) {
+        document.getElementById('campCouponCodes_' + lang).addEventListener('input', updateCodeCount);
+    });
 
     // Campaign image preview with drag + zoom
     const campImgInput = document.getElementById('campImageFile');
@@ -3667,14 +3690,19 @@ document.addEventListener("DOMContentLoaded", function() {
         const maxCoupons = parseInt(document.getElementById('campMaxCoupons').value) || 50;
         const durationValue = parseInt(document.getElementById('campDurationValue').value) || 24;
         const durationUnit = document.getElementById('campDurationUnit').value;
-        const couponCodesRaw = document.getElementById('campCouponCodes').value.trim();
-        const couponCodes = couponCodesRaw.split('\n').map(c => c.trim().toUpperCase().replace(/[^A-Z0-9]/g, '')).filter(c => c.length > 0);
-        // Remove duplicates
-        const uniqueCouponCodes = [...new Set(couponCodes)];
+        function parseCouponCodes(lang) {
+            var raw = document.getElementById('campCouponCodes_' + lang).value.trim();
+            return [...new Set(raw.split('\n').map(function(c) { return c.trim().toUpperCase().replace(/[^A-Z0-9]/g, ''); }).filter(function(c) { return c.length > 0; }))];
+        }
+        const couponCodes_az = parseCouponCodes('az');
+        const couponCodes_ru = parseCouponCodes('ru');
+        const couponCodes_en = parseCouponCodes('en');
+        const couponCodes_tr = parseCouponCodes('tr');
+        const uniqueCouponCodes = couponCodes_az;
         const active = document.getElementById('campActive').checked;
 
         if (!title) { msg.textContent = 'Başlıq tələb olunur!'; msg.style.color = '#e74c3c'; return; }
-        if (uniqueCouponCodes.length === 0) { msg.textContent = 'Ən azı bir kupon kodu daxil edin!'; msg.style.color = '#e74c3c'; return; }
+        if (couponCodes_az.length === 0) { msg.textContent = 'Ən azı AZ dilində kupon kodu daxil edin!'; msg.style.color = '#e74c3c'; return; }
 
         msg.textContent = 'Saxlanılır...'; msg.style.color = 'var(--gold)';
         this.disabled = true;
@@ -3714,6 +3742,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 discountPercent: discount,
                 maxCoupons: uniqueCouponCodes.length,
                 couponCodes: uniqueCouponCodes,
+                couponCodes_az: couponCodes_az,
+                couponCodes_ru: couponCodes_ru.length > 0 ? couponCodes_ru : couponCodes_az,
+                couponCodes_en: couponCodes_en.length > 0 ? couponCodes_en : couponCodes_az,
+                couponCodes_tr: couponCodes_tr.length > 0 ? couponCodes_tr : couponCodes_az,
                 durationMinutes: durationMinutes,
                 active: active,
                 timestamp: now
@@ -3773,7 +3805,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('campMaxCoupons').value = '50';
         document.getElementById('campDurationValue').value = '24';
         document.getElementById('campDurationUnit').value = 'hours';
-        document.getElementById('campCouponCodes').value = '';
+        ['az','ru','en','tr'].forEach(function(l) { document.getElementById('campCouponCodes_' + l).value = ''; });
         var codeCountEl = document.getElementById('campCodeCount');
         if (codeCountEl) codeCountEl.textContent = '';
         document.getElementById('campActive').checked = true;
@@ -3985,13 +4017,17 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('campDiscount').value = c.discountPercent || 10;
         document.getElementById('campMaxCoupons').value = c.maxCoupons || 50;
         // Support both old single couponCode and new couponCodes array
-        if (c.couponCodes && Array.isArray(c.couponCodes)) {
-            document.getElementById('campCouponCodes').value = c.couponCodes.join('\n');
-        } else if (c.couponCode) {
-            document.getElementById('campCouponCodes').value = c.couponCode;
-        } else {
-            document.getElementById('campCouponCodes').value = '';
-        }
+        // Load coupon codes for each language
+        ['az','ru','en','tr'].forEach(function(l) {
+            var codes = c['couponCodes_' + l];
+            if (codes && Array.isArray(codes)) {
+                document.getElementById('campCouponCodes_' + l).value = codes.join('\n');
+            } else if (l === 'az' && c.couponCodes && Array.isArray(c.couponCodes)) {
+                document.getElementById('campCouponCodes_az').value = c.couponCodes.join('\n');
+            } else {
+                document.getElementById('campCouponCodes_' + l).value = '';
+            }
+        });
         updateCodeCount();
         document.getElementById('campActive').checked = c.active !== false;
 

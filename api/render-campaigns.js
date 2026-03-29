@@ -126,7 +126,7 @@ module.exports = async (req, res) => {
                 if (!name || !surname || !phone) { errEl.textContent = 'Bütün sahələri doldurun!'; return; }
                 this.disabled = true; this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
                 try {
-                    var res = await fetch('/api/claim-coupon', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ campaignId: campId, name: name, surname: surname, phone: phone, fingerprint: browserFingerprint }) });
+                    var res = await fetch('/api/claim-coupon', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ campaignId: campId, name: name, surname: surname, phone: phone, fingerprint: browserFingerprint, lang: '${lang}' }) });
                     var data = await res.json();
                     if (data.success) {
                         setCampCookie(campId, data.couponCode);

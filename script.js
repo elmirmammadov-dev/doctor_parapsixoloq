@@ -1117,7 +1117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 var res = await fetch('/api/claim-coupon', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ campaignId: campId, name: name, surname: surname, phone: phone, fingerprint: browserFingerprint })
+                    body: JSON.stringify({ campaignId: campId, name: name, surname: surname, phone: phone, fingerprint: browserFingerprint, lang: currentLang })
                 });
                 var data = await res.json();
                 if (data.success) {

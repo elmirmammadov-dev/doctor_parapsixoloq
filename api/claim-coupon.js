@@ -11,7 +11,8 @@ module.exports = async (req, res) => {
     if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return; }
 
     try {
-        const { campaignId, name, surname, phone, fingerprint } = req.body || {};
+        const { campaignId, name, surname, phone, fingerprint, lang } = req.body || {};
+        const userLang = ['az','ru','en','tr'].includes(lang) ? lang : 'az';
 
         // Validate inputs
         if (!campaignId || !name || !surname || !phone) {
@@ -101,8 +102,8 @@ module.exports = async (req, res) => {
             return res.status(500).json({ error: 'Kupon alma uğursuz oldu, yenidən cəhd edin' });
         }
 
-        // Get the unique coupon code for this participant from the predefined list
-        const couponCodes = campaign.couponCodes || [];
+        // Get the unique coupon code for this participant from the language-specific list
+        const couponCodes = campaign['couponCodes_' + userLang] || campaign.couponCodes || [];
         let uniqueCode;
         if (couponCodes.length > 0 && claimedIndex < couponCodes.length) {
             uniqueCode = couponCodes[claimedIndex];
