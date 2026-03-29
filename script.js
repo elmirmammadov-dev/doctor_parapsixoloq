@@ -2,12 +2,9 @@
 // ŞAHSƏDDIN İMANLI — Website Scripts
 // ============================================
 
-// Initialize Firebase (config set in HTML)
-if (window.__firebaseConfig && typeof firebase !== 'undefined') {
-    firebase.initializeApp(window.__firebaseConfig);
-    var adminDb = firebase.database();
-    sessionStorage.removeItem('blogAdminAuth');
-}
+// Firebase is initialized in HTML before this script loads
+var adminDb = (typeof firebase !== 'undefined') ? firebase.database() : null;
+sessionStorage.removeItem('blogAdminAuth');
 
 document.addEventListener('DOMContentLoaded', () => {
 

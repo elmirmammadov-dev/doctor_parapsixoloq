@@ -889,13 +889,12 @@
         <span class="whatsapp-pulse delay"></span>
     </a>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js" defer></script>
-    <script src="translations.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script>
-        // Firebase config - will be initialized after defer scripts load
-        window.__firebaseConfig = {
+        // Initialize Firebase before any deferred scripts
+        firebase.initializeApp({
             apiKey: "AIzaSyBpgpRCBTtg4Tt0XRMUmOH8qs9RBcj04vo",
             authDomain: "hekim-sayti-comments.firebaseapp.com",
             databaseURL: "https://hekim-sayti-comments-default-rtdb.firebaseio.com",
@@ -903,8 +902,9 @@
             storageBucket: "hekim-sayti-comments.firebasestorage.app",
             messagingSenderId: "158921605576",
             appId: "1:158921605576:web:1c5d06133260aae200c0fd"
-        };
+        });
     </script>
+    <script src="translations.js" defer></script>
     <script src="auth.js" defer></script>
     <script src="tracker.js" defer></script>
     <script src="script.js" defer></script>
