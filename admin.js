@@ -3698,8 +3698,12 @@ document.addEventListener("DOMContentLoaded", function() {
     // Save campaign
     document.getElementById('campSaveBtn').addEventListener('click', async function() {
         const msg = document.getElementById('campMsg');
-        const title = document.getElementById('campTitle_az').value.trim();
-        const desc = document.getElementById('campDesc_az').value.trim();
+        const title_az = document.getElementById('campTitle_az').value.trim();
+        const title_ru = document.getElementById('campTitle_ru').value.trim();
+        const title_en = document.getElementById('campTitle_en').value.trim();
+        const title_tr = document.getElementById('campTitle_tr').value.trim();
+        const title = title_az || title_ru || title_en || title_tr;
+        const desc = document.getElementById('campDesc_az').value.trim() || document.getElementById('campDesc_ru').value.trim() || document.getElementById('campDesc_en').value.trim() || document.getElementById('campDesc_tr').value.trim();
         const discount = parseInt(document.getElementById('campDiscount').value) || 10;
         const maxCoupons = parseInt(document.getElementById('campMaxCoupons').value) || 50;
         const durationValue = parseInt(document.getElementById('campDurationValue').value) || 24;
@@ -3712,11 +3716,11 @@ document.addEventListener("DOMContentLoaded", function() {
         const couponCodes_ru = parseCouponCodes('ru');
         const couponCodes_en = parseCouponCodes('en');
         const couponCodes_tr = parseCouponCodes('tr');
-        const uniqueCouponCodes = couponCodes_az;
+        const uniqueCouponCodes = couponCodes_az.length > 0 ? couponCodes_az : (couponCodes_ru.length > 0 ? couponCodes_ru : (couponCodes_en.length > 0 ? couponCodes_en : couponCodes_tr));
         const active = document.getElementById('campActive').checked;
 
-        if (!title) { msg.textContent = 'Başlıq tələb olunur!'; msg.style.color = '#e74c3c'; return; }
-        if (couponCodes_az.length === 0) { msg.textContent = 'Ən azı AZ dilində kupon kodu daxil edin!'; msg.style.color = '#e74c3c'; return; }
+        if (!title) { msg.textContent = 'Ən azı bir dildə başlıq yazın!'; msg.style.color = '#e74c3c'; return; }
+        if (uniqueCouponCodes.length === 0) { msg.textContent = 'Ən azı bir dildə kupon kodu daxil edin!'; msg.style.color = '#e74c3c'; return; }
 
         msg.textContent = 'Saxlanılır...'; msg.style.color = 'var(--gold)';
         this.disabled = true;
@@ -3744,9 +3748,9 @@ document.addEventListener("DOMContentLoaded", function() {
             const campData = {
                 title: title,
                 desc: desc,
-                title_az: title,
-                desc_az: desc,
-                title_ru: document.getElementById('campTitle_ru').value.trim(),
+                title_az: title_az,
+                desc_az: document.getElementById('campDesc_az').value.trim(),
+                title_ru: title_ru,
                 desc_ru: document.getElementById('campDesc_ru').value.trim(),
                 title_en: document.getElementById('campTitle_en').value.trim(),
                 desc_en: document.getElementById('campDesc_en').value.trim(),
