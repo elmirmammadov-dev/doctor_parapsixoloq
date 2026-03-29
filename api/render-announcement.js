@@ -174,7 +174,7 @@ module.exports = async (req, res) => {
     </nav>
 
     <main class="ann-detail-page">
-        <a href="/elanlar" class="ann-detail-back"><i class="fas fa-arrow-left"></i> Bütün elanlar</a>
+        <a href="javascript:history.back()" class="ann-detail-back"><i class="fas fa-arrow-left"></i> Geri qayıt</a>
 
         <article class="ann-detail-card" itemscope itemtype="https://schema.org/Event">
             ${a.image ? `<div class="ann-detail-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};" role="img" aria-label="${escapeHtml(title)}" itemprop="image">
