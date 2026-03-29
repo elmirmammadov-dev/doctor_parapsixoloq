@@ -3475,18 +3475,18 @@ blockquote.hero-headline-quote-wrap {
     align-items: center;
     gap: 8px;
     padding: 10px 28px;
-    border: 1.5px solid #ddd;
+    border: none;
     border-radius: 30px;
-    color: var(--text-primary, #1a1a2e);
+    color: #fff;
     font-size: 0.82rem;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.3s;
-    background: #fff;
+    background: #c5d63d;
 }
 .ann-viewall-btn:hover {
-    border-color: var(--gold, #1a3c2a);
-    color: var(--gold, #1a3c2a);
+    background: #b3c235;
+    box-shadow: 0 4px 14px rgba(197,214,61,0.35);
 }
 
 /* Notify bar */
@@ -3718,7 +3718,7 @@ blockquote.hero-headline-quote-wrap {
     padding: 11px;
     border: none;
     border-radius: 10px;
-    background: #d4a017;
+    background: #c5d63d;
     color: #fff;
     font-weight: 700;
     font-size: 0.85rem;
@@ -3727,8 +3727,8 @@ blockquote.hero-headline-quote-wrap {
     letter-spacing: 0.3px;
 }
 .camp-claim-btn:hover {
-    background: #c49315;
-    box-shadow: 0 4px 14px rgba(212,160,23,0.35);
+    background: #b3c235;
+    box-shadow: 0 4px 14px rgba(197,214,61,0.35);
 }
 .camp-claim-btn:disabled {
     background: #e0e0e0;
