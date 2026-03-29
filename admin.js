@@ -421,6 +421,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('tabReviews').style.display = tab === 'reviews' ? 'block' : 'none';
         document.getElementById('tabAnnouncements').style.display = tab === 'announcements' ? 'block' : 'none';
         document.getElementById('tabCampaigns').style.display = tab === 'campaigns' ? 'block' : 'none';
+        document.getElementById('tabSubscribers').style.display = tab === 'subscribers' ? 'block' : 'none';
 
         if (tab === 'articles') loadAdminArticles();
         if (tab === 'comments') loadAdminComments();
