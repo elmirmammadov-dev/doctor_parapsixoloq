@@ -894,21 +894,31 @@ document.addEventListener('DOMContentLoaded', () => {
         '</' + tag + '>';
     }
 
+    // Campaign UI translations
+    var campTexts = {
+        az: { day:'Gün', hour:'Saat', min:'Dəq', sec:'San', ended:'BİTİB', claimed:'Kupon alınıb', coupon:'kupon', claimBtn:'Kuponu əldə et', alreadyClaimed:'Kupon alınıb', discount:'ENDİRİM', name:'Ad *', surname:'Soyad *', phone:'Telefon nömrəsi * (məs: +994501234567)', submit:'Kuponu al', cancel:'Ləğv et', close:'Bağla', copy:'Kodu kopyala', copied:'Kopyalandı!', congrats:'Təbriklər!', yourCoupon:'Sizin endirim kuponunuz:', fillAll:'Bütün sahələri doldurun!', loading:'Yüklənir...', error:'Xəta baş verdi', alreadyGot:'Bu kampaniyadan artıq kupon almısınız.', instructions:'Endirimi əldə etmək üçün bu kodu WhatsApp-da Şahsəddin İmanlıya göndərin və ya canlı seans zamanı telefonda göstərin.' },
+        ru: { day:'Дн.', hour:'Час', min:'Мин', sec:'Сек', ended:'ЗАВЕРШЕНО', claimed:'Купон получен', coupon:'купон', claimBtn:'Получить купон', alreadyClaimed:'Купон получен', discount:'СКИДКА', name:'Имя *', surname:'Фамилия *', phone:'Телефон * (напр: +79001234567)', submit:'Получить купон', cancel:'Отмена', close:'Закрыть', copy:'Копировать код', copied:'Скопировано!', congrats:'Поздравляем!', yourCoupon:'Ваш купон на скидку:', fillAll:'Заполните все поля!', loading:'Загрузка...', error:'Произошла ошибка', alreadyGot:'Вы уже получили купон по этой акции.', instructions:'Чтобы получить скидку, отправьте этот код в WhatsApp Шахсаддину Иманлы или покажите на очном сеансе.' },
+        en: { day:'Day', hour:'Hr', min:'Min', sec:'Sec', ended:'ENDED', claimed:'Coupon claimed', coupon:'coupon', claimBtn:'Get coupon', alreadyClaimed:'Coupon claimed', discount:'DISCOUNT', name:'Name *', surname:'Surname *', phone:'Phone * (e.g: +441234567890)', submit:'Get coupon', cancel:'Cancel', close:'Close', copy:'Copy code', copied:'Copied!', congrats:'Congratulations!', yourCoupon:'Your discount coupon:', fillAll:'Fill in all fields!', loading:'Loading...', error:'An error occurred', alreadyGot:'You have already claimed a coupon from this campaign.', instructions:'To get the discount, send this code to Shahsaddin Imanli on WhatsApp or show it during a live session.' },
+        tr: { day:'Gün', hour:'Saat', min:'Dk', sec:'Sn', ended:'BİTTİ', claimed:'Kupon alındı', coupon:'kupon', claimBtn:'Kuponu al', alreadyClaimed:'Kupon alındı', discount:'İNDİRİM', name:'Ad *', surname:'Soyad *', phone:'Telefon * (örn: +905001234567)', submit:'Kuponu al', cancel:'İptal', close:'Kapat', copy:'Kodu kopyala', copied:'Kopyalandı!', congrats:'Tebrikler!', yourCoupon:'İndirim kuponunuz:', fillAll:'Tüm alanları doldurun!', loading:'Yükleniyor...', error:'Bir hata oluştu', alreadyGot:'Bu kampanyadan zaten kupon aldınız.', instructions:'İndirimi almak için bu kodu WhatsApp\'ta Şahseddin İmanlı\'ya gönderin veya canlı seansta telefonda gösterin.' }
+    };
+    function CT() { return campTexts[currentLang] || campTexts.az; }
+
     function isCampExpired(c) {
         return (c.endTimestamp && Date.now() > c.endTimestamp) || (c.claimedCount >= c.maxCoupons);
     }
 
     function campCountdownHtml(endTs) {
+        var t = CT();
         var diff = Math.max(0, endTs - Date.now());
         var d = Math.floor(diff / 86400000);
         var h = Math.floor((diff % 86400000) / 3600000);
         var m = Math.floor((diff % 3600000) / 60000);
         var s = Math.floor((diff % 60000) / 1000);
         var html = '<div class="camp-countdown" data-end="' + endTs + '">';
-        if (d > 0) html += '<div class="camp-countdown-item camp-countdown-day"><div class="camp-countdown-num">' + d + '</div><div class="camp-countdown-label">Gün</div></div>';
-        if (d > 0 || h > 0) html += '<div class="camp-countdown-item camp-countdown-hour"><div class="camp-countdown-num">' + h + '</div><div class="camp-countdown-label">Saat</div></div>';
-        html += '<div class="camp-countdown-item"><div class="camp-countdown-num">' + m + '</div><div class="camp-countdown-label">Dəq</div></div>' +
-            '<div class="camp-countdown-item"><div class="camp-countdown-num">' + s + '</div><div class="camp-countdown-label">San</div></div>' +
+        if (d > 0) html += '<div class="camp-countdown-item camp-countdown-day"><div class="camp-countdown-num">' + d + '</div><div class="camp-countdown-label">' + t.day + '</div></div>';
+        if (d > 0 || h > 0) html += '<div class="camp-countdown-item camp-countdown-hour"><div class="camp-countdown-num">' + h + '</div><div class="camp-countdown-label">' + t.hour + '</div></div>';
+        html += '<div class="camp-countdown-item"><div class="camp-countdown-num">' + m + '</div><div class="camp-countdown-label">' + t.min + '</div></div>' +
+            '<div class="camp-countdown-item"><div class="camp-countdown-num">' + s + '</div><div class="camp-countdown-label">' + t.sec + '</div></div>' +
         '</div>';
         return html;
     }
@@ -929,6 +939,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderCampCard(c) {
+        var t = CT();
         var expired = isCampExpired(c);
         var claimed = c.claimedCount || 0;
         var max = c.maxCoupons || 1;
@@ -936,7 +947,7 @@ document.addEventListener('DOMContentLoaded', () => {
         var alreadyClaimed = getCampCookie(c.id);
 
         var html = '<div class="camp-card" data-camp-id="' + c.id + '">';
-        if (expired) html += '<div class="camp-ended-overlay"><div class="camp-ended-text">BİTİB</div></div>';
+        if (expired) html += '<div class="camp-ended-overlay"><div class="camp-ended-text">' + t.ended + '</div></div>';
         if (c.image) {
             var cPos = c.coverPos || '50% 50%';
             var cZoom = c.coverZoom || 1;
@@ -952,12 +963,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (campDesc) html += '<div class="camp-card-desc">' + campDesc + '</div>';
         if (!expired && c.endTimestamp) html += campCountdownHtml(c.endTimestamp);
         html += '<div class="camp-progress-wrap">';
-        html += '<div class="camp-progress-info"><span>Kupon alınıb</span><strong>' + claimed + '/' + max + ' kupon</strong></div>';
+        html += '<div class="camp-progress-info"><span>' + t.claimed + '</span><strong>' + claimed + '/' + max + ' ' + t.coupon + '</strong></div>';
         html += '<div class="camp-progress-bar"><div class="camp-progress-fill" style="width:' + pct + '%;"></div></div></div>';
         if (!expired && !alreadyClaimed) {
-            html += '<button class="camp-claim-btn" onclick="openCampClaimModal(\'' + c.id + '\',\'' + (campTitle).replace(/'/g, "\\'") + '\',' + c.discountPercent + ')">Kuponu əldə et</button>';
+            html += '<button class="camp-claim-btn" onclick="openCampClaimModal(\'' + c.id + '\',\'' + (campTitle).replace(/'/g, "\\'") + '\',' + c.discountPercent + ')">' + t.claimBtn + '</button>';
         } else if (alreadyClaimed) {
-            html += '<button class="camp-claim-btn" disabled><i class="fas fa-check"></i> Kupon alınıb</button>';
+            html += '<button class="camp-claim-btn" disabled><i class="fas fa-check"></i> ' + t.alreadyClaimed + '</button>';
         }
         html += '</div></div>';
         return html;
@@ -1088,17 +1099,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Claim modal
     window.openCampClaimModal = function(campId, title, discount) {
-        if (getCampCookie(campId)) { alert('Bu kampaniyadan artıq kupon almısınız.'); return; }
+        var t = CT();
+        if (getCampCookie(campId)) { alert(t.alreadyGot); return; }
         var overlay = document.createElement('div');
         overlay.className = 'camp-modal-overlay';
         overlay.innerHTML = '<div class="camp-modal">' +
             '<h3>' + title + '</h3>' +
-            '<div class="camp-modal-discount">-' + discount + '% ENDİRİM</div>' +
-            '<input type="text" id="campClaimName" placeholder="Ad *">' +
-            '<input type="text" id="campClaimSurname" placeholder="Soyad *">' +
-            '<input type="tel" id="campClaimPhone" placeholder="Telefon nömrəsi * (məs: +994501234567)">' +
-            '<button class="camp-modal-submit" id="campClaimSubmit"><i class="fas fa-ticket-alt"></i> Kuponu al</button>' +
-            '<button class="camp-modal-cancel" onclick="this.closest(\'.camp-modal-overlay\').remove()">Ləğv et</button>' +
+            '<div class="camp-modal-discount">-' + discount + '% ' + t.discount + '</div>' +
+            '<input type="text" id="campClaimName" placeholder="' + t.name + '">' +
+            '<input type="text" id="campClaimSurname" placeholder="' + t.surname + '">' +
+            '<input type="tel" id="campClaimPhone" placeholder="' + t.phone + '">' +
+            '<button class="camp-modal-submit" id="campClaimSubmit"><i class="fas fa-ticket-alt"></i> ' + t.submit + '</button>' +
+            '<button class="camp-modal-cancel" onclick="this.closest(\'.camp-modal-overlay\').remove()">' + t.cancel + '</button>' +
             '<p id="campClaimError" style="color:#e74c3c;font-size:0.82rem;text-align:center;margin-top:8px;min-height:1em;"></p>' +
         '</div>';
         document.body.appendChild(overlay);
@@ -1109,9 +1121,9 @@ document.addEventListener('DOMContentLoaded', () => {
             var surname = document.getElementById('campClaimSurname').value.trim();
             var phone = document.getElementById('campClaimPhone').value.trim();
             var errEl = document.getElementById('campClaimError');
-            if (!name || !surname || !phone) { errEl.textContent = 'Bütün sahələri doldurun!'; return; }
+            if (!name || !surname || !phone) { errEl.textContent = CT().fillAll; return; }
             this.disabled = true;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yüklənir...';
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + CT().loading;
             errEl.textContent = '';
             try {
                 var res = await fetch('/api/claim-coupon', {
@@ -1120,28 +1132,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ campaignId: campId, name: name, surname: surname, phone: phone, fingerprint: browserFingerprint, lang: currentLang })
                 });
                 var data = await res.json();
+                var t = CT();
                 if (data.success) {
                     setCampCookie(campId, data.couponCode);
                     overlay.innerHTML = '<div class="camp-modal">' +
-                        '<h3 style="text-align:center;color:#27ae60;"><i class="fas fa-check-circle"></i> Təbriklər!</h3>' +
-                        '<p style="text-align:center;color:#666;margin:8px 0;">Sizin ' + data.discount + '% endirim kuponunuz:</p>' +
+                        '<h3 style="text-align:center;color:#27ae60;"><i class="fas fa-check-circle"></i> ' + t.congrats + '</h3>' +
+                        '<p style="text-align:center;color:#666;margin:8px 0;">' + t.yourCoupon + '</p>' +
                         '<div class="camp-success-code"><span>' + data.couponCode + '</span></div>' +
-                        '<button class="camp-copy-btn" onclick="navigator.clipboard.writeText(\'' + data.couponCode + '\');this.textContent=\'Kopyalandı!\'"><i class="fas fa-copy"></i> Kodu kopyala</button>' +
-                        '<p style="text-align:center;font-size:0.78rem;color:#999;margin-top:12px;">Endirimi əldə etmək üçün bu kodu WhatsApp-da Şahsəddin İmanlıya göndərin və ya canlı seans zamanı telefonda göstərin.</p>' +
-                        '<button class="camp-modal-cancel" onclick="this.closest(\'.camp-modal-overlay\').remove()" style="margin-top:12px;">Bağla</button>' +
+                        '<button class="camp-copy-btn" onclick="navigator.clipboard.writeText(\'' + data.couponCode + '\');this.textContent=\'' + t.copied + '\'"><i class="fas fa-copy"></i> ' + t.copy + '</button>' +
+                        '<p style="text-align:center;font-size:0.78rem;color:#999;margin-top:12px;">' + t.instructions + '</p>' +
+                        '<button class="camp-modal-cancel" onclick="this.closest(\'.camp-modal-overlay\').remove()" style="margin-top:12px;">' + t.close + '</button>' +
                     '</div>';
-                    // Update card button
                     var card = document.querySelector('[data-camp-id="' + campId + '"]');
-                    if (card) { var btn = card.querySelector('.camp-claim-btn'); if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-check"></i> Kupon alınıb'; } }
+                    if (card) { var btn = card.querySelector('.camp-claim-btn'); if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-check"></i> ' + t.alreadyClaimed; } }
                 } else {
-                    errEl.textContent = data.error || 'Xəta baş verdi';
+                    errEl.textContent = data.error || t.error;
                     this.disabled = false;
-                    this.innerHTML = '<i class="fas fa-ticket-alt"></i> Kuponu al';
+                    this.innerHTML = '<i class="fas fa-ticket-alt"></i> ' + t.submit;
                 }
             } catch(e) {
-                errEl.textContent = 'Bağlantı xətası';
+                errEl.textContent = CT().error;
                 this.disabled = false;
-                this.innerHTML = '<i class="fas fa-ticket-alt"></i> Kuponu al';
+                this.innerHTML = '<i class="fas fa-ticket-alt"></i> ' + CT().submit;
             }
         });
     };
