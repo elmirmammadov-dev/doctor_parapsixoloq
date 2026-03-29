@@ -983,12 +983,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasAnn && leftCol && annGrid) {
             leftCol.style.display = '';
             var annHtml = '';
-            if (cachedAnnouncements.length > 0) {
-                annHtml += renderAnnCardLarge(cachedAnnouncements[0]);
+
+            // Check for manually positioned announcements
+            var featured = cachedAnnouncements.find(function(a) { return a.homePosition === 'featured'; });
+            var small1 = cachedAnnouncements.find(function(a) { return a.homePosition === 'small1'; });
+            var small2 = cachedAnnouncements.find(function(a) { return a.homePosition === 'small2'; });
+
+            // Fallback to auto if no manual positions set
+            if (!featured && !small1 && !small2) {
+                featured = cachedAnnouncements[0];
+                small1 = cachedAnnouncements[1];
+                small2 = cachedAnnouncements[2];
             }
-            if (cachedAnnouncements.length > 1) {
+
+            if (featured) {
+                annHtml += renderAnnCardLarge(featured);
+            }
+            if (small1 || small2) {
                 annHtml += '<div class="ann-small-row">';
-                annHtml += cachedAnnouncements.slice(1, 3).map(renderAnnCardSmall).join('');
+                if (small1) annHtml += renderAnnCardSmall(small1);
+                if (small2) annHtml += renderAnnCardSmall(small2);
                 annHtml += '</div>';
             }
             annGrid.innerHTML = annHtml;

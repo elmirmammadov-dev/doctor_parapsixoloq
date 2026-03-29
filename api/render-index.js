@@ -82,29 +82,61 @@ module.exports = async (req, res) => {
         // === SSR Announcement Cards (left column, max 2) ===
         let annHtml = '';
         if (annData && typeof annData === 'object') {
-            const announcements = Object.values(annData)
+            const allAnns = Object.values(annData)
                 .filter(a => a.active !== false)
-                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
-                .slice(0, 2);
-            if (announcements.length > 0) {
-                annHtml = announcements.map(a => {
-                    const pos = a.coverPos || '50% 50%';
-                    const zoom = a.coverZoom || 1;
-                    const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
-                    const aTitle = a.title_az || a.title || '';
-                    const aDesc = a.desc_az || a.desc || '';
-                    const annHref = a.slug ? `/elanlar/${a.slug}` : '';
-                    const tag = annHref ? 'a' : 'div';
-                    const href = annHref ? ` href="${escapeHtml(annHref)}"` : '';
-                    return `<${tag} class="ann-section-card"${href} style="text-decoration:none;color:inherit;">
+                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            // Check for manually positioned announcements
+            let featured = allAnns.find(a => a.homePosition === 'featured');
+            let small1 = allAnns.find(a => a.homePosition === 'small1');
+            let small2 = allAnns.find(a => a.homePosition === 'small2');
+
+            // Fallback to auto if no manual positions set
+            if (!featured && !small1 && !small2) {
+                featured = allAnns[0];
+                small1 = allAnns[1];
+                small2 = allAnns[2];
+            }
+
+            function renderAnnSSR(a, isLarge) {
+                const pos = a.coverPos || '50% 50%';
+                const zoom = a.coverZoom || 1;
+                const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
+                const aTitle = a.title_az || a.title || '';
+                const aDesc = a.desc_az || a.desc || '';
+                const annHref = a.slug ? `/elanlar/${a.slug}` : '';
+                const tag = annHref ? 'a' : 'div';
+                const href = annHref ? ` href="${escapeHtml(annHref)}"` : '';
+                const cardClass = isLarge ? 'ann-section-card ann-card-large' : 'ann-section-card ann-card-small';
+                if (isLarge) {
+                    return `<${tag} class="${cardClass}"${href} style="text-decoration:none;color:inherit;">
                         ${a.image ? `<div class="ann-section-card-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};">${a.showBadge !== false ? '<span class="ann-section-badge">YEN\u0130</span>' : ''}</div>` : ''}
                         <div class="ann-section-card-body">
+                            <div class="ann-section-card-date">${escapeHtml(a.date || '')}</div>
                             <div class="ann-section-card-title">${escapeHtml(aTitle)}</div>
                             ${aDesc ? `<div class="ann-section-card-desc">${escapeHtml(aDesc)}</div>` : ''}
-                            <div class="ann-section-card-date">${escapeHtml(a.date || '')}</div>
+                            <span class="ann-section-card-link">Daha \u0259trafl\u0131 <i class="fas fa-arrow-right"></i></span>
                         </div>
                     </${tag}>`;
-                }).join('');
+                }
+                return `<${tag} class="${cardClass}"${href} style="text-decoration:none;color:inherit;">
+                    <div class="ann-section-card-body">
+                        <div class="ann-section-card-date">${escapeHtml(a.date || '')}</div>
+                        <div class="ann-section-card-title">${escapeHtml(aTitle)}</div>
+                        ${aDesc ? `<div class="ann-section-card-desc">${escapeHtml(aDesc)}</div>` : ''}
+                        <span class="ann-section-card-link ann-link-upper">DAHA \u018FTRAFLI</span>
+                    </div>
+                </${tag}>`;
+            }
+
+            if (featured) {
+                annHtml += renderAnnSSR(featured, true);
+            }
+            if (small1 || small2) {
+                annHtml += '<div class="ann-small-row">';
+                if (small1) annHtml += renderAnnSSR(small1, false);
+                if (small2) annHtml += renderAnnSSR(small2, false);
+                annHtml += '</div>';
             }
         }
 

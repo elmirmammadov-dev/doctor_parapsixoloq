@@ -3356,21 +3356,33 @@ document.addEventListener("DOMContentLoaded", function() {
             const items = Object.entries(data).map(([id, v]) => ({ id, ...v })).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             countEl.textContent = items.length;
 
-            list.innerHTML = items.map(item => `
-                <div style="display:flex;gap:12px;padding:12px;background:#fff;border:1.5px solid #e8e8e8;border-radius:12px;margin-bottom:8px;align-items:center;">
+            list.innerHTML = items.map(item => {
+                const hp = item.homePosition || '';
+                const hpLabel = hp === 'featured' ? '⭐ Böyük' : hp === 'small1' ? '📌 Kiçik 1' : hp === 'small2' ? '📌 Kiçik 2' : '';
+                const hpColor = hp === 'featured' ? '#c5a637' : hp ? '#2d8157' : '#ccc';
+                return `
+                <div style="display:flex;gap:12px;padding:12px;background:#fff;border:1.5px solid ${hp ? hpColor : '#e8e8e8'};border-radius:12px;margin-bottom:8px;align-items:center;">
                     ${item.image ? `<img src="${item.image}" style="width:56px;height:56px;border-radius:10px;object-fit:cover;flex-shrink:0;">` : `<div style="width:56px;height:56px;border-radius:10px;background:#f0f7f3;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-bullhorn" style="color:#ccc;"></i></div>`}
                     <div style="flex:1;min-width:0;">
                         <div style="font-weight:600;font-size:0.9rem;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.title}</div>
-                        <div style="font-size:0.78rem;color:#999;margin-top:2px;">${item.date || ''}</div>
+                        <div style="font-size:0.78rem;color:#999;margin-top:2px;">${item.date || ''}${hpLabel ? ` <span style="color:${hpColor};font-weight:700;margin-left:6px;">${hpLabel}</span>` : ''}</div>
                         ${item.desc ? `<div style="font-size:0.8rem;color:#666;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${item.desc}</div>` : ''}
                     </div>
-                    <div style="display:flex;gap:6px;flex-shrink:0;">
-                        <button onclick="editAnnouncement('${item.id}')" style="width:32px;height:32px;border:1.5px solid #e0e0e0;border-radius:8px;background:#fff;cursor:pointer;color:#666;font-size:0.8rem;" title="Redaktə"><i class="fas fa-pen"></i></button>
-                        <button onclick="toggleAnnouncement('${item.id}', ${!item.active})" style="width:32px;height:32px;border:1.5px solid ${item.active ? '#2d8157' : '#e0e0e0'};border-radius:8px;background:${item.active ? '#f0faf5' : '#fff'};cursor:pointer;color:${item.active ? '#2d8157' : '#999'};font-size:0.8rem;" title="${item.active ? 'Deaktiv et' : 'Aktiv et'}"><i class="fas fa-${item.active ? 'eye' : 'eye-slash'}"></i></button>
-                        <button onclick="deleteAnnouncement('${item.id}')" style="width:32px;height:32px;border:1.5px solid #e74c3c;border-radius:8px;background:#fff;cursor:pointer;color:#e74c3c;font-size:0.8rem;" title="Sil"><i class="fas fa-trash"></i></button>
+                    <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;">
+                        <select onchange="setAnnHomePosition('${item.id}', this.value)" style="padding:4px 6px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:0.72rem;cursor:pointer;background:#fff;color:#333;">
+                            <option value=""${!hp ? ' selected' : ''}>Göstərmə</option>
+                            <option value="featured"${hp === 'featured' ? ' selected' : ''}>⭐ Böyük</option>
+                            <option value="small1"${hp === 'small1' ? ' selected' : ''}>📌 Kiçik 1</option>
+                            <option value="small2"${hp === 'small2' ? ' selected' : ''}>📌 Kiçik 2</option>
+                        </select>
+                        <div style="display:flex;gap:4px;">
+                            <button onclick="editAnnouncement('${item.id}')" style="width:32px;height:32px;border:1.5px solid #e0e0e0;border-radius:8px;background:#fff;cursor:pointer;color:#666;font-size:0.8rem;" title="Redaktə"><i class="fas fa-pen"></i></button>
+                            <button onclick="toggleAnnouncement('${item.id}', ${!item.active})" style="width:32px;height:32px;border:1.5px solid ${item.active ? '#2d8157' : '#e0e0e0'};border-radius:8px;background:${item.active ? '#f0faf5' : '#fff'};cursor:pointer;color:${item.active ? '#2d8157' : '#999'};font-size:0.8rem;" title="${item.active ? 'Deaktiv et' : 'Aktiv et'}"><i class="fas fa-${item.active ? 'eye' : 'eye-slash'}"></i></button>
+                            <button onclick="deleteAnnouncement('${item.id}')" style="width:32px;height:32px;border:1.5px solid #e74c3c;border-radius:8px;background:#fff;cursor:pointer;color:#e74c3c;font-size:0.8rem;" title="Sil"><i class="fas fa-trash"></i></button>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         });
     }
 
@@ -3421,6 +3433,26 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('tabAnnouncements').scrollTop = 0;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+    };
+
+    window.setAnnHomePosition = function(id, position) {
+        // If setting featured/small1/small2, clear any other announcement with the same position
+        if (position) {
+            adminDb.ref('announcements').once('value', function(snap) {
+                var data = snap.val();
+                if (!data) return;
+                var updates = {};
+                Object.entries(data).forEach(function([key, val]) {
+                    if (key !== id && val.homePosition === position) {
+                        updates[key + '/homePosition'] = null;
+                    }
+                });
+                if (Object.keys(updates).length > 0) {
+                    adminDb.ref('announcements').update(updates);
+                }
+            });
+        }
+        adminDb.ref('announcements/' + id + '/homePosition').set(position || null).then(() => loadAdminAnnouncements());
     };
 
     window.toggleAnnouncement = function(id, active) {
