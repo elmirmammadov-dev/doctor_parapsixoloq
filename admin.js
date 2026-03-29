@@ -4131,14 +4131,30 @@ document.addEventListener("DOMContentLoaded", function() {
     function _dk(i){try{return atob(_ek[i]);}catch(e){return '';}}
 
     function notifyCampSubscribers(campData) {
-        if (typeof emailjs === 'undefined') return;
+        var msgEl = document.getElementById('campMsg');
+        if (typeof emailjs === 'undefined') {
+            console.error('EmailJS kitabxanası yüklənməyib!');
+            if (msgEl) { msgEl.textContent = 'Email kitabxanası yüklənməyib!'; msgEl.style.color = '#e74c3c'; }
+            return;
+        }
         emailjs.init(_dk(2));
+
+        if (msgEl) { msgEl.textContent = 'Abunəçilərə email göndərilir...'; msgEl.style.color = 'var(--gold)'; }
 
         adminDb.ref('campaign_subscribers').once('value', function(snap) {
             var subs = snap.val();
-            if (!subs) return;
+            if (!subs) {
+                console.warn('Heç bir abunəçi tapılmadı');
+                if (msgEl) { msgEl.textContent = 'Heç bir abunəçi yoxdur.'; msgEl.style.color = '#e67e22'; }
+                return;
+            }
             var emails = Object.values(subs).map(function(s) { return s.email; }).filter(Boolean);
-            if (!emails.length) return;
+            if (!emails.length) {
+                if (msgEl) { msgEl.textContent = 'Heç bir abunəçi email-i tapılmadı.'; msgEl.style.color = '#e67e22'; }
+                return;
+            }
+
+            console.log('Email göndərilir ' + emails.length + ' abunəçiyə:', emails);
 
             var sent = 0, failed = 0;
             var campUrl = 'https://www.sahseddinimanli.com/kampaniyalar';
@@ -4150,19 +4166,19 @@ document.addEventListener("DOMContentLoaded", function() {
                     campaign_desc: campData.desc || '',
                     discount: campData.discountPercent || '',
                     campaign_url: campUrl
-                }).then(function() {
+                }).then(function(response) {
                     sent++;
+                    console.log('Email göndərildi: ' + email, response);
                     if (sent + failed === emails.length) {
-                        var msgEl = document.getElementById('campMsg');
                         if (msgEl) {
                             msgEl.textContent = sent + ' abunəçiyə email göndərildi' + (failed > 0 ? ' (' + failed + ' uğursuz)' : '');
                             msgEl.style.color = '#27ae60';
                         }
                     }
-                }).catch(function() {
+                }).catch(function(err) {
                     failed++;
+                    console.error('Email göndərilmədi: ' + email, err);
                     if (sent + failed === emails.length) {
-                        var msgEl = document.getElementById('campMsg');
                         if (msgEl) {
                             msgEl.textContent = sent + ' göndərildi, ' + failed + ' uğursuz';
                             msgEl.style.color = '#e67e22';
@@ -4170,6 +4186,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 });
             });
+        }, function(err) {
+            console.error('Firebase abunəçiləri oxuna bilmədi:', err);
+            if (msgEl) { msgEl.textContent = 'Abunəçilər yüklənmədi: ' + err.message; msgEl.style.color = '#e74c3c'; }
         });
     }
 

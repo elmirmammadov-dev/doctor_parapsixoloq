@@ -1524,7 +1524,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         notifyMsg.textContent = 'Abunəliyiniz aktivləşdirildi!';
                         notifyMsg.style.color = '#27ae60';
                         document.getElementById('notifyEmailInput').value = '';
-                        localStorage.setItem('campSubscribed', '1');
                     });
                 })
                 .catch(function(err) {
@@ -1533,11 +1532,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
 
-        // If already subscribed, show message
-        if (localStorage.getItem('campSubscribed')) {
-            notifyMsg.textContent = 'Siz artıq abunəsiniz ✓';
-            notifyMsg.style.color = '#27ae60';
-        }
     }
 
     // Push notification permission
