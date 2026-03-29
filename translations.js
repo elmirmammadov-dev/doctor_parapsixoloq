@@ -123,7 +123,7 @@ const translations = {
         ann_view_all2: "Hamısına bax",
         ann_view_detail: "Daha ətraflı",
         camp_right_title: "Kampaniyalar",
-        camp_right_title2: "Xüsusi Kampaniyalar",
+        camp_right_title2: "Endirim Kampaniyaları",
         camp_view_all: "Hamısına bax",
         notify_title: "Kampaniyalardan xəbərdar ol",
         notify_desc: "Yeni kampaniyalar başladıqda dərhal bildiriş al.",
