@@ -3945,13 +3945,21 @@ document.addEventListener("DOMContentLoaded", function() {
         adminDb.ref('campaign_subscribers').once('value', function(snap) {
             var subs = snap.val();
             if (!subs) { alert('Abunəçi yoxdur.'); return; }
-            var rows = [['Email', 'Dil', 'Tarix']];
-            Object.values(subs).forEach(function(s) {
+            var lines = [];
+            // Header: A-D email, E dil, F-G tarix
+            lines.push('Email;;;;"Dil";"Tarix"');
+            Object.values(subs).sort(function(a,b) { return (b.subscribedAt||0)-(a.subscribedAt||0); }).forEach(function(s) {
                 var d = new Date(s.subscribedAt);
-                var dateStr = d.toLocaleDateString('az') + ' ' + d.toLocaleTimeString('az', {hour:'2-digit', minute:'2-digit'});
-                rows.push([s.email || '', (s.lang || 'az').toUpperCase(), dateStr]);
+                var day = ('0'+d.getDate()).slice(-2);
+                var mon = ('0'+(d.getMonth()+1)).slice(-2);
+                var year = d.getFullYear();
+                var hour = ('0'+d.getHours()).slice(-2);
+                var min = ('0'+d.getMinutes()).slice(-2);
+                var dateStr = day + '.' + mon + '.' + year;
+                var timeStr = hour + ':' + min;
+                lines.push('"' + (s.email || '') + '";;;;"' + (s.lang || 'az').toUpperCase() + '";"' + dateStr + ' ' + timeStr + '"');
             });
-            var csv = '\uFEFF' + rows.map(function(r) { return r.join(';'); }).join('\n');
+            var csv = '\uFEFF' + lines.join('\n');
             var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
             var a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
