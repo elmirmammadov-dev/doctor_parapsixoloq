@@ -4126,69 +4126,36 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     };
 
-    // === CAMPAIGN EMAIL NOTIFICATION ===
-    var _ek = ['\x63\x32\x56\x79\x64\x6d\x6c\x6a\x5a\x56\x39\x70\x61\x33\x52\x79\x4e\x32\x35\x68','\x64\x47\x56\x74\x63\x47\x78\x68\x64\x47\x56\x66\x65\x57\x64\x6d\x64\x47\x78\x35\x62\x41\x3d\x3d','\x56\x46\x59\x78\x61\x7a\x56\x6b\x4e\x32\x74\x51\x4d\x6a\x46\x36\x54\x69\x30\x7a\x4d\x30\x34\x3d'];
-    function _dk(i){try{return atob(_ek[i]);}catch(e){return '';}}
-
+    // === CAMPAIGN EMAIL NOTIFICATION (via Vercel API + Nodemailer) ===
     function notifyCampSubscribers(campData) {
         var msgEl = document.getElementById('campMsg');
-        if (typeof emailjs === 'undefined') {
-            console.error('EmailJS kitabxanası yüklənməyib!');
-            if (msgEl) { msgEl.textContent = 'Email kitabxanası yüklənməyib!'; msgEl.style.color = '#e74c3c'; }
-            return;
-        }
-        emailjs.init(_dk(2));
-
         if (msgEl) { msgEl.textContent = 'Abunəçilərə email göndərilir...'; msgEl.style.color = 'var(--gold)'; }
 
-        adminDb.ref('campaign_subscribers').once('value', function(snap) {
-            var subs = snap.val();
-            if (!subs) {
-                console.warn('Heç bir abunəçi tapılmadı');
-                if (msgEl) { msgEl.textContent = 'Heç bir abunəçi yoxdur.'; msgEl.style.color = '#e67e22'; }
+        fetch('/api/send-campaign-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                title: campData.title || '',
+                desc: campData.desc || '',
+                discount: campData.discountPercent || '',
+                url: 'https://hekim2026yenidizayn.vercel.app/kampaniyalar'
+            })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            console.log('Email nəticəsi:', data);
+            if (data.error) {
+                if (msgEl) { msgEl.textContent = 'Xəta: ' + data.error; msgEl.style.color = '#e74c3c'; }
                 return;
             }
-            var emails = Object.values(subs).map(function(s) { return s.email; }).filter(Boolean);
-            if (!emails.length) {
-                if (msgEl) { msgEl.textContent = 'Heç bir abunəçi email-i tapılmadı.'; msgEl.style.color = '#e67e22'; }
-                return;
+            if (msgEl) {
+                msgEl.textContent = data.sent + ' abunəçiyə email göndərildi' + (data.failed > 0 ? ' (' + data.failed + ' uğursuz)' : '');
+                msgEl.style.color = data.failed > 0 ? '#e67e22' : '#27ae60';
             }
-
-            console.log('Email göndərilir ' + emails.length + ' abunəçiyə:', emails);
-
-            var sent = 0, failed = 0;
-            var campUrl = 'https://hekim2026yenidizayn.vercel.app/kampaniyalar';
-
-            emails.forEach(function(email) {
-                emailjs.send(_dk(0), _dk(1), {
-                    to_email: email,
-                    campaign_title: campData.title || '',
-                    campaign_desc: campData.desc || '',
-                    discount: campData.discountPercent || '',
-                    campaign_url: campUrl
-                }).then(function(response) {
-                    sent++;
-                    console.log('Email göndərildi: ' + email, response);
-                    if (sent + failed === emails.length) {
-                        if (msgEl) {
-                            msgEl.textContent = sent + ' abunəçiyə email göndərildi' + (failed > 0 ? ' (' + failed + ' uğursuz)' : '');
-                            msgEl.style.color = '#27ae60';
-                        }
-                    }
-                }).catch(function(err) {
-                    failed++;
-                    console.error('Email göndərilmədi: ' + email, err);
-                    if (sent + failed === emails.length) {
-                        if (msgEl) {
-                            msgEl.textContent = sent + ' göndərildi, ' + failed + ' uğursuz';
-                            msgEl.style.color = '#e67e22';
-                        }
-                    }
-                });
-            });
-        }, function(err) {
-            console.error('Firebase abunəçiləri oxuna bilmədi:', err);
-            if (msgEl) { msgEl.textContent = 'Abunəçilər yüklənmədi: ' + err.message; msgEl.style.color = '#e74c3c'; }
+        })
+        .catch(function(err) {
+            console.error('Email API xətası:', err);
+            if (msgEl) { msgEl.textContent = 'Email göndərilmədi: ' + err.message; msgEl.style.color = '#e74c3c'; }
         });
     }
 

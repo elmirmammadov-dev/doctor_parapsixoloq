@@ -6,8 +6,9 @@
     "build": "node minify.js"
   },
   "dependencies": {
-    "node-fetch": "2.7.0",
     "clean-css": "^5.3.3",
+    "node-fetch": "2.7.0",
+    "nodemailer": "^8.0.4",
     "terser": "^5.31.0"
   },
   "devDependencies": {
