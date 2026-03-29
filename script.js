@@ -1127,7 +1127,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         '<p style="text-align:center;color:#666;margin:8px 0;">Sizin ' + data.discount + '% endirim kuponunuz:</p>' +
                         '<div class="camp-success-code"><span>' + data.couponCode + '</span></div>' +
                         '<button class="camp-copy-btn" onclick="navigator.clipboard.writeText(\'' + data.couponCode + '\');this.textContent=\'Kopyalandı!\'"><i class="fas fa-copy"></i> Kodu kopyala</button>' +
-                        '<p style="text-align:center;font-size:0.78rem;color:#999;margin-top:12px;">Bu kodu WhatsApp-da Şahsəddin İmanlıya göstərin və ya canlı seans zamanı telefonda göstərin.</p>' +
+                        '<p style="text-align:center;font-size:0.78rem;color:#999;margin-top:12px;">Endirimi əldə etmək üçün bu kodu WhatsApp-da Şahsəddin İmanlıya göndərin və ya canlı seans zamanı telefonda göstərin.</p>' +
                         '<button class="camp-modal-cancel" onclick="this.closest(\'.camp-modal-overlay\').remove()" style="margin-top:12px;">Bağla</button>' +
                     '</div>';
                     // Update card button
