@@ -3951,7 +3951,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 var dateStr = d.toLocaleDateString('az') + ' ' + d.toLocaleTimeString('az', {hour:'2-digit', minute:'2-digit'});
                 rows.push([s.email || '', (s.lang || 'az').toUpperCase(), dateStr]);
             });
-            var csv = '\uFEFF' + rows.map(function(r) { return r.join('\t'); }).join('\n');
+            var csv = '\uFEFF' + rows.map(function(r) { return r.join(';'); }).join('\n');
             var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
             var a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
