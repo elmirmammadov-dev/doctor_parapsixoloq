@@ -39,7 +39,7 @@ module.exports = async (req, res) => {
             const max = c.maxCoupons || 1;
             const pct = Math.min(100, Math.round((claimed / max) * 100));
 
-            return `<div class="camp-archive-card" style="background:#fff;border-radius:16px;overflow:hidden;border:2px solid ${expired ? '#ccc' : '#c5a637'};margin-bottom:20px;${expired ? 'opacity:0.7;' : ''}position:relative;">
+            return `<div class="camp-archive-card" style="background:#fff;border-radius:16px;overflow:hidden;border:2px solid ${expired ? '#ccc' : '#1a3a2a'};margin-bottom:20px;${expired ? 'opacity:0.7;' : ''}position:relative;">
                 ${expired ? '<div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:2;border-radius:14px;"><span style="background:#e74c3c;color:#fff;padding:10px 28px;border-radius:10px;font-weight:800;font-size:1.1rem;letter-spacing:1px;">BİTİB</span></div>' : ''}
                 ${c.image ? `<div style="width:100%;aspect-ratio:3/1;background-image:url(${escapeHtml(c.image)});background-position:${c.coverPos || '50% 50%'};background-size:${(c.coverZoom || 1) <= 1 ? 'cover' : ((c.coverZoom || 1) * 100) + '%'};background-repeat:no-repeat;position:relative;">
                     <div style="position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;font-size:1.1rem;font-weight:800;padding:6px 14px;border-radius:10px;box-shadow:0 3px 12px rgba(231,76,60,0.5);">-${c.discountPercent}%</div>
