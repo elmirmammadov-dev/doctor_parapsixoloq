@@ -3945,12 +3945,14 @@ document.addEventListener("DOMContentLoaded", function() {
         adminDb.ref('campaign_subscribers').once('value', function(snap) {
             var subs = snap.val();
             if (!subs) { alert('Abunəçi yoxdur.'); return; }
-            var csv = 'Email,Dil,Tarix\n';
+            var rows = [['Email', 'Dil', 'Tarix']];
             Object.values(subs).forEach(function(s) {
-                var d = new Date(s.subscribedAt).toISOString();
-                csv += (s.email || '') + ',' + (s.lang || 'az') + ',' + d + '\n';
+                var d = new Date(s.subscribedAt);
+                var dateStr = d.toLocaleDateString('az') + ' ' + d.toLocaleTimeString('az', {hour:'2-digit', minute:'2-digit'});
+                rows.push([s.email || '', (s.lang || 'az').toUpperCase(), dateStr]);
             });
-            var blob = new Blob([csv], { type: 'text/csv' });
+            var csv = '\uFEFF' + rows.map(function(r) { return r.join('\t'); }).join('\n');
+            var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
             var a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = 'kampaniya_abunecileri.csv';
