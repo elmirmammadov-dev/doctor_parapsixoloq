@@ -54,7 +54,7 @@ module.exports = async (req, res) => {
                     <div style="height:6px;background:#eee;border-radius:3px;margin:6px 0 12px;overflow:hidden;">
                         <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#e74c3c,#c5a637);border-radius:3px;"></div>
                     </div>
-                    ${!expired ? `<button class="camp-claim-btn" onclick="openCampClaimModal('${c.id}','${escapeHtml(L(c, 'title')).replace(/'/g, "\\'")}',${c.discountPercent})" style="width:100%;padding:10px;border:none;border-radius:10px;background:linear-gradient(135deg,#c5a637,#d4b445);color:#fff;font-weight:700;font-size:0.88rem;cursor:pointer;">
+                    ${!expired ? `<button class="camp-claim-btn" onclick="openCampClaimModal('${c.id}','${escapeHtml(L(c, 'title')).replace(/'/g, "\\'")}',${c.discountPercent})" style="width:100%;padding:10px;border:none;border-radius:10px;background:#1a3a2a;color:#fff;font-weight:700;font-size:0.88rem;cursor:pointer;">
                         <i class="fas fa-ticket-alt"></i> Kuponu al
                     </button>` : ''}
                 </div>
