@@ -2243,10 +2243,11 @@ img {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: var(--gradient-gold);
-    color: #fff;
+    background: linear-gradient(135deg, #c5a637 0%, #e8d48b 40%, #c5a637 60%, #a88a2a 100%);
+    color: #1a2a1a;
     padding: 16px 28px;
     border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.3);
     box-shadow: 0 8px 30px rgba(45, 129, 87, 0.3);
     cursor: pointer;
     transition: all 0.3s ease;
@@ -2254,7 +2255,7 @@ img {
 
 .about-review-badge:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(45, 129, 87, 0.4);
+    box-shadow: 0 12px 40px rgba(197, 166, 55, 0.4);
 }
 
 .about-review-badge i.fa-comments {
