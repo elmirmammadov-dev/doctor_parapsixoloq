@@ -290,16 +290,28 @@
     <!-- Hero Banner -->
     <section class="hero-banner" id="about">
         <div class="container">
-            <div class="hero-banner-img-wrap">
-                <img src="hero-banner.webp" alt="Şahsəddin İmanlı - Parapsixoloq və Tantra Yoqa Müəllimi" width="600" height="700" fetchpriority="high">
-                <div class="hero-img-badge hero-img-badge-left" id="zengBadge" style="cursor:pointer;">
-                    <div class="hero-bar-label" data-i18n="hero_form_title">Zəng Sifarişi</div>
-                    <div class="badge-tooltip" id="zengTooltip" data-i18n="zeng_tooltip">Bu seçim üçün mütləq nömrənizi yazmalısınız. Ad, Soyad yazmaya da bilərsiniz.</div>
+            <div class="hero-banner-img-wrap" style="background-image:url('hero-banner.webp');">
+                <div class="hero-banner-overlay"></div>
+                <div class="hero-banner-content">
+                    <div class="hero-badge-group">
+                        <div class="hero-img-badge hero-img-badge-left" id="zengBadge" style="cursor:pointer;">
+                            <i class="fas fa-phone-alt hero-badge-icon"></i>
+                            <div class="hero-badge-text">
+                                <div class="hero-bar-label" data-i18n="hero_form_title">Zəng Sifarişi</div>
+                                <div class="hero-badge-sub" data-i18n="hero_call_sub">Nömrənizi yazın, biz zəng edək</div>
+                            </div>
+                            <div class="badge-tooltip" id="zengTooltip" data-i18n="zeng_tooltip">Bu seçim üçün mütləq nömrənizi yazmalısınız. Ad, Soyad yazmaya da bilərsiniz.</div>
+                        </div>
+                        <button type="button" class="hero-img-badge hero-img-badge-right hero-bar-calendar-btn" id="openCalendarBtn">
+                            <i class="fas fa-calendar-check hero-badge-icon"></i>
+                            <div class="hero-badge-text">
+                                <span data-i18n="reservation_title">Seans üçün Gün Seçimi</span>
+                                <div class="hero-badge-sub" data-i18n="hero_seans_sub">Uyğun vaxtı seçin</div>
+                            </div>
+                            <i class="fas fa-arrow-right hero-badge-arrow"></i>
+                        </button>
+                    </div>
                 </div>
-                <button type="button" class="hero-img-badge hero-img-badge-right hero-bar-calendar-btn" id="openCalendarBtn">
-                    <span data-i18n="reservation_title">Seans üçün Gün Seçimi</span>
-                    <i class="fas fa-arrow-right"></i>
-                </button>
             </div>
         </div>
         <div class="hero-form-bar">
