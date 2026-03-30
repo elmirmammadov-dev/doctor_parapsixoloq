@@ -94,6 +94,17 @@ module.exports = async (req, res) => {
             ${campCardsHtml}
         </div>
     </main>
+    <script>
+        (function(){
+            var params = new URLSearchParams(window.location.search);
+            if (!params.get('lang')) {
+                var savedLang = localStorage.getItem('lang') || 'az';
+                if (savedLang !== 'az') {
+                    window.location.replace('/kampaniyalar?lang=' + savedLang);
+                }
+            }
+        })();
+    </script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script src="/style.css"></script>

@@ -135,6 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Re-render announcements with new language
         if (typeof renderAnnSectionPage === 'function') renderAnnSectionPage();
+
+        // Update campaign "view all" link with current language
+        var campLink = document.getElementById('campViewAllLink');
+        if (campLink) campLink.href = '/kampaniyalar?lang=' + lang;
     }
 
     // Lang switcher click
