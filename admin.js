@@ -4238,16 +4238,16 @@ document.addEventListener("DOMContentLoaded", function() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                title_az: campData.title_az || campData.title || '',
+                title_az: campData.title_az || '',
                 title_ru: campData.title_ru || '',
                 title_en: campData.title_en || '',
                 title_tr: campData.title_tr || '',
-                desc_az: campData.desc_az || campData.desc || '',
+                desc_az: campData.desc_az || '',
                 desc_ru: campData.desc_ru || '',
                 desc_en: campData.desc_en || '',
                 desc_tr: campData.desc_tr || '',
                 discount: campData.discountPercent || '',
-                url: 'https://hekim2026yenidizayn.vercel.app/kampaniyalar'
+                url: 'https://hekim2026yenidizayn.vercel.app'
             })
         })
         .then(function(r) { return r.json(); })
