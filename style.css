@@ -2227,8 +2227,10 @@ img {
 }
 
 .rating-stars-inner i {
-    color: #1a3c2a;
+    color: #ffc940;
     font-size: 1rem;
+    -webkit-text-stroke: 0.5px #8a6d00;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
 }
 
 .rating-score {
