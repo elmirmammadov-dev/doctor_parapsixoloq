@@ -164,7 +164,7 @@ module.exports = async (req, res) => {
             auth: { user: gmailUser, pass: gmailPass }
         });
 
-        const campaignUrl = body.url || 'https://hekim2026yenidizayn.vercel.app/kampaniyalar';
+        const siteUrl = body.url || 'https://hekim2026yenidizayn.vercel.app';
         let sent = 0, failed = 0;
         const results = [];
 
@@ -175,6 +175,7 @@ module.exports = async (req, res) => {
 
             const t = TEXTS[lang] || TEXTS.az;
             const desc = body['desc_' + lang] || '';
+            const campaignUrl = siteUrl.replace(/\/kampaniyalar.*$/, '') + '/' + lang + '/kampaniyalar';
 
             const html = buildHtml({ title, desc, discount: body.discount || '', url: campaignUrl }, lang);
 
