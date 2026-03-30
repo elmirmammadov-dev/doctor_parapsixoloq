@@ -2227,14 +2227,14 @@ img {
 }
 
 .rating-stars-inner i {
-    color: #ffc940;
+    color: #1a3c2a;
     font-size: 1rem;
 }
 
 .rating-score {
     font-weight: 800;
     font-size: 1.3rem;
-    color: #fff;
+    color: #1a2a1a;
 }
 
 /* === REVIEW BADGE - bottom left === */
