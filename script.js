@@ -1021,9 +1021,14 @@ document.addEventListener('DOMContentLoaded', () => {
             leftCol.style.display = 'none';
         }
 
+        var langCampaigns = cachedCampaigns.filter(function(c) {
+            return c['title_' + currentLang] && c['title_' + currentLang].trim() !== '';
+        });
+        hasCamp = langCampaigns.length > 0;
+
         if (hasCamp && rightCol && campGrid) {
             rightCol.style.display = '';
-            campGrid.innerHTML = cachedCampaigns.slice(0, 2).map(renderCampCard).join('');
+            campGrid.innerHTML = langCampaigns.slice(0, 2).map(renderCampCard).join('');
             startCampCountdowns();
         } else if (rightCol) {
             rightCol.style.display = 'none';

@@ -144,9 +144,11 @@ module.exports = async (req, res) => {
         let campHtml = '';
         const now = Date.now();
         if (campData && typeof campData === 'object') {
+            const ssrLang = 'az';
             const campaigns = Object.entries(campData)
                 .map(([id, c]) => ({ id, ...c }))
                 .filter(c => c.active !== false)
+                .filter(c => c['title_' + ssrLang] && c['title_' + ssrLang].trim() !== '')
                 .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
                 .slice(0, 2);
             if (campaigns.length > 0) {

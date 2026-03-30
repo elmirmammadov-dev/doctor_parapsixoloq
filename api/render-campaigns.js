@@ -17,6 +17,7 @@ module.exports = async (req, res) => {
         const campaigns = campData ? Object.entries(campData)
             .map(([id, c]) => ({ id, ...c }))
             .filter(c => c.active !== false)
+            .filter(c => c['title_' + lang] && c['title_' + lang].trim() !== '')
             .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)) : [];
 
         const now = Date.now();
