@@ -170,9 +170,11 @@ module.exports = async (req, res) => {
 
         for (const sub of subscribers) {
             const lang = sub.lang || 'az';
+            const title = body['title_' + lang];
+            if (!title || !title.trim()) continue; // skip if campaign has no content in this language
+
             const t = TEXTS[lang] || TEXTS.az;
-            const title = body['title_' + lang] || body.title_az || '';
-            const desc = body['desc_' + lang] || body.desc_az || '';
+            const desc = body['desc_' + lang] || '';
 
             const html = buildHtml({ title, desc, discount: body.discount || '', url: campaignUrl }, lang);
 
