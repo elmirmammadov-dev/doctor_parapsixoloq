@@ -2073,7 +2073,7 @@ img {
     right: 20px;
     top: auto;
     background: linear-gradient(135deg, #c5a637 0%, #e8d48b 40%, #c5a637 60%, #a88a2a 100%);
-    color: #1a2a1a;
+    color: #1a3c2a;
     padding: 14px 24px;
     border-radius: 16px;
     text-align: center;
@@ -2246,7 +2246,7 @@ img {
     align-items: center;
     gap: 12px;
     background: linear-gradient(135deg, #c5a637 0%, #e8d48b 40%, #c5a637 60%, #a88a2a 100%);
-    color: #1a2a1a;
+    color: #1a3c2a;
     padding: 16px 28px;
     border-radius: 16px;
     border: 1px solid rgba(255,255,255,0.3);
