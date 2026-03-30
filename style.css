@@ -333,9 +333,9 @@ img {
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
     position: relative;
     background-size: cover;
-    background-position: center top;
+    background-position: center 30%;
     background-repeat: no-repeat;
-    min-height: 520px;
+    min-height: 600px;
     display: flex;
     align-items: flex-end;
 }
