@@ -21,13 +21,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // === ZENG BADGE 2 TOOLTIP ===
+    const zengBadge2 = document.getElementById('zengBadge2');
+    const zengTooltip2 = document.getElementById('zengTooltip2');
+    if (zengBadge2 && zengTooltip2) {
+        zengBadge2.addEventListener('click', (e) => {
+            e.stopPropagation();
+            zengTooltip2.classList.toggle('active');
+        });
+        document.addEventListener('click', () => {
+            zengTooltip2.classList.remove('active');
+        });
+    }
+
     // === CALENDAR MODAL ===
     const openCalBtn = document.getElementById('openCalendarBtn');
+    const openCalBtn2 = document.getElementById('openCalendarBtn2');
     const calModal = document.getElementById('calendarModal');
     const calModalClose = document.getElementById('calendarModalClose');
 
     if (openCalBtn && calModal) {
         openCalBtn.addEventListener('click', () => {
+            calModal.classList.add('active');
+        });
+    }
+    if (openCalBtn2 && calModal) {
+        openCalBtn2.addEventListener('click', () => {
             calModal.classList.add('active');
         });
     }
@@ -589,6 +608,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const heroCallForm = document.getElementById('heroCallForm');
     if (heroCallForm) handleFormSubmit(heroCallForm);
+
+    const heroCallForm2 = document.getElementById('heroCallForm2');
+    if (heroCallForm2) handleFormSubmit(heroCallForm2);
 
     // === PARTICLES ===
     const particlesContainer = document.getElementById('particles');

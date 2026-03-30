@@ -682,6 +682,60 @@
 
 
 
+    <!-- Hero Banner Repeat (before FAQ) -->
+    <section class="hero-banner hero-banner-repeat">
+        <div class="container">
+            <div class="hero-banner-img-wrap" style="background-image:url('hero-banner.webp');">
+                <div class="hero-banner-overlay"></div>
+                <div class="hero-banner-content">
+                    <div class="hero-badge-group">
+                        <div class="hero-img-badge hero-img-badge-left" id="zengBadge2" style="cursor:pointer;">
+                            <i class="fas fa-phone-alt hero-badge-icon"></i>
+                            <div class="hero-badge-text">
+                                <div class="hero-bar-label" data-i18n="hero_form_title">Zəng Sifarişi</div>
+                                <div class="hero-badge-sub" data-i18n="hero_call_sub">Nömrənizi yazın, biz zəng edək</div>
+                            </div>
+                            <div class="badge-tooltip" id="zengTooltip2" data-i18n="zeng_tooltip">Bu seçim üçün mütləq nömrənizi yazmalısınız. Ad, Soyad yazmaya da bilərsiniz.</div>
+                        </div>
+                        <button type="button" class="hero-img-badge hero-img-badge-right hero-bar-calendar-btn" id="openCalendarBtn2">
+                            <i class="fas fa-calendar-check hero-badge-icon"></i>
+                            <div class="hero-badge-text">
+                                <span data-i18n="reservation_title">Seans üçün Gün Seçimi</span>
+                                <div class="hero-badge-sub" data-i18n="hero_seans_sub">Uyğun vaxtı seçin</div>
+                            </div>
+                            <i class="fas fa-arrow-right hero-badge-arrow"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-form-bar">
+            <div class="container hero-bar-inner">
+                <form class="hero-bar-form" id="heroCallForm2">
+                    <div class="hero-bar-field">
+                        <span data-i18n="herobar_name_label">Ad</span>
+                        <input type="text" name="ad" data-i18n-placeholder="herobar_name" placeholder="Adınızı yazın">
+                    </div>
+                    <div class="hero-bar-field">
+                        <span data-i18n="herobar_surname_label">Soyad</span>
+                        <input type="text" name="soyad" data-i18n-placeholder="herobar_surname" placeholder="Soyadınızı yazın">
+                    </div>
+                    <div class="hero-bar-field">
+                        <span data-i18n="herobar_phone_label">Telefon*</span>
+                        <div class="hero-bar-phone">
+                            <select class="phone-prefix-select" name="phone_code">
+                                <option value="+994" selected>🇦🇿 +994</option>
+                                <option value="+7">🇷🇺 +7</option>
+                            </select>
+                            <input type="tel" name="telefon" data-i18n-placeholder="herobar_phone" placeholder="Nömrə" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="hero-bar-submit btn btn-gold" data-i18n="btn_submit">Müraciət Göndər</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
     <!-- FAQ Section -->
     <section class="section faq" id="faq">
         <div class="container">
