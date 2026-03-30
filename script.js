@@ -69,6 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
             whatsapp: 'https://wa.link/wcams9',
             youtube: 'https://www.youtube.com/@sahseddinimanli',
             telegram: 'https://web.telegram.org/k/#@menevi_shefaci'
+        },
+        tr: {
+            tiktok: 'https://www.tiktok.com/@shahseddinimanli',
+            facebook: 'https://www.facebook.com/shahseddin.imanli',
+            instagram: 'https://www.instagram.com/parapsixoloq_yoq/',
+            whatsapp: 'https://wa.link/wcams9',
+            youtube: 'https://www.youtube.com/@sahseddinimanli',
+            telegram: 'https://web.telegram.org/k/#@menevi_shefaci'
         }
     };
 
@@ -626,6 +634,16 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(style);
 
+    // === FAYDALI MƏLUMATLAR — CONTENTFUL BLOG ===
+    var CONTENTFUL_SPACE = 'q3fe87ca4p3k';
+    var CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
+    var LANG_TO_LOCALE = { az: 'az', ru: 'az', en: 'az', tr: 'az' };
+
+    var BLOG_PER_PAGE = 4;
+    var allBlogCards = [];
+    var blogCurrentPage = 1;
+    var MOST_READ_LABELS = { az: 'Ən Çox Oxunan', ru: 'Самое читаемое', en: 'Most Read', tr: 'En Çok Okunan' };
+
     // Apply saved language on load
     if (currentLang !== 'az') {
         applyTranslations(currentLang);
@@ -635,15 +653,6 @@ document.addEventListener('DOMContentLoaded', () => {
             opt.classList.toggle('active', opt.dataset.lang === 'az');
         });
     }
-
-    // === FAYDALI MƏLUMATLAR — CONTENTFUL BLOG ===
-    var CONTENTFUL_SPACE = 'q3fe87ca4p3k';
-    var CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
-    var LANG_TO_LOCALE = { az: 'az', ru: 'az', en: 'az', tr: 'az' };
-
-    var BLOG_PER_PAGE = 4;
-    var allBlogCards = [];
-    var blogCurrentPage = 1;
 
     function renderBlogPage(page) {
         const grid = document.getElementById('blogGrid');
@@ -713,8 +722,6 @@ document.addEventListener('DOMContentLoaded', () => {
         pagEl.innerHTML = pagHtml;
         pagEl.style.display = 'flex';
     }
-
-    var MOST_READ_LABELS = { az: 'Ən Çox Oxunan', ru: 'Самое читаемое', en: 'Most Read', tr: 'En Çok Okunan' };
 
     function highlightCards(viewCounts, likeCounts) {
         // Remove previous highlights
