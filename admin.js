@@ -3922,11 +3922,14 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             var entries = Object.values(subs);
             if (subCountEl) subCountEl.textContent = entries.length + ' abunəçi';
+            var flagMap = {az:'az',ru:'ru',en:'gb',tr:'tr'};
             subListEl.innerHTML = entries.map(function(s) {
                 var date = new Date(s.subscribedAt).toLocaleDateString('az');
+                var lang = s.lang || 'az';
+                var flag = flagMap[lang] || 'az';
                 return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid #f0f0f0;font-size:0.8rem;">' +
                     '<span style="color:var(--text-primary);font-weight:500;">' + (s.email || '') + '</span>' +
-                    '<span style="color:#999;font-size:0.7rem;">' + date + ' · ' + (s.lang || 'az').toUpperCase() + '</span>' +
+                    '<span style="color:#999;font-size:0.7rem;display:flex;align-items:center;gap:4px;">' + date + ' · <img src="https://flagcdn.com/w20/' + flag + '.png" width="16" height="12" style="border-radius:2px;" alt="' + lang.toUpperCase() + '"> ' + lang.toUpperCase() + '</span>' +
                 '</div>';
             }).join('');
         });
@@ -3964,6 +3967,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             if (totalEl) totalEl.textContent = entries.length;
 
+            var flagMap = {az:'az',ru:'ru',en:'gb',tr:'tr'};
             listEl.innerHTML = entries.sort(function(a, b) {
                 return (b[1].subscribedAt || 0) - (a[1].subscribedAt || 0);
             }).map(function(e) {
@@ -3971,9 +3975,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 var d = new Date(s.subscribedAt);
                 if (d >= todayStart) todayCount++;
                 var dateStr = d.toLocaleDateString('az') + ' ' + d.toLocaleTimeString('az', {hour:'2-digit', minute:'2-digit'});
+                var lang = s.lang || 'az';
+                var flag = flagMap[lang] || 'az';
                 return '<div style="display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid #f0f0f0;font-size:0.82rem;">' +
                     '<span style="flex:2;color:var(--text-primary);font-weight:500;overflow:hidden;text-overflow:ellipsis;">' + (s.email || '') + '</span>' +
-                    '<span style="flex:1;text-align:center;"><span style="background:#f0f7f3;padding:2px 8px;border-radius:6px;font-size:0.7rem;font-weight:600;color:var(--gold);">' + (s.lang || 'az').toUpperCase() + '</span></span>' +
+                    '<span style="flex:1;text-align:center;"><span style="background:#f0f7f3;padding:2px 8px;border-radius:6px;font-size:0.7rem;font-weight:600;color:var(--gold);display:inline-flex;align-items:center;gap:4px;"><img src="https://flagcdn.com/w20/' + flag + '.png" width="16" height="12" style="border-radius:2px;" alt="' + lang.toUpperCase() + '"> ' + lang.toUpperCase() + '</span></span>' +
                     '<span style="flex:1;text-align:center;color:#999;font-size:0.75rem;">' + dateStr + '</span>' +
                     '<span style="flex:0.5;text-align:center;"><button onclick="deleteSubscriber(\'' + key + '\')" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-size:0.82rem;" title="Sil"><i class="fas fa-trash"></i></button></span>' +
                 '</div>';
