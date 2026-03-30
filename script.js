@@ -126,8 +126,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Update auth navbar text
-        if (typeof updateNavbarAuth === 'function' && typeof firebase !== 'undefined') {
+        if (typeof updateNavbarAuth === 'function' && typeof firebase !== 'undefined' && firebase.auth) {
             updateNavbarAuth(firebase.auth().currentUser);
+        } else if (typeof getAuthText === 'function') {
+            // Firebase not loaded yet - update login button text directly
+            var authBtn = document.getElementById('userAuthBtn');
+            var nameSpan = authBtn && authBtn.querySelector('.nav-user-name');
+            if (nameSpan && authBtn.querySelector('.fa-user')) {
+                nameSpan.textContent = getAuthText().login;
+            }
         }
         if (typeof window.updateNavAnonLabel === 'function') window.updateNavAnonLabel();
 
@@ -147,6 +154,23 @@ document.addEventListener('DOMContentLoaded', () => {
         opt.addEventListener('click', () => {
             applyTranslations(opt.dataset.lang);
         });
+    });
+
+    // Re-sync language when returning via browser back/forward (bfcache)
+    window.addEventListener('pageshow', function(e) {
+        if (e.persisted) {
+            var savedLang = localStorage.getItem('lang') || 'az';
+            if (savedLang !== currentLang) {
+                applyTranslations(savedLang);
+            } else {
+                // Even if lang matches, re-render campaigns since they may be stale
+                if (typeof renderAnnSectionPage === 'function') renderAnnSectionPage();
+            }
+            // Re-sync auth button text
+            if (typeof updateNavbarAuth === 'function' && typeof firebase !== 'undefined') {
+                updateNavbarAuth(firebase.auth().currentUser);
+            }
+        }
     });
 
     // === NAVBAR SCROLL ===
