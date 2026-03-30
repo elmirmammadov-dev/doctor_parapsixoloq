@@ -2072,17 +2072,18 @@ img {
     bottom: 36px;
     right: 20px;
     top: auto;
-    background: var(--gradient-gold);
-    color: #ffffff;
+    background: linear-gradient(135deg, #c5a637 0%, #e8d48b 40%, #c5a637 60%, #a88a2a 100%);
+    color: #1a2a1a;
     padding: 14px 24px;
     border-radius: 16px;
     text-align: center;
-    box-shadow: 0 8px 30px rgba(45, 129, 87, 0.3);
+    box-shadow: 0 8px 30px rgba(197, 166, 55, 0.4), 0 2px 8px rgba(0,0,0,0.15);
     z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    border: 1px solid rgba(255,255,255,0.3);
 }
 
 .badge-number {
