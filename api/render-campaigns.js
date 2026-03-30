@@ -72,10 +72,10 @@ module.exports = async (req, res) => {
         }).join('') : '<p style="text-align:center;color:#999;padding:40px 0;">' + ({az:'Hazırda aktiv kampaniya yoxdur.',ru:'В настоящее время нет активных акций.',en:'No active campaigns at the moment.',tr:'Şu anda aktif kampanya yok.'}[lang] || 'Hazırda aktiv kampaniya yoxdur.') + '</p>';
 
         const META = {
-            az: { title: 'Kampaniyalar | Şahsəddin İmanlı', desc: 'Şahsəddin İmanlının xüsusi endirim kampaniyaları. Kupon alın və endirimdən yararlanın.', keywords: 'kampaniya, endirim, kupon, Şahsəddin İmanlı, parapsixologiya', h1: 'Kampaniyalar', subtitle: 'Xüsusi endirim kuponları. Kuponu alın, WhatsApp-da və ya canlı seansda göstərin.' },
-            ru: { title: 'Акции | Шахсаддин Иманлы', desc: 'Специальные скидочные акции Шахсаддина Иманлы. Получите купон и воспользуйтесь скидкой.', keywords: 'акция, скидка, купон, Шахсаддин Иманлы, парапсихология', h1: 'Акции', subtitle: 'Специальные скидочные купоны. Получите купон и покажите в WhatsApp или на сеансе.' },
-            en: { title: 'Campaigns | Shahsaddin Imanli', desc: 'Special discount campaigns by Shahsaddin Imanli. Get your coupon and enjoy the discount.', keywords: 'campaign, discount, coupon, Shahsaddin Imanli, parapsychology', h1: 'Campaigns', subtitle: 'Special discount coupons. Get your coupon and show it on WhatsApp or during a live session.' },
-            tr: { title: 'Kampanyalar | Şahseddin İmanlı', desc: 'Şahseddin İmanlının özel indirim kampanyaları. Kupon alın ve indirimden yararlanın.', keywords: 'kampanya, indirim, kupon, Şahseddin İmanlı, parapsikoloji', h1: 'Kampanyalar', subtitle: 'Özel indirim kuponları. Kuponu alın, WhatsApp\'ta veya canlı seansta gösterin.' }
+            az: { title: 'Kampaniyalar | Şahsəddin İmanlı', desc: 'Şahsəddin İmanlının xüsusi endirim kampaniyaları. Kupon alın və endirimdən yararlanın.', keywords: 'kampaniya, endirim, kupon, Şahsəddin İmanlı, parapsixologiya', h1: 'Kampaniyalar', subtitle: 'Xüsusi endirim kuponları. Kuponu alın, WhatsApp-da və ya canlı seansda göstərin.', home: 'Ana Səhifə' },
+            ru: { title: 'Акции | Шахсаддин Иманлы', desc: 'Специальные скидочные акции Шахсаддина Иманлы. Получите купон и воспользуйтесь скидкой.', keywords: 'акция, скидка, купон, Шахсаддин Иманлы, парапсихология', h1: 'Акции', subtitle: 'Специальные скидочные купоны. Получите купон и покажите в WhatsApp или на сеансе.', home: 'Главная' },
+            en: { title: 'Campaigns | Shahsaddin Imanli', desc: 'Special discount campaigns by Shahsaddin Imanli. Get your coupon and enjoy the discount.', keywords: 'campaign, discount, coupon, Shahsaddin Imanli, parapsychology', h1: 'Campaigns', subtitle: 'Special discount coupons. Get your coupon and show it on WhatsApp or during a live session.', home: 'Home' },
+            tr: { title: 'Kampanyalar | Şahseddin İmanlı', desc: 'Şahseddin İmanlının özel indirim kampanyaları. Kupon alın ve indirimden yararlanın.', keywords: 'kampanya, indirim, kupon, Şahseddin İmanlı, parapsikoloji', h1: 'Kampanyalar', subtitle: 'Özel indirim kuponları. Kuponu alın, WhatsApp\'ta veya canlı seansta gösterin.', home: 'Ana Sayfa' }
         };
         const meta = META[lang] || META.az;
 
@@ -106,7 +106,7 @@ module.exports = async (req, res) => {
     <nav class="navbar" id="navbar">
         <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
             <a href="/" style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.2rem;color:var(--text-primary);text-decoration:none;">Şahsəddin İmanlı</a>
-            <a href="/" style="color:var(--gold);text-decoration:none;font-weight:600;font-size:0.9rem;"><i class="fas fa-arrow-left"></i> ${{az:'Ana Səhifə',ru:'Главная',en:'Home',tr:'Ana Sayfa'}[lang] || 'Ana Səhifə'}</a>
+            <a href="/" style="color:var(--gold);text-decoration:none;font-weight:600;font-size:0.9rem;"><i class="fas fa-arrow-left"></i> ${meta.home}</a>
         </div>
     </nav>
     <main style="padding:100px 0 60px;">
