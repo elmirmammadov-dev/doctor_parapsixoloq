@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.lang = lang;
         currentLang = lang;
         localStorage.setItem('lang', lang);
+        document.cookie = 'lang=' + lang + ';path=/;max-age=31536000;SameSite=Lax';
 
         // Text content
         document.querySelectorAll('[data-i18n]').forEach(el => {

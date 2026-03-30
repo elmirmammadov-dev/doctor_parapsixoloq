@@ -8,7 +8,8 @@ function escapeHtml(str) {
 
 module.exports = async (req, res) => {
     try {
-        const lang = req.query.lang || 'az';
+        const cookieLang = ((req.headers.cookie || '').match(/(?:^|; )lang=([a-z]{2})/) || [])[1];
+        const lang = req.query.lang || cookieLang || 'az';
         const L = (c, field) => c[field + '_' + lang] || c[field] || '';
 
         const campRes = await fetch(`${FIREBASE_DB_URL}/campaigns.json`);
@@ -98,7 +99,8 @@ module.exports = async (req, res) => {
         (function(){
             var params = new URLSearchParams(window.location.search);
             if (!params.get('lang')) {
-                var savedLang = localStorage.getItem('lang') || 'az';
+                var m = document.cookie.match(/(?:^|; )lang=([a-z]{2})/);
+                var savedLang = m ? m[1] : 'az';
                 if (savedLang !== 'az') {
                     window.location.replace('/kampaniyalar?lang=' + savedLang);
                 }
