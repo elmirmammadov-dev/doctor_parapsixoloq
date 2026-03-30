@@ -126,17 +126,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Update auth navbar text
-        if (typeof updateNavbarAuth === 'function' && typeof firebase !== 'undefined' && firebase.auth) {
-            updateNavbarAuth(firebase.auth().currentUser);
-        } else if (typeof getAuthText === 'function') {
-            // Firebase not loaded yet - update login button text directly
-            var authBtn = document.getElementById('userAuthBtn');
-            var nameSpan = authBtn && authBtn.querySelector('.nav-user-name');
-            if (nameSpan && authBtn.querySelector('.fa-user')) {
-                nameSpan.textContent = getAuthText().login;
+        try {
+            if (typeof updateNavbarAuth === 'function' && typeof firebase !== 'undefined' && firebase.auth) {
+                updateNavbarAuth(firebase.auth().currentUser);
             }
-        }
-        if (typeof window.updateNavAnonLabel === 'function') window.updateNavAnonLabel();
+        } catch(e) {}
+        try {
+            if (typeof window.updateNavAnonLabel === 'function') window.updateNavAnonLabel();
+        } catch(e) {}
 
         // Update social links based on language
         updateSocialLinks(lang);
@@ -159,17 +156,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Re-sync language when returning via browser back/forward (bfcache)
     window.addEventListener('pageshow', function(e) {
         if (e.persisted) {
-            var savedLang = localStorage.getItem('lang') || 'az';
-            if (savedLang !== currentLang) {
-                applyTranslations(savedLang);
-            } else {
-                // Even if lang matches, re-render campaigns since they may be stale
-                if (typeof renderAnnSectionPage === 'function') renderAnnSectionPage();
-            }
-            // Re-sync auth button text
-            if (typeof updateNavbarAuth === 'function' && typeof firebase !== 'undefined') {
-                updateNavbarAuth(firebase.auth().currentUser);
-            }
+            setTimeout(function() {
+                var savedLang = localStorage.getItem('lang') || 'az';
+                if (savedLang !== currentLang) {
+                    applyTranslations(savedLang);
+                } else {
+                    if (typeof renderAnnSectionPage === 'function') renderAnnSectionPage();
+                }
+                try {
+                    if (typeof updateNavbarAuth === 'function' && typeof firebase !== 'undefined') {
+                        updateNavbarAuth(firebase.auth().currentUser);
+                    }
+                } catch(e) {}
+            }, 0);
         }
     });
 
@@ -640,9 +639,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
     const LANG_TO_LOCALE = { az: 'az', ru: 'az', en: 'az', tr: 'az' };
 
-    const BLOG_PER_PAGE = 4;
-    let allBlogCards = [];
-    let blogCurrentPage = 1;
+    var BLOG_PER_PAGE = 4;
+    var allBlogCards = [];
+    var blogCurrentPage = 1;
 
     function renderBlogPage(page) {
         const grid = document.getElementById('blogGrid');
