@@ -128,7 +128,6 @@ module.exports = async (req, res) => {
     </script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="/style.css"></script>
     <script>
         function setCampCookie(id,v){var d=new Date();d.setTime(d.getTime()+365*24*60*60*1000);document.cookie='camp_'+id+'='+encodeURIComponent(v)+';expires='+d.toUTCString()+';path=/;SameSite=Lax';}
         function getCampCookie(id){var n='camp_'+id+'=',p=document.cookie.split(';');for(var i=0;i<p.length;i++){var c=p[i].trim();if(c.indexOf(n)===0)return decodeURIComponent(c.substring(n.length));}return null;}
