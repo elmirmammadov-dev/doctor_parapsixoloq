@@ -35,6 +35,22 @@
       "destination": "/api/render-campaigns"
     },
     {
+      "source": "/az/kampaniyalar",
+      "destination": "/api/render-campaigns?lang=az"
+    },
+    {
+      "source": "/ru/kampaniyalar",
+      "destination": "/api/render-campaigns?lang=ru"
+    },
+    {
+      "source": "/en/kampaniyalar",
+      "destination": "/api/render-campaigns?lang=en"
+    },
+    {
+      "source": "/tr/kampaniyalar",
+      "destination": "/api/render-campaigns?lang=tr"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
     },

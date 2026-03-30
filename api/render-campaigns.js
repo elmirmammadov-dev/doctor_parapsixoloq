@@ -61,20 +61,33 @@ module.exports = async (req, res) => {
                     </button>` : ''}
                 </div>
             </div>`;
-        }).join('') : '<p style="text-align:center;color:#999;padding:40px 0;">Hazırda aktiv kampaniya yoxdur.</p>';
+        }).join('') : '<p style="text-align:center;color:#999;padding:40px 0;">' + ({az:'Hazırda aktiv kampaniya yoxdur.',ru:'В настоящее время нет активных акций.',en:'No active campaigns at the moment.',tr:'Şu anda aktif kampanya yok.'}[lang] || 'Hazırda aktiv kampaniya yoxdur.') + '</p>';
+
+        const META = {
+            az: { title: 'Kampaniyalar | Şahsəddin İmanlı', desc: 'Şahsəddin İmanlının xüsusi endirim kampaniyaları. Kupon alın və endirimdən yararlanın.', keywords: 'kampaniya, endirim, kupon, Şahsəddin İmanlı, parapsixologiya', h1: 'Kampaniyalar', subtitle: 'Xüsusi endirim kuponları. Kuponu alın, WhatsApp-da və ya canlı seansda göstərin.' },
+            ru: { title: 'Акции | Шахсаддин Иманлы', desc: 'Специальные скидочные акции Шахсаддина Иманлы. Получите купон и воспользуйтесь скидкой.', keywords: 'акция, скидка, купон, Шахсаддин Иманлы, парапсихология', h1: 'Акции', subtitle: 'Специальные скидочные купоны. Получите купон и покажите в WhatsApp или на сеансе.' },
+            en: { title: 'Campaigns | Shahsaddin Imanli', desc: 'Special discount campaigns by Shahsaddin Imanli. Get your coupon and enjoy the discount.', keywords: 'campaign, discount, coupon, Shahsaddin Imanli, parapsychology', h1: 'Campaigns', subtitle: 'Special discount coupons. Get your coupon and show it on WhatsApp or during a live session.' },
+            tr: { title: 'Kampanyalar | Şahseddin İmanlı', desc: 'Şahseddin İmanlının özel indirim kampanyaları. Kupon alın ve indirimden yararlanın.', keywords: 'kampanya, indirim, kupon, Şahseddin İmanlı, parapsikoloji', h1: 'Kampanyalar', subtitle: 'Özel indirim kuponları. Kuponu alın, WhatsApp\'ta veya canlı seansta gösterin.' }
+        };
+        const meta = META[lang] || META.az;
 
         const html = `<!DOCTYPE html>
-<html lang="az">
+<html lang="${lang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kampaniyalar | Şahsəddin İmanlı</title>
-    <meta name="description" content="Şahsəddin İmanlının xüsusi endirim kampaniyaları. Kupon alın və endirimdən yararlanın.">
-    <meta name="keywords" content="kampaniya, endirim, kupon, Şahsəddin İmanlı, parapsixologiya">
-    <link rel="canonical" href="${siteUrl}/kampaniyalar">
-    <meta property="og:title" content="Kampaniyalar | Şahsəddin İmanlı">
-    <meta property="og:description" content="Xüsusi endirim kampaniyaları">
-    <meta property="og:url" content="${siteUrl}/kampaniyalar">
+    <title>${meta.title}</title>
+    <meta name="description" content="${meta.desc}">
+    <meta name="keywords" content="${meta.keywords}">
+    <link rel="canonical" href="${siteUrl}/${lang}/kampaniyalar">
+    <link rel="alternate" hreflang="az" href="${siteUrl}/az/kampaniyalar">
+    <link rel="alternate" hreflang="ru" href="${siteUrl}/ru/kampaniyalar">
+    <link rel="alternate" hreflang="en" href="${siteUrl}/en/kampaniyalar">
+    <link rel="alternate" hreflang="tr" href="${siteUrl}/tr/kampaniyalar">
+    <link rel="alternate" hreflang="x-default" href="${siteUrl}/az/kampaniyalar">
+    <meta property="og:title" content="${meta.title}">
+    <meta property="og:description" content="${meta.desc}">
+    <meta property="og:url" content="${siteUrl}/${lang}/kampaniyalar">
     <meta property="og:type" content="website">
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -90,20 +103,18 @@ module.exports = async (req, res) => {
     </nav>
     <main style="padding:100px 0 60px;">
         <div class="container" style="max-width:700px;">
-            <h1 style="font-family:'Montserrat',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:8px;">Kampaniyalar</h1>
-            <p style="color:#666;margin-bottom:32px;">Xüsusi endirim kuponları. Kuponu alın, WhatsApp-da və ya canlı seansda göstərin.</p>
+            <h1 style="font-family:'Montserrat',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:8px;">${meta.h1}</h1>
+            <p style="color:#666;margin-bottom:32px;">${meta.subtitle}</p>
             ${campCardsHtml}
         </div>
     </main>
     <script>
         (function(){
-            var params = new URLSearchParams(window.location.search);
-            if (!params.get('lang')) {
+            var path = window.location.pathname;
+            if (path === '/kampaniyalar') {
                 var m = document.cookie.match(/(?:^|; )lang=([a-z]{2})/);
                 var savedLang = m ? m[1] : 'az';
-                if (savedLang !== 'az') {
-                    window.location.replace('/kampaniyalar?lang=' + savedLang);
-                }
+                window.location.replace('/' + savedLang + '/kampaniyalar');
             }
         })();
     </script>
