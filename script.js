@@ -119,11 +119,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof renderHeroCalendar === 'function') renderHeroCalendar();
 
         // Re-render blog posts (no re-fetch needed, all locales use az)
-        if (allBlogCards && allBlogCards.length > 0 && typeof renderBlogPage === 'function') {
-            renderBlogPage(1);
-        } else if (typeof fetchBlogPosts === 'function') {
-            fetchBlogPosts();
-        }
+        try {
+            if (allBlogCards && allBlogCards.length > 0 && typeof renderBlogPage === 'function') {
+                renderBlogPage(1);
+            } else if (typeof fetchBlogPosts === 'function') {
+                fetchBlogPosts();
+            }
+        } catch(e) {}
 
         // Update auth navbar text
         try {
@@ -635,9 +637,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // === FAYDALI MƏLUMATLAR — CONTENTFUL BLOG ===
-    const CONTENTFUL_SPACE = 'q3fe87ca4p3k';
-    const CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
-    const LANG_TO_LOCALE = { az: 'az', ru: 'az', en: 'az', tr: 'az' };
+    var CONTENTFUL_SPACE = 'q3fe87ca4p3k';
+    var CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
+    var LANG_TO_LOCALE = { az: 'az', ru: 'az', en: 'az', tr: 'az' };
 
     var BLOG_PER_PAGE = 4;
     var allBlogCards = [];
@@ -712,7 +714,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pagEl.style.display = 'flex';
     }
 
-    const MOST_READ_LABELS = { az: 'Ən Çox Oxunan', ru: 'Самое читаемое', en: 'Most Read', tr: 'En Çok Okunan' };
+    var MOST_READ_LABELS = { az: 'Ən Çox Oxunan', ru: 'Самое читаемое', en: 'Most Read', tr: 'En Çok Okunan' };
 
     function highlightCards(viewCounts, likeCounts) {
         // Remove previous highlights
@@ -1013,8 +1015,8 @@ document.addEventListener('DOMContentLoaded', () => {
         var campGrid = document.getElementById('campSplitGrid');
         if (!section) return;
 
-        var hasAnn = cachedAnnouncements.length > 0;
-        var hasCamp = cachedCampaigns.length > 0;
+        var hasAnn = cachedAnnouncements && cachedAnnouncements.length > 0;
+        var hasCamp = cachedCampaigns && cachedCampaigns.length > 0;
 
         if (!hasAnn && !hasCamp) { section.style.display = 'none'; return; }
         section.style.display = '';
@@ -1049,7 +1051,7 @@ document.addEventListener('DOMContentLoaded', () => {
             leftCol.style.display = 'none';
         }
 
-        var langCampaigns = cachedCampaigns.filter(function(c) {
+        var langCampaigns = (cachedCampaigns || []).filter(function(c) {
             return c['title_' + currentLang] && c['title_' + currentLang].trim() !== '';
         });
         hasCamp = langCampaigns.length > 0;
