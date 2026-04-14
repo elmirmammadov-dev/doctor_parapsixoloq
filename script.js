@@ -892,10 +892,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     var browserFingerprint = getBrowserFingerprint();
 
+    function optimizeImgUrl(url, w) {
+        if (!url) return url;
+        return 'https://wsrv.nl/?url=' + encodeURIComponent(url) + '&w=' + w + '&output=webp&q=82&il';
+    }
+
     function renderAnnCardLarge(a) {
         const pos = a.coverPos || '50% 50%';
         const zoom = a.coverZoom || 1;
         const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
+        const imgSrc = optimizeImgUrl(a.image, 900);
+        const imgSrc2x = optimizeImgUrl(a.image, 1600);
         const aTitle = a['title_' + currentLang] || a.title;
         const hasShort = !!(a['shortDesc_' + currentLang]);
         const aShortDesc = hasShort ? a['shortDesc_' + currentLang] : (a['desc_' + currentLang] || a.desc);
@@ -906,7 +913,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const imgScale = zoom > 1 ? 'transform:scale(' + zoom + ');' : '';
         return '<' + tag + ' class="ann-section-card ann-card-large"' + href + ' style="text-decoration:none;color:inherit;">' +
             (a.image ? '<div class="ann-section-card-img" style="overflow:hidden;">' +
-                '<img src="' + a.image + '" alt="' + (aTitle || '') + '" loading="eager" fetchpriority="high" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:' + pos + ';' + imgScale + '">' +
+                '<img src="' + imgSrc + '" srcset="' + imgSrc + ' 1x, ' + imgSrc2x + ' 2x" alt="' + (aTitle || '') + '" loading="eager" fetchpriority="high" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:' + pos + ';' + imgScale + '">' +
                 (a.showBadge !== false ? '<span class="ann-section-badge">YENİ</span>' : '') +
             '</div>' : '') +
             '<div class="ann-section-card-body">' +
@@ -1092,6 +1099,16 @@ document.addEventListener('DOMContentLoaded', () => {
             cachedAnnouncements = annData ? Object.values(annData).filter(function(a) { return a.active !== false; }).sort(function(a, b) { return (b.timestamp || 0) - (a.timestamp || 0); }) : [];
 
             cachedCampaigns = campData ? Object.entries(campData).map(function(e) { return Object.assign({ id: e[0] }, e[1]); }).filter(function(c) { return c.active !== false; }).sort(function(a, b) { return (b.timestamp || 0) - (a.timestamp || 0); }) : [];
+
+            // Preload first announcement cover image at high priority
+            if (cachedAnnouncements[0] && cachedAnnouncements[0].image) {
+                var preload = document.createElement('link');
+                preload.rel = 'preload';
+                preload.as = 'image';
+                preload.href = optimizeImgUrl(cachedAnnouncements[0].image, 900);
+                preload.setAttribute('fetchpriority', 'high');
+                document.head.appendChild(preload);
+            }
 
             renderAnnSectionPage();
         } catch(e) {
