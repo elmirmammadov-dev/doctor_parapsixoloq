@@ -10,6 +10,50 @@ document.addEventListener("DOMContentLoaded", function() {
     const CONTENTFUL_SPACE = 'q3fe87ca4p3k';
     const CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
     const FIREBASE_REST = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
+    const SITE_URL = 'https://www.sahseddinimanli.com';
+
+    // Fire-and-forget Google Indexing API submission — never blocks the UI
+    async function submitIndexing(urls) {
+        if (!urls || !urls.length) return;
+        try {
+            await fetch('/api/submit-indexing', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ urls })
+            });
+        } catch (e) { /* silent */ }
+    }
+    window.submitIndexing = submitIndexing;
+
+    // "Hamısını təzələ" — bulk resubmit every URL in priority order
+    document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('indexingResubmitBtn');
+        const statusEl = document.getElementById('indexingStatus');
+        if (!btn) return;
+        btn.addEventListener('click', async function() {
+            if (!confirm('Bütün URL-ləri Google Indexing API-yə yenidən göndərmək istəyirsiniz?')) return;
+            btn.disabled = true;
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Göndərilir...';
+            if (statusEl) statusEl.textContent = 'Göndərilir...';
+            try {
+                const res = await fetch('/api/submit-indexing-bulk', { method: 'POST' });
+                const data = await res.json();
+                if (data.skipped) {
+                    if (statusEl) statusEl.textContent = 'GOOGLE_INDEXING_KEY Vercel-də təyin olunmayıb';
+                } else if (data.error) {
+                    if (statusEl) statusEl.textContent = 'Xəta: ' + data.error;
+                } else {
+                    if (statusEl) statusEl.textContent = (data.submitted || 0) + ' / ' + (data.total || 0) + ' URL göndərildi';
+                }
+            } catch (e) {
+                if (statusEl) statusEl.textContent = 'Xəta: ' + e.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+            }
+        });
+    });
 
     // Show admin panel immediately
     const overlay = document.getElementById("adminPanelOverlay");
@@ -2483,6 +2527,16 @@ document.addEventListener("DOMContentLoaded", function() {
                     // Update slug mapping
                     if (articleSlug) await adminDb.ref('articleSlugs/' + articleSlug).set(editingEntryId);
 
+                    // Auto-submit to Google Indexing API
+                    const idxUrls = [];
+                    if (articleSlug) idxUrls.push(SITE_URL + '/' + articleSlug);
+                    if (contentRuHtml && contentRuHtml.trim() && contentRuHtml !== '<br>') {
+                        const existingSlugRu = (seoObj.slugRu) || articleSlug;
+                        if (existingSlugRu) idxUrls.push(SITE_URL + '/ru/' + existingSlugRu);
+                    }
+                    idxUrls.push(SITE_URL + '/');
+                    submitIndexing(idxUrls);
+
                     statusEl.textContent = 'Məqalə uğurla yeniləndi!';
                     statusEl.style.color = '#27ae60';
                     // Formu sıfırlamadan edit rejimində qal
@@ -2518,6 +2572,15 @@ document.addEventListener("DOMContentLoaded", function() {
                         await adminDb.ref('articleSeo/' + newEntryId).set(seoObj2);
                         // Save slug mapping
                         if (articleSlug) await adminDb.ref('articleSlugs/' + articleSlug).set(newEntryId);
+
+                        // Auto-submit to Google Indexing API
+                        const idxUrls2 = [];
+                        if (articleSlug) idxUrls2.push(SITE_URL + '/' + articleSlug);
+                        if (contentRuHtml && contentRuHtml.trim() && contentRuHtml !== '<br>' && articleSlug) {
+                            idxUrls2.push(SITE_URL + '/ru/' + articleSlug);
+                        }
+                        idxUrls2.push(SITE_URL + '/');
+                        submitIndexing(idxUrls2);
                     }
 
                     statusEl.textContent = 'Məqalə uğurla dərc edildi!';
@@ -3322,6 +3385,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 await adminDb.ref('announcements').push(annData);
             }
 
+            // Auto-submit announcement to Google Indexing API
+            submitIndexing([
+                SITE_URL + '/elanlar/' + annSlug,
+                SITE_URL + '/elanlar',
+                SITE_URL + '/'
+            ]);
+
             msg.style.display = 'block'; msg.style.color = '#2d8157'; msg.textContent = adminT('annSaved') || 'Elan yadda saxlandı!';
             // Reset form
             ['az','ru','en','tr'].forEach(function(l) {
@@ -3790,6 +3860,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 campData.claimedCount = 0;
                 await adminDb.ref('campaigns').push(campData);
             }
+
+            // Auto-submit campaign to Google Indexing API
+            submitIndexing([SITE_URL + '/kampaniyalar', SITE_URL + '/']);
 
             msg.textContent = adminT('campSaved') || 'Kampaniya yadda saxlandı!';
             msg.style.color = '#27ae60';
