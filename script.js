@@ -903,8 +903,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const annHref = a.slug ? '/elanlar/' + a.slug : (a.link || '');
         const tag = annHref ? 'a' : 'div';
         const href = annHref ? ' href="' + annHref + '"' : '';
+        const imgScale = zoom > 1 ? 'transform:scale(' + zoom + ');' : '';
         return '<' + tag + ' class="ann-section-card ann-card-large"' + href + ' style="text-decoration:none;color:inherit;">' +
-            (a.image ? '<div class="ann-section-card-img" style="background-image:url(' + a.image + ');background-position:' + pos + ';background-size:' + bgSize + ';">' + (a.showBadge !== false ? '<span class="ann-section-badge">YENİ</span>' : '') + '</div>' : '') +
+            (a.image ? '<div class="ann-section-card-img" style="overflow:hidden;">' +
+                '<img src="' + a.image + '" alt="' + (aTitle || '') + '" loading="eager" fetchpriority="high" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:' + pos + ';' + imgScale + '">' +
+                (a.showBadge !== false ? '<span class="ann-section-badge">YENİ</span>' : '') +
+            '</div>' : '') +
             '<div class="ann-section-card-body">' +
                 '<div class="ann-section-card-date">' + (a.date || '') + '</div>' +
                 '<div class="ann-section-card-title">' + aTitle + '</div>' +
