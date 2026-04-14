@@ -79,9 +79,10 @@ module.exports = async (req, res) => {
         <priority>0.7</priority>
     </url>`;
             if (hasRu) {
+                const slugRu = (seoData[id] && seoData[id].slugRu) || slug;
                 xml += `
     <url>
-        <loc>${SITE_URL}/ru/${slug}</loc>
+        <loc>${SITE_URL}/ru/${slugRu}</loc>
         ${updated ? `<lastmod>${updated}</lastmod>` : ''}
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>

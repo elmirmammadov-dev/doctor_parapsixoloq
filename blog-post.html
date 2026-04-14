@@ -1803,11 +1803,13 @@
             opt.addEventListener('click', () => {
                 const newLang = opt.dataset.lang;
                 // Blog posts have separate AZ/RU URLs — navigate instead of client-side swap
-                const seoSlug = (window.__POST_DATA__ ? (JSON.parse(window.__POST_DATA__).seo || {}).slug : null);
+                const postSeo = (window.__POST_DATA__ ? (JSON.parse(window.__POST_DATA__).seo || {}) : {});
+                const seoSlug = postSeo.slug;
+                const seoSlugRu = postSeo.slugRu || seoSlug;
                 if (seoSlug && (newLang === 'ru' || currentLang === 'ru' || newLang === 'az')) {
                     localStorage.setItem('lang', newLang);
                     if (newLang === 'ru') {
-                        window.location.href = '/ru/' + seoSlug;
+                        window.location.href = '/ru/' + seoSlugRu;
                         return;
                     } else if (newLang === 'az') {
                         window.location.href = '/' + seoSlug;

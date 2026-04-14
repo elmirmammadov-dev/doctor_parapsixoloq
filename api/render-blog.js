@@ -85,12 +85,21 @@ module.exports = async (req, res) => {
             : (seoData.keyword || 'parapsixologiya, Şahsəddin İmanlı');
         const imageAlt = isRu && seoData.imageAltRu ? seoData.imageAltRu : (seoData.imageAlt || title);
         const siteUrl = 'https://www.sahseddinimanli.com';
-        const slugPath = seoData.slug || `blog/${postId}`;
-        const azUrl = `${siteUrl}/${slugPath}`;
-        const ruUrl = `${siteUrl}/ru/${slugPath}`;
+        const slugAz = seoData.slug || `blog/${postId}`;
+        const slugRu = seoData.slugRu || slugAz;
+        const azUrl = `${siteUrl}/${slugAz}`;
+        const ruUrl = `${siteUrl}/ru/${slugRu}`;
         const pageUrl = isRu ? ruUrl : azUrl;
         const dateModified = article.sys.updatedAt || '';
         const htmlLang = isRu ? 'ru' : 'az';
+
+        // If the slug used to reach this page isn't the canonical one for this lang, redirect
+        const canonicalSlug = isRu ? slugRu : slugAz;
+        if (slug !== canonicalSlug) {
+            res.setHeader('Location', pageUrl);
+            res.status(301).end();
+            return;
+        }
 
         // Read the blog-post.html template
         const templatePath = path.join(process.cwd(), 'blog-post.html');
