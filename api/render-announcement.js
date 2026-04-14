@@ -70,20 +70,29 @@ module.exports = async (req, res) => {
             </a>`;
         }).join('') : '';
 
-        // JSON-LD
+        // JSON-LD: Article (not Event — Event requires location/offers for rich results)
         const jsonLd = {
             "@context": "https://schema.org",
-            "@type": "Event",
-            "name": title,
+            "@type": "Article",
+            "headline": title,
             "description": desc,
-            "image": a.image || undefined,
+            "image": a.image || `${SITE_URL}/logo.webp`,
             "url": pageUrl,
-            "startDate": a.dateRaw || undefined,
-            "organizer": {
+            "datePublished": a.dateRaw || undefined,
+            "dateModified": a.dateRaw || undefined,
+            "inLanguage": lang === 'ru' ? 'ru' : lang === 'en' ? 'en' : lang === 'tr' ? 'tr' : 'az',
+            "author": {
                 "@type": "Person",
                 "name": "Şahsəddin İmanlı",
                 "url": SITE_URL
-            }
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "Şahsəddin İmanlı",
+                "url": SITE_URL,
+                "logo": { "@type": "ImageObject", "url": `${SITE_URL}/logo.webp` }
+            },
+            "mainEntityOfPage": { "@type": "WebPage", "@id": pageUrl }
         };
         Object.keys(jsonLd).forEach(k => jsonLd[k] === undefined && delete jsonLd[k]);
 
@@ -176,14 +185,14 @@ module.exports = async (req, res) => {
     <main class="ann-detail-page">
         <a href="javascript:history.back()" class="ann-detail-back"><i class="fas fa-arrow-left"></i> Geri qayıt</a>
 
-        <article class="ann-detail-card" itemscope itemtype="https://schema.org/Event">
-            ${a.image ? `<div class="ann-detail-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};" role="img" aria-label="${escapeHtml(title)}" itemprop="image">
+        <article class="ann-detail-card">
+            ${a.image ? `<div class="ann-detail-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};" role="img" aria-label="${escapeHtml(title)}">
                 ${a.showBadge !== false ? '<span class="ann-detail-badge">YEN\u0130</span>' : ''}
             </div>` : ''}
             <div class="ann-detail-body">
-                <h1 class="ann-detail-title" itemprop="name">${escapeHtml(title)}</h1>
-                <time class="ann-detail-date" itemprop="startDate" content="${escapeHtml(a.dateRaw || '')}"><i class="fas fa-calendar-alt"></i> ${escapeHtml(a.date || '')}</time>
-                ${desc ? `<div class="ann-detail-desc" itemprop="description">${escapeHtml(desc)}</div>` : ''}
+                <h1 class="ann-detail-title">${escapeHtml(title)}</h1>
+                <time class="ann-detail-date" datetime="${escapeHtml(a.dateRaw || '')}"><i class="fas fa-calendar-alt"></i> ${escapeHtml(a.date || '')}</time>
+                ${desc ? `<div class="ann-detail-desc">${escapeHtml(desc)}</div>` : ''}
                 ${a.link ? `<a href="${escapeHtml(a.link)}" class="ann-detail-link" target="_blank" rel="noopener nofollow"><i class="fas fa-external-link-alt"></i> Xarici linkə keç</a>` : ''}
             </div>
         </article>
