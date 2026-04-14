@@ -164,6 +164,19 @@ module.exports = async (req, res) => {
             htmlRu: articleHtmlRu
         };
 
+        // Slug-aware hreflang: point all languages to the canonical post URL
+        // (content is AZ-primary; RU available when articleHtmlRu is set)
+        const hreflangLinks = [
+            `<link rel="alternate" hreflang="az" href="${pageUrl}">`,
+            articleHtmlRu ? `<link rel="alternate" hreflang="ru" href="${pageUrl}">` : '',
+            `<link rel="alternate" hreflang="x-default" href="${pageUrl}">`
+        ].filter(Boolean).join('\n    ');
+
+        html = html.replace(
+            /<link rel="alternate" hreflang="az"[^>]*>\s*<link rel="alternate" hreflang="ru"[^>]*>\s*<link rel="alternate" hreflang="en"[^>]*>\s*<link rel="alternate" hreflang="tr"[^>]*>\s*<link rel="alternate" hreflang="x-default"[^>]*>/,
+            hreflangLinks
+        );
+
         const headInject = `
     <link rel="canonical" href="${pageUrl}">
     <meta property="og:url" content="${pageUrl}">
