@@ -186,21 +186,6 @@ window.__POST_DATA__ = ${JSON.stringify(JSON.stringify(preloadData))};</script>
 
         html = html.replace('</head>', headInject + '\n</head>');
 
-        // Inject SSR announcements as noscript/hidden content for SEO
-        const activeAnns = Object.values(announcementsData)
-            .filter(a => a.active !== false)
-            .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
-            .slice(0, 10);
-        if (activeAnns.length > 0) {
-            const annSeoHtml = activeAnns.map(a =>
-                `<div itemscope itemtype="https://schema.org/Event"><meta itemprop="name" content="${escapeHtml(a.title)}"><meta itemprop="description" content="${escapeHtml(a.desc || '')}">` +
-                (a.image ? `<meta itemprop="image" content="${escapeHtml(a.image)}">` : '') +
-                (a.date ? `<meta itemprop="startDate" content="${escapeHtml(a.date)}">` : '') +
-                `<meta itemprop="organizer" content="Şahsəddin İmanlı"></div>`
-            ).join('');
-            html = html.replace('</body>', `<div style="display:none" aria-hidden="true">${annSeoHtml}</div>\n</body>`);
-        }
-
         // No cache - always serve fresh data
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('CDN-Cache-Control', 'no-store');
