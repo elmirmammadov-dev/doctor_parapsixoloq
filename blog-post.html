@@ -1917,19 +1917,21 @@
                     } catch (e) { bodyHtml = f.content ? renderRichText(f.content) : ''; }
                 }
 
-                document.title = f.title + ' | Şahsəddin İmanlı';
                 const isRu = currentLang === 'ru';
-                const seoDesc = (isRu && seoData.metaDescRu) ? seoData.metaDescRu : (seoData.metaDesc || f.title + ' - Şahsəddin İmanlı tərəfindən yazılmış məqalə.');
+                const displayTitle = (isRu && seoData.titleRu) ? seoData.titleRu : f.title;
+                const displayDate = (isRu && seoData.dateRu) ? seoData.dateRu : (f.date || '');
+                document.title = displayTitle + ' | Şahsəddin İmanlı';
+                const seoDesc = (isRu && seoData.metaDescRu) ? seoData.metaDescRu : (seoData.metaDesc || displayTitle + ' - Şahsəddin İmanlı tərəfindən yazılmış məqalə.');
                 const seoKeyword = (isRu && seoData.keywordRu) ? seoData.keywordRu : (seoData.keyword || '');
-                const seoImageAlt = (isRu && seoData.imageAltRu) ? seoData.imageAltRu : (seoData.imageAlt || f.title);
+                const seoImageAlt = (isRu && seoData.imageAltRu) ? seoData.imageAltRu : (seoData.imageAlt || displayTitle);
 
                 let imgHtml = imgUrl ? `<img class="blog-detail-image" src="${imgUrl}" alt="${seoImageAlt}">` : '';
 
                 const postTexts = POST_TEXTS[currentLang] || POST_TEXTS.az;
                 container.innerHTML = `
                     <a href="/#about" class="blog-detail-back"><i class="fas fa-arrow-left"></i> ${ui.back}</a>
-                    <h1 class="blog-detail-title">${f.title}</h1>
-                    <span class="blog-detail-date">${f.date || ''}</span>
+                    <h1 class="blog-detail-title">${displayTitle}</h1>
+                    <span class="blog-detail-date">${displayDate}</span>
                     <div class="blog-detail-meta">
                         <span class="blog-meta-item"><i class="fas fa-eye"></i> <span id="viewCount">0</span> ${postTexts.views}</span>
                         <span class="blog-meta-item"><i class="fas fa-thumbs-up"></i> <span id="likeCountMeta">0</span> ${postTexts.likes}</span>
