@@ -805,7 +805,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 // Use background-image with cover + scale for zoom (matches admin preview)
                 const scaleStyle = coverZoom > 1 ? `transform:scale(${coverZoom});` : '';
-                const blogUrl = (seoData[id] && seoData[id].slug) ? '/' + seoData[id].slug : '#';
+                const slugPart = seoData[id] && seoData[id].slug;
+                const blogUrl = slugPart
+                    ? (currentLang === 'ru' ? '/ru/' + slugPart : '/' + slugPart)
+                    : '#';
                 return {
                     id: id,
                     date: f.date || '',

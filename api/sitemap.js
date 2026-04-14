@@ -14,11 +14,16 @@ module.exports = async (req, res) => {
         const data = await contentfulRes.json();
         const articles = data.items || [];
 
-        // Fetch SEO data (slugs) from Firebase
+        // Fetch SEO data (slugs) and article HTML (to detect RU versions) from Firebase
         let seoData = {};
+        let htmlData = {};
         try {
-            const seoRes = await fetch(`${FIREBASE_DB_URL}/articleSeo.json`);
+            const [seoRes, htmlRes] = await Promise.all([
+                fetch(`${FIREBASE_DB_URL}/articleSeo.json`),
+                fetch(`${FIREBASE_DB_URL}/articleHtml.json`)
+            ]);
             seoData = await seoRes.json() || {};
+            htmlData = await htmlRes.json() || {};
         } catch(e) {}
 
         let xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -59,12 +64,13 @@ module.exports = async (req, res) => {
         <priority>0.3</priority>
     </url>`;
 
-        // Add each blog post
+        // Add each blog post (AZ + RU if Russian HTML exists)
         for (const article of articles) {
             const id = article.sys.id;
             const updated = article.sys.updatedAt ? article.sys.updatedAt.split('T')[0] : '';
             const slug = seoData[id] && seoData[id].slug ? seoData[id].slug : null;
             if (!slug) continue; // Skip articles without slug URL
+            const hasRu = htmlData[id] && htmlData[id].ru;
             xml += `
     <url>
         <loc>${SITE_URL}/${slug}</loc>
@@ -72,6 +78,15 @@ module.exports = async (req, res) => {
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>`;
+            if (hasRu) {
+                xml += `
+    <url>
+        <loc>${SITE_URL}/ru/${slug}</loc>
+        ${updated ? `<lastmod>${updated}</lastmod>` : ''}
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>`;
+            }
         }
 
         // Add announcements page with language variants

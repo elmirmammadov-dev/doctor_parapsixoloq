@@ -9,6 +9,7 @@ const FIREBASE_DB_URL = 'https://hekim-sayti-comments-default-rtdb.firebaseio.co
 module.exports = async (req, res) => {
     let postId = null;
     const slug = req.query.slug;
+    const lang = req.query.lang === 'ru' ? 'ru' : 'az';
 
     // Resolve slug to article ID from Firebase
     if (slug) {
@@ -36,8 +37,8 @@ module.exports = async (req, res) => {
             return;
         }
 
-        const title = article.fields.title || '';
-        const date = article.fields.date || '';
+        const titleAz = article.fields.title || '';
+        const dateAz = article.fields.date || '';
 
         // Fetch image URL if exists
         let imageUrl = '';
@@ -72,16 +73,31 @@ module.exports = async (req, res) => {
         // Prefer ImgBB cover image from SEO data
         if (seoData.coverImage) imageUrl = seoData.coverImage;
 
-        const metaDesc = seoData.metaDesc || title + ' - Şahsəddin İmanlı tərəfindən yazılmış məqalə.';
-        const keyword = seoData.keyword || 'parapsixologiya, Şahsəddin İmanlı';
-        const imageAlt = seoData.imageAlt || title;
+        // Pick language-specific fields (RU overrides when lang=ru and data exists)
+        const isRu = lang === 'ru' && !!articleHtmlRu;
+        const title = isRu && seoData.titleRu ? seoData.titleRu : titleAz;
+        const date = isRu && seoData.dateRu ? seoData.dateRu : dateAz;
+        const metaDesc = isRu && seoData.metaDescRu
+            ? seoData.metaDescRu
+            : (seoData.metaDesc || titleAz + ' - Şahsəddin İmanlı tərəfindən yazılmış məqalə.');
+        const keyword = isRu && seoData.keywordRu
+            ? seoData.keywordRu
+            : (seoData.keyword || 'parapsixologiya, Şahsəddin İmanlı');
+        const imageAlt = isRu && seoData.imageAltRu ? seoData.imageAltRu : (seoData.imageAlt || title);
         const siteUrl = 'https://www.sahseddinimanli.com';
-        const pageUrl = seoData.slug ? `${siteUrl}/${seoData.slug}` : `${siteUrl}/blog/${postId}`;
+        const slugPath = seoData.slug || `blog/${postId}`;
+        const azUrl = `${siteUrl}/${slugPath}`;
+        const ruUrl = `${siteUrl}/ru/${slugPath}`;
+        const pageUrl = isRu ? ruUrl : azUrl;
         const dateModified = article.sys.updatedAt || '';
+        const htmlLang = isRu ? 'ru' : 'az';
 
         // Read the blog-post.html template
         const templatePath = path.join(process.cwd(), 'blog-post.html');
         let html = fs.readFileSync(templatePath, 'utf-8');
+
+        // Set html lang attribute
+        html = html.replace('<html lang="az">', `<html lang="${htmlLang}">`);
 
         // Replace static meta tags with dynamic ones
         html = html.replace(
@@ -149,7 +165,7 @@ module.exports = async (req, res) => {
             },
             "mainEntityOfPage": { "@type": "WebPage", "@id": pageUrl },
             "keywords": keyword,
-            "inLanguage": "az"
+            "inLanguage": htmlLang
         };
         // Remove undefined values
         Object.keys(jsonLd).forEach(k => jsonLd[k] === undefined && delete jsonLd[k]);
@@ -164,12 +180,11 @@ module.exports = async (req, res) => {
             htmlRu: articleHtmlRu
         };
 
-        // Slug-aware hreflang: point all languages to the canonical post URL
-        // (content is AZ-primary; RU available when articleHtmlRu is set)
+        // Slug-aware hreflang: AZ primary at /{slug}, RU at /ru/{slug} when available
         const hreflangLinks = [
-            `<link rel="alternate" hreflang="az" href="${pageUrl}">`,
-            articleHtmlRu ? `<link rel="alternate" hreflang="ru" href="${pageUrl}">` : '',
-            `<link rel="alternate" hreflang="x-default" href="${pageUrl}">`
+            `<link rel="alternate" hreflang="az" href="${azUrl}">`,
+            articleHtmlRu ? `<link rel="alternate" hreflang="ru" href="${ruUrl}">` : '',
+            `<link rel="alternate" hreflang="x-default" href="${azUrl}">`
         ].filter(Boolean).join('\n    ');
 
         html = html.replace(
@@ -181,6 +196,7 @@ module.exports = async (req, res) => {
     <link rel="canonical" href="${pageUrl}">
     <meta property="og:url" content="${pageUrl}">
     <script>window.__POST_ID__ = "${postId}";
+window.__POST_LANG__ = "${htmlLang}";
 window.__POST_DATA__ = ${JSON.stringify(JSON.stringify(preloadData))};</script>
     <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
 

@@ -1774,7 +1774,11 @@
             az: { title: 'Şərhlər', name: 'Ad', email: 'E-poçt', comment: 'Şərh', placeholder: 'Şərhinizi yazın...', submit: 'Şərh göndər', success: 'Şərhiniz göndərildi!', noComments: 'Hələ şərh yoxdur. İlk şərhi siz yazın!', author: 'Müəllif', replyLabel: 'şərhinizə cavab yazdı', replyBtn: 'Cavab yaz', replies: 'cavab', showMore: 'Daha çox göstər', hideReplies: 'Cavabları gizlə', replyPlaceholder: 'Cavabınızı yazın...', sendReply: 'Göndər' },
             ru: { title: 'Комментарии', name: 'Имя', email: 'Эл. почта', comment: 'Комментарий', placeholder: 'Напишите комментарий...', submit: 'Отправить', success: 'Комментарий отправлен!', noComments: 'Пока нет комментариев. Будьте первым!', author: 'Автор', replyLabel: 'ответил(а) на ваш комментарий', replyBtn: 'Ответить', replies: 'ответ', showMore: 'Показать ещё', hideReplies: 'Скрыть ответы', replyPlaceholder: 'Напишите ответ...', sendReply: 'Отправить' }
         };
-        let currentLang = localStorage.getItem('lang') || 'az';
+        // Server can force the page language (e.g., /ru/{slug} route)
+        let currentLang = window.__POST_LANG__ || localStorage.getItem('lang') || 'az';
+        if (window.__POST_LANG__) {
+            localStorage.setItem('lang', currentLang);
+        }
         let locale = LANG_TO_LOCALE[currentLang] || 'az';
 
         function updatePageLang() {
@@ -1797,7 +1801,20 @@
         // Lang switcher
         document.querySelectorAll('.lang-option').forEach(opt => {
             opt.addEventListener('click', () => {
-                currentLang = opt.dataset.lang;
+                const newLang = opt.dataset.lang;
+                // Blog posts have separate AZ/RU URLs — navigate instead of client-side swap
+                const seoSlug = (window.__POST_DATA__ ? (JSON.parse(window.__POST_DATA__).seo || {}).slug : null);
+                if (seoSlug && (newLang === 'ru' || currentLang === 'ru' || newLang === 'az')) {
+                    localStorage.setItem('lang', newLang);
+                    if (newLang === 'ru') {
+                        window.location.href = '/ru/' + seoSlug;
+                        return;
+                    } else if (newLang === 'az') {
+                        window.location.href = '/' + seoSlug;
+                        return;
+                    }
+                }
+                currentLang = newLang;
                 locale = LANG_TO_LOCALE[currentLang] || 'az';
                 localStorage.setItem('lang', currentLang);
                 updatePageLang();
