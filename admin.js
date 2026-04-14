@@ -3995,6 +3995,8 @@ document.addEventListener("DOMContentLoaded", function() {
         adminDb.ref('campaign_subscribers/' + key).remove().then(function() {
             loadFullSubscribers();
             loadCampSubscribers();
+        }).catch(function(err) {
+            alert('Silinmədi: ' + (err && err.message ? err.message : 'icazə yoxdur. Firebase rules-u yoxlayın.'));
         });
     };
 
