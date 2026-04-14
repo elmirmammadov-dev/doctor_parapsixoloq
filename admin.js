@@ -3237,8 +3237,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     async function uploadAnnImage(file) {
+        const webpFile = await convertToWebP(file, 0.85);
         const formData = new FormData();
-        formData.append('image', file);
+        formData.append('image', webpFile);
         const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API_KEY, { method: 'POST', body: formData });
         const data = await res.json();
         if (data.success) return data.data.url;
