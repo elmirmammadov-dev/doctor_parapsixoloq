@@ -2302,6 +2302,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (kwRuEl) kwRuEl.value = seo.keywordRu || '';
                 const iaRuEl = document.getElementById('articleImageAltRu');
                 if (iaRuEl) iaRuEl.value = seo.imageAltRu || '';
+                const slRuEl = document.getElementById('articleSlugRu');
+                if (slRuEl) slRuEl.value = seo.slugRu || '';
                 // Show cover image preview if exists
                 const previewEl = document.getElementById('articleImagePreview');
                 const wrapEl = document.getElementById('coverPreviewWrap');
@@ -2445,9 +2447,11 @@ document.addEventListener("DOMContentLoaded", function() {
             const metaDescRuEl = document.getElementById('articleMetaDescRu');
             const keywordRuEl = document.getElementById('articleKeywordRu');
             const imageAltRuEl = document.getElementById('articleImageAltRu');
+            const slugRuEl = document.getElementById('articleSlugRu');
             const metaDescRu = metaDescRuEl ? metaDescRuEl.value.trim() : '';
             const keywordRu = keywordRuEl ? keywordRuEl.value.trim() : '';
             const imageAltRu = imageAltRuEl ? imageAltRuEl.value.trim() : '';
+            const articleSlugRu = slugRuEl ? slugRuEl.value.trim() : '';
 
             // Russian locale fields
             const titleRuEl = document.getElementById('articleTitleRu');
@@ -2520,19 +2524,23 @@ document.addEventListener("DOMContentLoaded", function() {
                         seoObj.coverDeleteUrl = coverDeleteUrl || null;
                     }
                     if (articleSlug) seoObj.slug = articleSlug;
+                    if (articleSlugRu) seoObj.slugRu = articleSlugRu;
                     if (metaDescRu) seoObj.metaDescRu = metaDescRu;
                     if (keywordRu) seoObj.keywordRu = keywordRu;
                     if (imageAltRu) seoObj.imageAltRu = imageAltRu;
+                    if (titleRu) seoObj.titleRu = titleRu;
+                    if (dateRu) seoObj.dateRu = dateRu;
                     await adminDb.ref('articleSeo/' + editingEntryId).update(seoObj);
-                    // Update slug mapping
+                    // Update slug mappings (both AZ and RU point to same post)
                     if (articleSlug) await adminDb.ref('articleSlugs/' + articleSlug).set(editingEntryId);
+                    if (articleSlugRu) await adminDb.ref('articleSlugs/' + articleSlugRu).set(editingEntryId);
 
                     // Auto-submit to Google Indexing API
                     const idxUrls = [];
                     if (articleSlug) idxUrls.push(SITE_URL + '/' + articleSlug);
                     if (contentRuHtml && contentRuHtml.trim() && contentRuHtml !== '<br>') {
-                        const existingSlugRu = (seoObj.slugRu) || articleSlug;
-                        if (existingSlugRu) idxUrls.push(SITE_URL + '/ru/' + existingSlugRu);
+                        const effectiveSlugRu = articleSlugRu || articleSlug;
+                        if (effectiveSlugRu) idxUrls.push(SITE_URL + '/ru/' + effectiveSlugRu);
                     }
                     idxUrls.push(SITE_URL + '/');
                     submitIndexing(idxUrls);
@@ -2566,18 +2574,23 @@ document.addEventListener("DOMContentLoaded", function() {
                             seoObj2.coverDeleteUrl = coverDeleteUrl || null;
                         }
                         if (articleSlug) seoObj2.slug = articleSlug;
+                        if (articleSlugRu) seoObj2.slugRu = articleSlugRu;
                         if (metaDescRu) seoObj2.metaDescRu = metaDescRu;
                         if (keywordRu) seoObj2.keywordRu = keywordRu;
                         if (imageAltRu) seoObj2.imageAltRu = imageAltRu;
+                        if (titleRu) seoObj2.titleRu = titleRu;
+                        if (dateRu) seoObj2.dateRu = dateRu;
                         await adminDb.ref('articleSeo/' + newEntryId).set(seoObj2);
-                        // Save slug mapping
+                        // Save slug mappings
                         if (articleSlug) await adminDb.ref('articleSlugs/' + articleSlug).set(newEntryId);
+                        if (articleSlugRu) await adminDb.ref('articleSlugs/' + articleSlugRu).set(newEntryId);
 
                         // Auto-submit to Google Indexing API
                         const idxUrls2 = [];
                         if (articleSlug) idxUrls2.push(SITE_URL + '/' + articleSlug);
-                        if (contentRuHtml && contentRuHtml.trim() && contentRuHtml !== '<br>' && articleSlug) {
-                            idxUrls2.push(SITE_URL + '/ru/' + articleSlug);
+                        if (contentRuHtml && contentRuHtml.trim() && contentRuHtml !== '<br>') {
+                            const effectiveSlugRu2 = articleSlugRu || articleSlug;
+                            if (effectiveSlugRu2) idxUrls2.push(SITE_URL + '/ru/' + effectiveSlugRu2);
                         }
                         idxUrls2.push(SITE_URL + '/');
                         submitIndexing(idxUrls2);
