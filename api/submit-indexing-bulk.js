@@ -109,6 +109,10 @@ async function collectUrls() {
     urls.push(SITE_URL + '/en');
     urls.push(SITE_URL + '/tr');
 
+    // 7. Legal pages
+    urls.push(SITE_URL + '/privacy-policy.html');
+    urls.push(SITE_URL + '/terms-of-use.html');
+
     return urls;
 }
 
