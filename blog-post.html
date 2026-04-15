@@ -2358,12 +2358,12 @@
                 const zoom = a.coverZoom || 1;
                 const aTitle = a['title_' + currentLang] || a.title;
                 const aDesc = a['desc_' + currentLang] || a.desc;
-                return `<${tag} class="ann-item"${href} itemscope itemtype="https://schema.org/Event">
-                    ${a.image ? `<div class="ann-item-img" style="background-image:url(${a.image});background-position:${pos};background-size:${zoom <= 1 ? 'cover' : (zoom * 100) + '%'};" role="img" aria-label="${aTitle}" itemprop="image">${a.showBadge !== false ? '<span class="ann-badge-tag">YENİ</span>' : ''}</div>` : (a.showBadge !== false ? '<div style="position:relative;"><span class="ann-badge-tag">YENİ</span></div>' : '')}
+                return `<${tag} class="ann-item"${href}>
+                    ${a.image ? `<div class="ann-item-img" style="background-image:url(${a.image});background-position:${pos};background-size:${zoom <= 1 ? 'cover' : (zoom * 100) + '%'};" role="img" aria-label="${aTitle}">${a.showBadge !== false ? '<span class="ann-badge-tag">YENİ</span>' : ''}</div>` : (a.showBadge !== false ? '<div style="position:relative;"><span class="ann-badge-tag">YENİ</span></div>' : '')}
                     <div class="ann-item-body">
-                        <div class="ann-item-title" itemprop="name">${aTitle}</div>
-                        ${aDesc ? `<div class="ann-item-desc" itemprop="description">${aDesc}</div>` : ''}
-                        <time class="ann-item-date" itemprop="startDate">${a.date || ''}</time>
+                        <div class="ann-item-title">${aTitle}</div>
+                        ${aDesc ? `<div class="ann-item-desc">${aDesc}</div>` : ''}
+                        <time class="ann-item-date">${a.date || ''}</time>
                     </div>
                 </${tag}>`;
             }).join('');

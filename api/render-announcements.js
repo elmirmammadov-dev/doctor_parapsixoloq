@@ -29,15 +29,15 @@ module.exports = async (req, res) => {
         // Helper to get localized field
         const L = (a, field) => a[field + '_' + lang] || a[field] || '';
 
-        // Build JSON-LD structured data
+        // Build JSON-LD structured data (Article — not Event — since these are announcements)
         const jsonLdItems = announcements.map(a => ({
-            "@type": "Event",
-            "name": L(a, 'title'),
+            "@type": "Article",
+            "headline": L(a, 'title'),
             "description": L(a, 'desc'),
-            "image": a.image || undefined,
+            "image": a.image || `${SITE_URL}/logo.webp`,
             "url": a.slug ? `${SITE_URL}/elanlar/${a.slug}` : `${SITE_URL}/elanlar`,
-            "startDate": a.date || undefined,
-            "organizer": {
+            "datePublished": a.dateRaw || undefined,
+            "author": {
                 "@type": "Person",
                 "name": "Şahsəddin İmanlı",
                 "url": SITE_URL
@@ -70,13 +70,13 @@ module.exports = async (req, res) => {
                 const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
                 const detailUrl = a.slug ? `/elanlar/${a.slug}` : '';
                 return `
-                <a href="${detailUrl || '#'}" class="ann-card" itemscope itemtype="https://schema.org/Event" style="text-decoration:none;color:inherit;display:block;">
-                    ${a.image ? `<div class="ann-card-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};" role="img" aria-label="${escapeHtml(L(a, 'title'))}" itemprop="image">${a.showBadge !== false ? '<span class="ann-badge">YENİ</span>' : ''}</div>` : ''}
+                <a href="${detailUrl || '#'}" class="ann-card" style="text-decoration:none;color:inherit;display:block;">
+                    ${a.image ? `<div class="ann-card-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};" role="img" aria-label="${escapeHtml(L(a, 'title'))}">${a.showBadge !== false ? '<span class="ann-badge">YENİ</span>' : ''}</div>` : ''}
                     <div class="ann-card-body">
-                        <h2 class="ann-card-title" itemprop="name">${escapeHtml(L(a, 'title'))}</h2>
-                        ${L(a, 'desc') ? `<p class="ann-card-desc" itemprop="description">${escapeHtml(L(a, 'desc'))}</p>` : ''}
-                        <time class="ann-card-date" itemprop="startDate"><i class="fas fa-calendar-alt"></i> ${escapeHtml(a.date || '')}</time>
-                        <span class="ann-card-link" itemprop="url">Ətraflı bax &rarr;</span>
+                        <h2 class="ann-card-title">${escapeHtml(L(a, 'title'))}</h2>
+                        ${L(a, 'desc') ? `<p class="ann-card-desc">${escapeHtml(L(a, 'desc'))}</p>` : ''}
+                        <time class="ann-card-date" datetime="${escapeHtml(a.dateRaw || '')}"><i class="fas fa-calendar-alt"></i> ${escapeHtml(a.date || '')}</time>
+                        <span class="ann-card-link">Ətraflı bax &rarr;</span>
                     </div>
                 </a>`;
             }).join('');
