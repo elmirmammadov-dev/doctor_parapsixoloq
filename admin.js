@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
     window.submitIndexing = submitIndexing;
 
     // "Hamısını təzələ" — bulk resubmit every URL in priority order
-    document.addEventListener('DOMContentLoaded', function() {
+    (function() {
         const btn = document.getElementById('indexingResubmitBtn');
         const statusEl = document.getElementById('indexingStatus');
         if (!btn) return;
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 btn.innerHTML = origHtml;
             }
         });
-    });
+    })();
 
     // Show admin panel immediately
     const overlay = document.getElementById("adminPanelOverlay");
