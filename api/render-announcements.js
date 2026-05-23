@@ -86,6 +86,14 @@ module.exports = async (req, res) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KY50DE1QQZ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KY50DE1QQZ');
+    </script>
     <title>Elanlar və Kampaniyalar | Şahsəddin İmanlı</title>
     <meta name="description" content="Şahsəddin İmanlının ən son elanları, kampaniyaları və xüsusi təklifləri. Yeni seans imkanları, endirimler və daha çox.">
     <meta name="keywords" content="elanlar, kampaniyalar, Şahsəddin İmanlı, parapsixologiya, xüsusi təkliflər, seans">
