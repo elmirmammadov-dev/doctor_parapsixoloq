@@ -124,6 +124,10 @@ module.exports = async (req, res) => {
             `<meta name="keywords" content="${escapeHtml(keyword)}, parapsixologiya, Şahsəddin İmanlı">`
         );
 
+        // Remove the template's default (homepage) canonical; the correct per-article
+        // canonical is injected before </head> below. Avoids a duplicate/wrong canonical.
+        html = html.replace('<link rel="canonical" href="https://www.sahseddinimanli.com/">', '');
+
         // Replace Open Graph tags
         html = html.replace(
             '<meta property="og:title" content="Məqalə | Şahsəddin İmanlı">',
