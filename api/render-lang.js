@@ -160,19 +160,23 @@ module.exports = async (req, res) => {
                 }
                 const seo = seoData || {};
                 const sorted = blogData.items.sort((a, b) => new Date(b.fields.date || 0) - new Date(a.fields.date || 0));
+                const isRu = lang === 'ru';
                 const blogHtml = sorted.slice(0, 4).map(item => {
                     const f = item.fields; const id = item.sys.id;
+                    const s = seo[id] || {};
                     const imgId = f.image && f.image.sys ? f.image.sys.id : null;
                     let imgUrl = imgId ? assets[imgId] : null;
                     let coverPos = '50% 50%', coverZoom = 1;
-                    if (seo[id] && seo[id].coverImage) imgUrl = seo[id].coverImage;
-                    if (seo[id] && seo[id].coverPos) coverPos = seo[id].coverPos;
-                    if (seo[id] && seo[id].coverZoom) coverZoom = seo[id].coverZoom;
+                    if (s.coverImage) imgUrl = s.coverImage;
+                    if (s.coverPos) coverPos = s.coverPos;
+                    if (s.coverZoom) coverZoom = s.coverZoom;
                     const scaleStyle = coverZoom > 1 ? `transform:scale(${coverZoom});` : '';
-                    const blogUrl = (seo[id] && seo[id].slug) ? '/' + seo[id].slug : '#';
+                    const title = (isRu && s.titleRu) ? s.titleRu : f.title;
+                    const date = (isRu && s.dateRu) ? s.dateRu : (f.date || '');
+                    const blogUrl = s.slug ? (isRu ? '/ru/' + (s.slugRu || s.slug) : '/' + s.slug) : '#';
                     return `<a href="${escapeHtml(blogUrl)}" class="blog-post-card" data-id="${id}" style="text-decoration:none;color:inherit;cursor:pointer;">
-                        ${imgUrl ? `<div class="blog-post-cover" role="img" aria-label="${escapeHtml(f.title)}" style="background-image:url(${escapeHtml(imgUrl)});background-size:cover;background-position:${coverPos};${scaleStyle}"></div>` : ''}
-                        <div class="blog-post-info"><h4>${escapeHtml(f.title)}</h4><span class="blog-post-date">${escapeHtml(f.date || '')}</span></div>
+                        ${imgUrl ? `<div class="blog-post-cover" role="img" aria-label="${escapeHtml(title)}" style="background-image:url(${escapeHtml(imgUrl)});background-size:cover;background-position:${coverPos};${scaleStyle}"></div>` : ''}
+                        <div class="blog-post-info"><h4>${escapeHtml(title)}</h4><span class="blog-post-date">${escapeHtml(date)}</span></div>
                     </a>`;
                 }).join('');
                 html = html.replace(/<div class="blog-grid blog-section-grid" id="blogGrid">[\s\S]*?<\/div>/, `<div class="blog-grid blog-section-grid" id="blogGrid">${blogHtml}</div>`);

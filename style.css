@@ -4239,6 +4239,16 @@ blockquote.hero-headline-quote-wrap {
     flex-direction: column;
     align-items: center;
 }
+/* In the homepage blog grid the most-read card must fill its cell, same size as
+   sibling cards (the badge stays centered underneath). */
+.blog-section-grid .most-read-wrapper {
+    width: 100%;
+}
+.blog-section-grid .most-read-wrapper .blog-post-card.most-read {
+    width: 100%;
+    align-self: stretch;
+    aspect-ratio: 1 / 1;
+}
 .blog-post-card.most-read {
     transform: translateY(-18px) scale(1.03);
     box-shadow:

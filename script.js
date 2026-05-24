@@ -646,6 +646,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function buildBlogCardHtml(c) {
+        const isRu = currentLang === 'ru';
+        const title = (isRu && c.titleRu) ? c.titleRu : c.title;
+        const date = (isRu && c.dateRu) ? c.dateRu : c.date;
+        const blogUrl = c.slug ? (isRu ? '/ru/' + (c.slugRu || c.slug) : '/' + c.slug) : '#';
+        const scaleStyle = c.coverZoom > 1 ? `transform:scale(${c.coverZoom});` : '';
+        const cover = c.imgUrl
+            ? `<div class="blog-post-cover" role="img" aria-label="${title}" style="background-image:url(${c.imgUrl});background-size:cover;background-position:${c.coverPos};background-repeat:no-repeat;${scaleStyle}"></div>`
+            : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`;
+        return `
+                    <a href="${blogUrl}" class="blog-post-card" data-id="${c.id}" style="text-decoration:none;color:inherit;cursor:pointer;">
+                        ${cover}
+                        <div class="blog-post-info">
+                            <h4>${title}</h4>
+                            <div style="display:flex;align-items:center;gap:12px;margin-top:4px;">
+                                <span class="blog-post-date">${date}</span>
+                                <span style="font-size:0.78rem;color:#999;display:inline-flex;align-items:center;gap:4px;"><i class="fas fa-eye" style="font-size:0.72rem;"></i> <span id="cardViews_${c.id}">0</span></span>
+                                <span style="font-size:0.78rem;color:#999;display:inline-flex;align-items:center;gap:4px;"><i class="fas fa-thumbs-up" style="font-size:0.72rem;"></i> <span id="cardLikes_${c.id}">0</span></span>
+                                <span style="font-size:0.78rem;color:#999;display:inline-flex;align-items:center;gap:4px;"><i class="fas fa-comment" style="font-size:0.72rem;"></i> <span id="cardComments_${c.id}">0</span></span>
+                            </div>
+                        </div>
+                    </a>
+                    `;
+    }
+
     function renderBlogPage(page) {
         const grid = document.getElementById('blogGrid');
         if (!grid) return;
@@ -654,7 +679,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const start = (page - 1) * BLOG_PER_PAGE;
         const pageItems = allBlogCards.slice(start, start + BLOG_PER_PAGE);
 
-        grid.innerHTML = pageItems.map(c => c.html).join('');
+        grid.innerHTML = pageItems.map(c => buildBlogCardHtml(c)).join('');
 
         // Load view/like counts from Firebase and highlight most-read/most-liked
         if (typeof adminDb !== 'undefined') {
@@ -716,12 +741,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function highlightCards(viewCounts, likeCounts) {
-        // Remove previous highlights
-        document.querySelectorAll('.blog-post-card.most-read').forEach(el => {
-            el.classList.remove('most-read');
-            const badge = el.querySelector('.blog-most-read-badge');
-            if (badge) badge.remove();
+        // Remove previous highlights (idempotent): unwrap any existing wrappers and
+        // strip badges so re-running never nests wrappers or duplicates the badge.
+        document.querySelectorAll('.most-read-wrapper').forEach(wrapper => {
+            if (!wrapper.parentNode) return; // already removed as a nested child
+            const card = wrapper.querySelector('.blog-post-card');
+            if (card) {
+                card.classList.remove('most-read');
+                wrapper.parentNode.insertBefore(card, wrapper);
+            }
+            wrapper.remove();
         });
+        document.querySelectorAll('.blog-most-read-badge').forEach(b => b.remove());
+        document.querySelectorAll('.blog-post-card.most-read').forEach(el => el.classList.remove('most-read'));
 
         // Find most viewed
         const viewSorted = Object.entries(viewCounts).filter(e => e[1] > 0).sort((a, b) => b[1] - a[1]);
@@ -750,9 +782,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sidebar) sidebar.scrollTop = 0;
     };
 
+    var blogFetchStarted = false;
     async function fetchBlogPosts() {
         const grid = document.getElementById('blogGrid');
         if (!grid) return;
+        // Guard against double-fetch (applyTranslations + initial call) which causes
+        // highlightCards to run twice and nest the most-read wrapper / duplicate badge.
+        if (blogFetchStarted) return;
+        blogFetchStarted = true;
         grid.innerHTML = '<p style="color:#999;font-size:0.9rem;">Yüklənir...</p>';
         const locale = LANG_TO_LOCALE[currentLang] || 'az';
         try {
@@ -798,26 +835,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const scaleStyle = coverZoom > 1 ? `transform:scale(${coverZoom});` : '';
                 const slugAzPart = seoData[id] && seoData[id].slug;
                 const slugRuPart = (seoData[id] && seoData[id].slugRu) || slugAzPart;
-                const blogUrl = slugAzPart
-                    ? (currentLang === 'ru' ? '/ru/' + slugRuPart : '/' + slugAzPart)
-                    : '#';
                 return {
                     id: id,
+                    title: f.title || '',
+                    titleRu: (seoData[id] && seoData[id].titleRu) || '',
                     date: f.date || '',
-                    html: `
-                    <a href="${blogUrl}" class="blog-post-card" data-id="${id}" style="text-decoration:none;color:inherit;cursor:pointer;">
-                        ${imgUrl ? `<div class="blog-post-cover" role="img" aria-label="${f.title}" style="background-image:url(${imgUrl});background-size:cover;background-position:${coverPos};background-repeat:no-repeat;${scaleStyle}"></div>` : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`}
-                        <div class="blog-post-info">
-                            <h4>${f.title}</h4>
-                            <div style="display:flex;align-items:center;gap:12px;margin-top:4px;">
-                                <span class="blog-post-date">${f.date || ''}</span>
-                                <span style="font-size:0.78rem;color:#999;display:inline-flex;align-items:center;gap:4px;"><i class="fas fa-eye" style="font-size:0.72rem;"></i> <span id="cardViews_${id}">0</span></span>
-                                <span style="font-size:0.78rem;color:#999;display:inline-flex;align-items:center;gap:4px;"><i class="fas fa-thumbs-up" style="font-size:0.72rem;"></i> <span id="cardLikes_${id}">0</span></span>
-                                <span style="font-size:0.78rem;color:#999;display:inline-flex;align-items:center;gap:4px;"><i class="fas fa-comment" style="font-size:0.72rem;"></i> <span id="cardComments_${id}">0</span></span>
-                            </div>
-                        </div>
-                    </a>
-                    `
+                    dateRu: (seoData[id] && seoData[id].dateRu) || '',
+                    imgUrl: imgUrl,
+                    coverPos: coverPos,
+                    coverZoom: coverZoom,
+                    slug: slugAzPart || '',
+                    slugRu: slugRuPart || ''
                 };
             });
             // Sort by date (newest first)
