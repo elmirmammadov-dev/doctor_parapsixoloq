@@ -409,6 +409,12 @@ function initAuth() {
 
     // Auth state listener
     auth.onAuthStateChanged(function(user) {
+        if (!user) {
+            // Auto sign-in anonymously so guests can use views/likes/comments
+            // (these write to Firebase, whose rules require auth != null).
+            auth.signInAnonymously().catch(function(e) { console.warn('Anonymous auth failed:', e && e.code); });
+            return;
+        }
         updateNavbarAuth(user);
         updateCommentFormAuth(user);
         if (user && !user.isAnonymous) {
@@ -554,12 +560,8 @@ function updateNavbarAuth(user) {
         authBtn.onclick = toggleUserDropdown;
         // Show dropdown
         showUserDropdown(user);
-    } else if (user && user.isAnonymous) {
-        const t = getAuthText();
-        authBtn.innerHTML = `<img src="/anonim.webp" class="nav-user-avatar" alt="Anonim" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"> <span class="nav-user-name">${t.anonymous}</span>`;
-        authBtn.onclick = toggleUserDropdown;
-        showUserDropdown(user);
     } else {
+        // Logged-out OR anonymous guest → show the login entry point
         const t = getAuthText();
         authBtn.innerHTML = `<i class="fas fa-user"></i> <span class="nav-user-name">${t.login}</span>`;
         authBtn.onclick = function() { openAuthModal(); };
@@ -611,14 +613,6 @@ function updateCommentFormAuth(user) {
         nameInput.readOnly = true;
         nameInput.style.background = '#f5f5f5';
         emailInput.value = user.email || '';
-        emailInput.readOnly = true;
-        emailInput.style.background = '#f5f5f5';
-    } else if (user && user.isAnonymous) {
-        const anonLabel = (window.getAnonVisitorName && window.getAnonVisitorName()) || getAuthText().anonymous;
-        nameInput.value = anonLabel;
-        nameInput.readOnly = true;
-        nameInput.style.background = '#f5f5f5';
-        emailInput.value = 'anonim@user.com';
         emailInput.readOnly = true;
         emailInput.style.background = '#f5f5f5';
     } else {

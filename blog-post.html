@@ -2323,6 +2323,19 @@
         }
 
         // ===== VIEW COUNT & REACTIONS =====
+        // Wait until Firebase auth (anonymous or real) is ready, so writes that
+        // require auth != null (views/likes) succeed even on the first page load.
+        function awaitAuth() {
+            return new Promise(function(resolve) {
+                var u = firebase.auth().currentUser;
+                if (u) return resolve(u);
+                var done = false;
+                var unsub = firebase.auth().onAuthStateChanged(function(user) {
+                    if (user && !done) { done = true; unsub(); resolve(user); }
+                });
+                setTimeout(function() { if (!done) { done = true; try { unsub(); } catch (e) {} resolve(firebase.auth().currentUser); } }, 6000);
+            });
+        }
         async function trackView() {
             const postId = await getPostId();
             if (!postId) return;
@@ -2330,6 +2343,7 @@
             const ref = db.ref('postStats/' + postId + '/views');
             // Increment view count once per session
             if (!sessionStorage.getItem(viewKey)) {
+                await awaitAuth();
                 ref.transaction(current => (current || 0) + 1);
                 sessionStorage.setItem(viewKey, '1');
             }
@@ -2370,6 +2384,7 @@
         window.toggleReaction = async function(type) {
             const postId = await getPostId();
             if (!postId) return;
+            await awaitAuth();
             const storageKey = 'reaction_' + postId;
             const current = localStorage.getItem(storageKey);
             const likeBtn = document.getElementById('likeBtn');
