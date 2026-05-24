@@ -143,12 +143,10 @@ module.exports = async (req, res) => {
 
         // 11. SSR: Inject blog, announcements, reviews
         try {
-            const [blogData, seoData, annData, reviewsData] = await Promise.all([
+            const [blogData, seoData, reviewsData] = await Promise.all([
                 fetch(`https://cdn.contentful.com/spaces/${CONTENTFUL_SPACE}/entries?access_token=${CONTENTFUL_TOKEN}&content_type=blogPost&include=1&order=-sys.createdAt&locale=az`)
                     .then(r => r.json()).catch(() => ({})),
                 fetch(`${FIREBASE_DB_URL}/articleSeo.json`)
-                    .then(r => r.json()).catch(() => ({})),
-                fetch(`${FIREBASE_DB_URL}/announcements.json`)
                     .then(r => r.json()).catch(() => ({})),
                 fetch(`${FIREBASE_DB_URL}/reviews.json`)
                     .then(r => r.json()).catch(() => ({}))
@@ -178,30 +176,6 @@ module.exports = async (req, res) => {
                     </a>`;
                 }).join('');
                 html = html.replace(/<div class="blog-grid blog-section-grid" id="blogGrid">[\s\S]*?<\/div>/, `<div class="blog-grid blog-section-grid" id="blogGrid">${blogHtml}</div>`);
-            }
-
-            // SSR Announcements
-            if (annData && typeof annData === 'object') {
-                const anns = Object.values(annData).filter(a => a.active !== false).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)).slice(0, 6);
-                if (anns.length === 0) {
-                    html = html.replace(/<section class="announcements-section" id="announcementsSection">/, '<section class="announcements-section" id="announcementsSection" style="display:none;">');
-                }
-                if (anns.length > 0) {
-                    const annHtml = anns.map(a => {
-                        const pos = a.coverPos || '50% 50%'; const zoom = a.coverZoom || 1;
-                        const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
-                        const aTitle = a['title_' + lang] || a.title_az || a.title || '';
-                        const aDesc = a['desc_' + lang] || a.desc_az || a.desc || '';
-                        const annHref = a.slug ? `/elanlar/${a.slug}` : '';
-                        const tag = annHref ? 'a' : 'div';
-                        const href = annHref ? ` href="${escapeHtml(annHref)}"` : '';
-                        return `<${tag} class="ann-section-card"${href} style="text-decoration:none;color:inherit;">
-                            ${a.image ? `<div class="ann-section-card-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};">${a.showBadge !== false ? '<span class="ann-section-badge">YEN\u0130</span>' : ''}</div>` : ''}
-                            <div class="ann-section-card-body"><div class="ann-section-card-title">${escapeHtml(aTitle)}</div>${aDesc ? `<div class="ann-section-card-desc">${escapeHtml(aDesc)}</div>` : ''}<div class="ann-section-card-date">${escapeHtml(a.date || '')}</div></div>
-                        </${tag}>`;
-                    }).join('');
-                    html = html.replace(/<div class="ann-section-grid" id="annSectionGrid">[\s\S]*?<\/div>/, `<div class="ann-section-grid" id="annSectionGrid">${annHtml}</div>`);
-                }
             }
 
             // SSR Reviews

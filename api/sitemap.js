@@ -49,11 +49,6 @@ module.exports = async (req, res) => {
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>${SITE_URL}/elanlar</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
         <loc>${SITE_URL}/privacy-policy.html</loc>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
@@ -89,40 +84,6 @@ module.exports = async (req, res) => {
     </url>`;
             }
         }
-
-        // Add announcements page with language variants
-        const langs = ['ru', 'en', 'tr'];
-        for (const l of langs) {
-            xml += `
-    <url>
-        <loc>${SITE_URL}/elanlar?lang=${l}</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>`;
-        }
-
-        // Add individual announcement pages
-        try {
-            const annRes = await fetch(`${FIREBASE_DB_URL}/announcements.json`);
-            const annData = await annRes.json() || {};
-            for (const [id, a] of Object.entries(annData)) {
-                if (a.active === false || !a.slug) continue;
-                xml += `
-    <url>
-        <loc>${SITE_URL}/elanlar/${a.slug}</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>`;
-            }
-        } catch(e) {}
-
-        // Add campaigns page
-        xml += `
-    <url>
-        <loc>${SITE_URL}/kampaniyalar</loc>
-        <changefreq>daily</changefreq>
-        <priority>0.7</priority>
-    </url>`;
 
         xml += '\n</urlset>';
 

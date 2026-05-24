@@ -20,17 +20,13 @@ module.exports = async (req, res) => {
         const htmlPath = path.join(process.cwd(), '_index.html');
         let html = fs.readFileSync(htmlPath, 'utf-8');
 
-        // Fetch blog posts, announcements, and reviews in parallel
-        const [blogData, seoData, annData, reviewsData, campData] = await Promise.all([
+        // Fetch blog posts, SEO data, and reviews in parallel
+        const [blogData, seoData, reviewsData] = await Promise.all([
             fetch(`https://cdn.contentful.com/spaces/${CONTENTFUL_SPACE}/entries?access_token=${CONTENTFUL_TOKEN}&content_type=blogPost&include=1&order=-sys.createdAt&locale=az`)
                 .then(r => r.json()).catch(() => ({})),
             fetch(`${FIREBASE_DB_URL}/articleSeo.json`)
                 .then(r => r.json()).catch(() => ({})),
-            fetch(`${FIREBASE_DB_URL}/announcements.json`)
-                .then(r => r.json()).catch(() => ({})),
             fetch(`${FIREBASE_DB_URL}/reviews.json`)
-                .then(r => r.json()).catch(() => ({})),
-            fetch(`${FIREBASE_DB_URL}/campaigns.json`)
                 .then(r => r.json()).catch(() => ({}))
         ]);
 
@@ -78,98 +74,6 @@ module.exports = async (req, res) => {
             }).join('');
         }
 
-        // === SSR Announcement Cards ===
-        // === SSR Announcement Cards (left column, max 2) ===
-        let annHtml = '';
-        if (annData && typeof annData === 'object') {
-            const allAnns = Object.values(annData)
-                .filter(a => a.active !== false)
-                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-            // Check for manually positioned announcements
-            let featured = allAnns.find(a => a.homePosition === 'featured');
-            let small1 = allAnns.find(a => a.homePosition === 'small1');
-            let small2 = allAnns.find(a => a.homePosition === 'small2');
-
-            // Fallback to auto if no manual positions set
-            if (!featured && !small1 && !small2) {
-                featured = allAnns[0];
-                small1 = allAnns[1];
-                small2 = allAnns[2];
-            }
-
-            function renderAnnSSR(a, isLarge) {
-                const pos = a.coverPos || '50% 50%';
-                const zoom = a.coverZoom || 1;
-                const bgSize = zoom <= 1 ? 'cover' : (zoom * 100) + '%';
-                const aTitle = a.title_az || a.title || '';
-                const aDesc = a.desc_az || a.desc || '';
-                const annHref = a.slug ? `/elanlar/${a.slug}` : '';
-                const tag = annHref ? 'a' : 'div';
-                const href = annHref ? ` href="${escapeHtml(annHref)}"` : '';
-                const cardClass = isLarge ? 'ann-section-card ann-card-large' : 'ann-section-card ann-card-small';
-                if (isLarge) {
-                    return `<${tag} class="${cardClass}"${href} style="text-decoration:none;color:inherit;">
-                        ${a.image ? `<div class="ann-section-card-img" style="background-image:url(${escapeHtml(a.image)});background-position:${pos};background-size:${bgSize};">${a.showBadge !== false ? '<span class="ann-section-badge">YEN\u0130</span>' : ''}</div>` : ''}
-                        <div class="ann-section-card-body">
-                            <div class="ann-section-card-date">${escapeHtml(a.date || '')}</div>
-                            <div class="ann-section-card-title">${escapeHtml(aTitle)}</div>
-                            ${aDesc ? `<div class="ann-section-card-desc">${escapeHtml(aDesc)}</div>` : ''}
-                            <span class="ann-section-card-link">Daha \u0259trafl\u0131 <i class="fas fa-arrow-right"></i></span>
-                        </div>
-                    </${tag}>`;
-                }
-                return `<${tag} class="${cardClass}"${href} style="text-decoration:none;color:inherit;">
-                    <div class="ann-section-card-body">
-                        <div class="ann-section-card-date">${escapeHtml(a.date || '')}</div>
-                        <div class="ann-section-card-title">${escapeHtml(aTitle)}</div>
-                        ${aDesc ? `<div class="ann-section-card-desc">${escapeHtml(aDesc)}</div>` : ''}
-                        <span class="ann-section-card-link ann-link-upper">DAHA \u018FTRAFLI</span>
-                    </div>
-                </${tag}>`;
-            }
-
-            if (featured) {
-                annHtml += renderAnnSSR(featured, true);
-            }
-            if (small1 || small2) {
-                annHtml += '<div class="ann-small-row">';
-                if (small1) annHtml += renderAnnSSR(small1, false);
-                if (small2) annHtml += renderAnnSSR(small2, false);
-                annHtml += '</div>';
-            }
-        }
-
-        // === SSR Campaign Cards (right column, max 2) ===
-        let campHtml = '';
-        const now = Date.now();
-        if (campData && typeof campData === 'object') {
-            const ssrLang = 'az';
-            const campaigns = Object.entries(campData)
-                .map(([id, c]) => ({ id, ...c }))
-                .filter(c => c.active !== false)
-                .filter(c => c['title_' + ssrLang] && c['title_' + ssrLang].trim() !== '')
-                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
-                .slice(0, 2);
-            if (campaigns.length > 0) {
-                campHtml = campaigns.map(c => {
-                    const expired = (c.endTimestamp && now > c.endTimestamp) || ((c.claimedCount || 0) >= c.maxCoupons);
-                    const claimed = c.claimedCount || 0;
-                    const max = c.maxCoupons || 1;
-                    const pct = Math.min(100, Math.round((claimed / max) * 100));
-                    return `<div class="camp-card"${expired ? ' style="opacity:0.7;"' : ''}>
-                        ${expired ? '<div class="camp-ended-overlay"><div class="camp-ended-text">B\u0130T\u0130B</div></div>' : ''}
-                        ${c.image ? `<div class="camp-card-img" style="background-image:url(${escapeHtml(c.image)});background-position:${c.coverPos || '50% 50%'};background-size:${(c.coverZoom || 1) <= 1 ? 'cover' : ((c.coverZoom || 1) * 100) + '%'};"><div class="camp-discount-badge">-${c.discountPercent}%</div></div>` : ''}
-                        <div class="camp-card-body">
-                            <div class="camp-card-title">${escapeHtml(c.title || '')}</div>
-                            ${c.desc ? `<div class="camp-card-desc">${escapeHtml(c.desc)}</div>` : ''}
-                            <div class="camp-progress-wrap"><div class="camp-progress-bar"><div class="camp-progress-fill" style="width:${pct}%;"></div></div><div class="camp-progress-text"><span>${claimed} / ${max} kupon</span><span>${max - claimed} qal\u0131b</span></div></div>
-                        </div>
-                    </div>`;
-                }).join('');
-            }
-        }
-
         // === SSR Review Cards ===
         let reviewsHtml = '';
         if (reviewsData && typeof reviewsData === 'object') {
@@ -210,34 +114,6 @@ module.exports = async (req, res) => {
             html = html.replace(
                 /<div class="blog-grid blog-section-grid" id="blogGrid">[\s\S]*?<\/div>/,
                 `<div class="blog-grid blog-section-grid" id="blogGrid">${blogHtml}</div>`
-            );
-        }
-        if (annHtml) {
-            html = html.replace(
-                /<div class="ann-split-grid" id="annSplitGrid"><\/div>/,
-                `<div class="ann-split-grid" id="annSplitGrid">${annHtml}</div>`
-            );
-        } else {
-            html = html.replace(
-                /<div class="ann-split-col" id="annSplitLeft">/,
-                '<div class="ann-split-col" id="annSplitLeft" style="display:none;">'
-            );
-        }
-        if (campHtml) {
-            html = html.replace(
-                /<div class="camp-split-grid" id="campSplitGrid"><\/div>/,
-                `<div class="camp-split-grid" id="campSplitGrid">${campHtml}</div>`
-            );
-        } else {
-            html = html.replace(
-                /<div class="ann-split-col" id="annSplitRight">/,
-                '<div class="ann-split-col" id="annSplitRight" style="display:none;">'
-            );
-        }
-        if (!annHtml && !campHtml) {
-            html = html.replace(
-                /<section class="announcements-section" id="announcementsSection">/,
-                '<section class="announcements-section" id="announcementsSection" style="display:none;">'
             );
         }
         if (reviewsHtml) {

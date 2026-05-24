@@ -88,23 +88,7 @@ async function collectUrls() {
         }
     } catch (e) {}
 
-    // 3. Individual announcements
-    try {
-        const annRes = await fetch(`${FIREBASE_DB_URL}/announcements.json`);
-        const annData = (await annRes.json()) || {};
-        for (const a of Object.values(annData)) {
-            if (a.active === false || !a.slug) continue;
-            urls.push(`${SITE_URL}/elanlar/${a.slug}`);
-        }
-    } catch (e) {}
-
-    // 4. Announcements list
-    urls.push(SITE_URL + '/elanlar');
-
-    // 5. Campaigns
-    urls.push(SITE_URL + '/kampaniyalar');
-
-    // 6. Language homepages
+    // 3. Language homepages
     urls.push(SITE_URL + '/ru');
     urls.push(SITE_URL + '/en');
     urls.push(SITE_URL + '/tr');
