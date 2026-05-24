@@ -3293,15 +3293,15 @@ img {
 .hero-headline-bg {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: url('/hero-bg.webp') center/cover no-repeat;
+    background: linear-gradient(135deg, #1a3c2a 0%, #24503a 55%, #15301f 100%);
     z-index: 0;
 }
-/* Green overlay on background image */
+/* Subtle vignette for depth (no background figure) */
 .hero-headline-bg::after {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(30,70,45,0.88);
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.18) 100%);
     z-index: 0;
 }
 .hero-headline-content {
