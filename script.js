@@ -919,14 +919,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 nameInput.readOnly = true;
                 nameInput.style.opacity = '0.7';
                 sessionStorage.setItem('reviewUserName', firstName);
-            } else if (user && user.isAnonymous) {
-                // Anonymous user
-                nameInput.value = 'Anonim';
-                nameInput.readOnly = true;
-                nameInput.style.opacity = '0.7';
-                sessionStorage.setItem('reviewUserName', 'Anonim');
             } else {
-                // Logged out or no user - clear and make editable
+                // Guest (anonymous auth or logged out) - editable: type a name, or use the "Anonim" checkbox / leave empty
                 nameInput.readOnly = false;
                 nameInput.style.opacity = '1';
                 if (savedName && savedName !== 'Anonim') {
@@ -951,15 +945,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })();
 
+    // "Anonim olaraq göndər" checkbox — disables the name field when checked
+    const anonCheckbox = document.getElementById('reviewAnonymous');
+    if (anonCheckbox) {
+        anonCheckbox.addEventListener('change', function() {
+            const nameInput = document.getElementById('reviewName');
+            if (!nameInput) return;
+            if (this.checked) {
+                nameInput.dataset.prevValue = nameInput.value;
+                nameInput.value = '';
+                nameInput.disabled = true;
+                nameInput.style.opacity = '0.5';
+            } else {
+                nameInput.disabled = false;
+                nameInput.style.opacity = '1';
+                if (nameInput.dataset.prevValue) nameInput.value = nameInput.dataset.prevValue;
+            }
+        });
+    }
+
     // Submit review
     const reviewForm = document.getElementById('reviewForm');
     if (reviewForm) {
         reviewForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const name = document.getElementById('reviewName').value.trim();
+            const anonChecked = anonCheckbox && anonCheckbox.checked;
+            let name = document.getElementById('reviewName').value.trim();
             const city = document.getElementById('reviewCity').value.trim();
             const text = document.getElementById('reviewText').value.trim();
-            if (!name || !text) return;
+            // Name optional: empty or "Anonim" checkbox -> post as Anonim
+            if (anonChecked || !name) name = 'Anonim';
+            if (!text) return;
 
             // Check if already submitted a review
             if (sessionStorage.getItem('reviewSubmitted')) {

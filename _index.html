@@ -725,11 +725,15 @@
                 <form class="review-form" id="reviewForm">
                     <div class="review-form-row">
                         <div class="review-form-group">
-                            <input type="text" id="reviewName" data-i18n-placeholder="reviews_name" placeholder="Adınız" required>
+                            <input type="text" id="reviewName" data-i18n-placeholder="reviews_name" placeholder="Adınız">
                         </div>
                         <div class="review-form-group">
                             <input type="text" id="reviewCity" data-i18n-placeholder="reviews_city" placeholder="Şəhər (istəyə bağlı)">
                         </div>
+                    </div>
+                    <div class="review-form-group review-anon-row" style="display:flex;align-items:center;gap:8px;margin-top:-2px;">
+                        <input type="checkbox" id="reviewAnonymous" style="width:16px;height:16px;cursor:pointer;accent-color:#2d8157;flex-shrink:0;">
+                        <label for="reviewAnonymous" data-i18n="reviews_anonymous" style="font-size:0.88rem;color:var(--text-secondary);cursor:pointer;margin:0;">Anonim olaraq göndər</label>
                     </div>
                     <div class="review-form-group">
                         <div class="review-rating-select" id="reviewRatingSelect">
