@@ -170,7 +170,7 @@ module.exports = async (req, res) => {
                     if (s.coverImage) imgUrl = s.coverImage;
                     if (s.coverPos) coverPos = s.coverPos;
                     if (s.coverZoom) coverZoom = s.coverZoom;
-                    const scaleStyle = coverZoom > 1 ? `transform:scale(${coverZoom});` : '';
+                    const scaleStyle = coverZoom > 1 ? `transform:scale(${coverZoom});transform-origin:${coverPos};` : '';
                     const title = (isRu && s.titleRu) ? s.titleRu : f.title;
                     const date = (isRu && s.dateRu) ? s.dateRu : (f.date || '');
                     const blogUrl = s.slug ? (isRu ? '/ru/' + (s.slugRu || s.slug) : '/' + s.slug) : '#';

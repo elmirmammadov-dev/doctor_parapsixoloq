@@ -651,7 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = (isRu && c.titleRu) ? c.titleRu : c.title;
         const date = (isRu && c.dateRu) ? c.dateRu : c.date;
         const blogUrl = c.slug ? (isRu ? '/ru/' + (c.slugRu || c.slug) : '/' + c.slug) : '#';
-        const scaleStyle = c.coverZoom > 1 ? `transform:scale(${c.coverZoom});` : '';
+        const scaleStyle = c.coverZoom > 1 ? `transform:scale(${c.coverZoom});transform-origin:${c.coverPos};` : '';
         const cover = c.imgUrl
             ? `<div class="blog-post-cover" role="img" aria-label="${title}" style="background-image:url(${c.imgUrl});background-size:cover;background-position:${c.coverPos};background-repeat:no-repeat;${scaleStyle}"></div>`
             : `<div class="blog-post-placeholder" style="flex:1;background:#f0f7f3;display:flex;align-items:center;justify-content:center;color:#aaa;"><i class="fas fa-image" style="font-size:1.5rem;"></i></div>`;
@@ -832,7 +832,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     coverZoom = seoData[id].coverZoom;
                 }
                 // Use background-image with cover + scale for zoom (matches admin preview)
-                const scaleStyle = coverZoom > 1 ? `transform:scale(${coverZoom});` : '';
+                const scaleStyle = coverZoom > 1 ? `transform:scale(${coverZoom});transform-origin:${coverPos};` : '';
                 const slugAzPart = seoData[id] && seoData[id].slug;
                 const slugRuPart = (seoData[id] && seoData[id].slugRu) || slugAzPart;
                 return {
