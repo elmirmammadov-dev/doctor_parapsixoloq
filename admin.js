@@ -2234,7 +2234,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const ruContentField = document.getElementById('ruContentField');
 
             if (f.title?.ru || f.date?.ru || f.content?.ru || (firebaseHtml && firebaseHtml.ru)) {
-                if (ruFields) ruFields.style.display = 'flex';
+                if (ruFields) ruFields.style.display = 'block';
                 if (ruContentField) ruContentField.style.display = 'block';
                 if (titleRuEl) titleRuEl.value = f.title?.ru || '';
                 if (dateRuEl) dateRuEl.value = f.date?.ru || '';
