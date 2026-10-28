@@ -1048,8 +1048,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalPages = Math.ceil(allReviews.length / REVIEWS_PER_PAGE);
         const months = ['Yan','Fev','Mar','Apr','May','İyn','İyl','Avq','Sen','Okt','Noy','Dek'];
 
+        // Reviews are written by visitors, so escape everything before inserting as HTML
+        const esc = v => String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         grid.innerHTML = visible.map(r => {
-            const initial = r.name.charAt(0).toUpperCase();
+            const rName = String(r.name || '');
+            const rText = String(r.text || '');
+            const initial = esc(rName.charAt(0).toUpperCase());
             const date = new Date(r.timestamp);
             const dateStr = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
             let starsHtml = '';
@@ -1059,15 +1063,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return `
                 <div class="review-card">
                     <div class="review-card-header">
-                        ${r.photoURL ? `<img src="${r.photoURL}" class="review-card-avatar" style="width:42px;height:42px;border-radius:50%;object-fit:cover;object-position:top center;" alt="${r.name}">` : `<div class="review-card-avatar">${initial}</div>`}
+                        ${r.photoURL ? `<img src="${esc(r.photoURL)}" class="review-card-avatar" style="width:42px;height:42px;border-radius:50%;object-fit:cover;object-position:top center;" alt="${esc(rName)}">` : `<div class="review-card-avatar">${initial}</div>`}
                         <div class="review-card-info">
-                            <div class="review-card-name">${r.name}</div>
-                            ${r.city ? `<div class="review-card-city"><i class="fas fa-map-marker-alt"></i> ${r.city}</div>` : ''}
+                            <div class="review-card-name">${esc(rName)}</div>
+                            ${r.city ? `<div class="review-card-city"><i class="fas fa-map-marker-alt"></i> ${esc(r.city)}</div>` : ''}
                         </div>
                         <div class="review-card-stars">${starsHtml}</div>
                     </div>
-                    <div class="review-card-text" id="reviewCardText_${r._key}" data-full-text="${r.text.replace(/"/g, '&quot;')}" data-shown="150">${r.text.length > 150 ? r.text.substring(0, 150) + '...' : r.text}</div>
-                    ${r.text.length > 150 ? `<button class="review-read-more" id="reviewReadMore_${r._key}" onclick="toggleReviewText('${r._key}')">Ardını oxu</button>` : ''}
+                    <div class="review-card-text" id="reviewCardText_${r._key}" data-full-text="${esc(rText)}" data-shown="150">${rText.length > 150 ? esc(rText.substring(0, 150)) + '...' : esc(rText)}</div>
+                    ${rText.length > 150 ? `<button class="review-read-more" id="reviewReadMore_${r._key}" onclick="toggleReviewText('${r._key}')">Ardını oxu</button>` : ''}
                     <div class="review-card-date">${dateStr}</div>
                 </div>
             `;

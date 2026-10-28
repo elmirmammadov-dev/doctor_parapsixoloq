@@ -1,5 +1,49 @@
 // ===== USER AUTH SYSTEM =====
 const IMGBB_API_KEY = 'b1a73ddcdac93d67a842d887adc92634'; // Free ImgBB API key
+
+// ===== ADMIN ACCOUNT =====
+// The admin logs in with the username below. The password is checked by
+// Firebase Authentication and is not stored anywhere in the site's code.
+// The database rules give admin rights only to ADMIN_UID.
+const ADMIN_USERNAME = 'novokuzneck';
+const ADMIN_EMAIL = 'novokuzneck@sahseddinimanli.com';
+const ADMIN_UID = 'waajwt79aggDJHelvrWpmqTPx6f1';
+
+function isAdminUser(user) {
+    return !!(user && !user.isAnonymous && user.uid === ADMIN_UID);
+}
+window.isAdminUser = isAdminUser;
+
+// Show the admin as the author on public pages (navbar avatar, comment form)
+function applyAdminUI() {
+    window.isAdminLoggedIn = true;
+    const nameInput = document.getElementById('commentName');
+    const emailInput = document.getElementById('commentEmail');
+    if (nameInput) {
+        nameInput.value = 'Şahsəddin İmanlı';
+        nameInput.readOnly = true;
+        nameInput.style.background = '#f5f5f5';
+    }
+    if (emailInput) {
+        emailInput.value = 'Shahseddinimanli2016@gmail.com';
+        emailInput.readOnly = true;
+        emailInput.style.background = '#f5f5f5';
+    }
+    const badgeEl = document.getElementById('adminBadgeLabel');
+    if (badgeEl) {
+        const lang = localStorage.getItem('lang') || 'az';
+        badgeEl.textContent = lang === 'ru' ? 'Автор' : 'Müəllif';
+        badgeEl.style.display = 'inline';
+    }
+    const authBtn = document.getElementById('userAuthBtn');
+    if (authBtn) {
+        authBtn.innerHTML = '<img src="/profil-sekli-1.webp" class="nav-user-avatar" alt="Şahsəddin İmanlı" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"> <span class="nav-user-name">Şahsəddin</span>';
+        authBtn.onclick = function() { window.location.href = '/admin.html'; };
+    }
+    const anonLabel = document.getElementById('navAnonLabel');
+    if (anonLabel) anonLabel.style.display = 'none';
+    hideUserDropdown();
+}
 const AUTH_TEXTS = {
     az: {
         login: 'Giriş',
@@ -281,40 +325,35 @@ function initAuth() {
         const emailOrUser = document.getElementById('authLoginEmail').value.trim();
         const pass = document.getElementById('authLoginPass').value;
 
-        // Check admin credentials
-        if (emailOrUser === 'Novokuzneck' && pass === 'Dudenge1!') {
-            window.isAdminLoggedIn = true;
+        // Admin login: username "Novokuzneck" (or the admin e-mail).
+        // The password is verified by Firebase Authentication.
+        const loginLower = emailOrUser.toLowerCase();
+        if (loginLower === ADMIN_USERNAME || loginLower === ADMIN_EMAIL) {
+            btn.disabled = true;
+            btn.textContent = t.loggingIn;
+            errorEl.textContent = '';
+            try {
+                // Admin session lasts only while this browser tab is open
+                await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+                const cred = await auth.signInWithEmailAndPassword(ADMIN_EMAIL, pass);
+                if (!isAdminUser(cred.user)) {
+                    await auth.signOut();
+                    throw { code: 'auth/invalid-credential' };
+                }
+            } catch (err) {
+                errorEl.textContent = getFirebaseErrorMsg(err.code);
+                btn.disabled = false;
+                btn.textContent = t.loginBtn;
+                return;
+            }
+            btn.disabled = false;
+            btn.textContent = t.loginBtn;
             sessionStorage.setItem('adminAuth', 'true');
             closeAuthModal();
-            // If on blog post page, set blog-only admin session
             const isOnBlogPost = window.location.pathname.match(/\/blog\//) || document.getElementById('blogDetail');
             if (isOnBlogPost) {
                 sessionStorage.setItem('blogAdminAuth', 'true');
-                // Update comment form for admin
-                const nameInput = document.getElementById('commentName');
-                const emailInput = document.getElementById('commentEmail');
-                if (nameInput) {
-                    nameInput.value = 'Şahsəddin İmanlı';
-                    nameInput.readOnly = true;
-                    nameInput.style.background = '#f5f5f5';
-                }
-                if (emailInput) {
-                    emailInput.value = 'Shahseddinimanli2016@gmail.com';
-                    emailInput.readOnly = true;
-                    emailInput.style.background = '#f5f5f5';
-                }
-                const badgeEl = document.getElementById('adminBadgeLabel');
-                if (badgeEl) {
-                    const lang = localStorage.getItem('lang') || 'az';
-                    badgeEl.textContent = lang === 'ru' ? 'Автор' : 'Müəllif';
-                    badgeEl.style.display = 'inline';
-                }
-                // Update navbar to show admin is logged in
-                const authBtn = document.getElementById('userAuthBtn');
-                if (authBtn) {
-                    authBtn.innerHTML = '<img src="/profil-sekli-1.webp" class="nav-user-avatar" alt="Şahsəddin İmanlı" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"> <span class="nav-user-name">Şahsəddin</span>';
-                    authBtn.onclick = function() { window.location.href = '/admin.html'; };
-                }
+                applyAdminUI();
             } else {
                 window.location.href = '/admin.html';
             }
@@ -417,7 +456,7 @@ function initAuth() {
         }
         updateNavbarAuth(user);
         updateCommentFormAuth(user);
-        if (user && !user.isAnonymous) {
+        if (user && !user.isAnonymous && !isAdminUser(user)) {
             checkUserWarnings(user.uid);
         }
     });
@@ -548,6 +587,8 @@ function updateNavbarAuth(user) {
     const authBtn = document.getElementById('userAuthBtn');
     if (!authBtn) return;
 
+    if (isAdminUser(user)) { applyAdminUI(); return; }
+
     // Update anon label visibility
     if (typeof window.updateNavAnonLabel === 'function') window.updateNavAnonLabel();
 
@@ -607,6 +648,8 @@ function updateCommentFormAuth(user) {
     const nameInput = document.getElementById('commentName');
     const emailInput = document.getElementById('commentEmail');
     if (!nameInput || !emailInput) return;
+
+    if (isAdminUser(user)) { applyAdminUI(); return; }
 
     if (user && !user.isAnonymous) {
         nameInput.value = user.displayName || '';

@@ -96,20 +96,7 @@
         }
 
         db.ref('siteTraffic/visits/' + dateKey + '/' + sessionId).set(visitData);
-
-        // Keep only last 100 sessions per day
-        db.ref('siteTraffic/visits/' + dateKey).once('value', snap => {
-            const count = snap.numChildren();
-            if (count > 100) {
-                let deleteCount = count - 100;
-                snap.forEach(child => {
-                    if (deleteCount > 0) {
-                        child.ref.remove();
-                        deleteCount--;
-                    }
-                });
-            }
-        });
+        // Trimming old sessions is done by the admin panel (visitors cannot read the list)
 
         // Only count unique IPs per day (or unique users)
         const uniqueKey = (user && !user.isAnonymous) ? user.uid : visitorIpKey;
@@ -131,6 +118,8 @@
         if (action === 'admin' || (details && details.indexOf('Admin panel') !== -1)) return;
 
         const user = firebase.auth().currentUser;
+        // Don't log the admin's own browsing
+        if (window.isAdminUser && window.isAdminUser(user)) return;
         const activityData = {
             action: action,
             details: details || '',
@@ -143,25 +132,12 @@
             activityData.userName = getAnonLabel(anonNumber);
         }
         db.ref('siteTraffic/activities').push(activityData);
-
-        // Keep only last 100 activities
-        db.ref('siteTraffic/activities').once('value', snap => {
-            const count = snap.numChildren();
-            if (count > 100) {
-                let deleteCount = count - 100;
-                snap.forEach(child => {
-                    if (deleteCount > 0) {
-                        child.ref.remove();
-                        deleteCount--;
-                    }
-                });
-            }
-        });
+        // Keeping only the last 100 activities is done by the admin panel
     }
 
     // Record session duration — only once
     function recordDuration() {
-        if (durationRecorded) return;
+        if (durationRecorded || !visitRecorded) return;
         durationRecorded = true;
 
         const dateKey = getDateKey();
@@ -177,40 +153,22 @@
         logActivity('exit', pageDesc + ' səhifəsindən çıxdı (' + durationText + ')');
     }
 
-    // Clean up old data (older than 30 days)
-    function cleanOldData() {
-        const lastClean = localStorage.getItem('lastTrafficClean');
-        const now = Date.now();
-        if (lastClean && now - parseInt(lastClean) < 86400000) return;
-        localStorage.setItem('lastTrafficClean', now);
-
-        const cutoff = new Date();
-        cutoff.setDate(cutoff.getDate() - 30);
-        const cutoffKey = cutoff.getFullYear() + '-' + String(cutoff.getMonth()+1).padStart(2,'0') + '-' + String(cutoff.getDate()).padStart(2,'0');
-
-        db.ref('siteTraffic/visits').orderByKey().endAt(cutoffKey).once('value', snap => {
-            snap.forEach(child => { child.ref.remove(); });
-        });
-        db.ref('siteTraffic/dailyCounts').orderByKey().endAt(cutoffKey).once('value', snap => {
-            snap.forEach(child => { child.ref.remove(); });
-        });
-        db.ref('siteTraffic/uniqueVisitors').orderByKey().endAt(cutoffKey).once('value', snap => {
-            snap.forEach(child => { child.ref.remove(); });
-        });
-    }
+    // Removing data older than 30 days is done by the admin panel
+    // (visitors can no longer read the statistics lists).
 
     // Skip all tracking if admin panel is open
     if (location.hash.startsWith('#admin-')) return;
 
     // Record visit once on first auth state
     firebase.auth().onAuthStateChanged(function(user) {
+        // Don't count the admin's own visits
+        if (window.isAdminUser && window.isAdminUser(user)) return;
         if (!visitRecorded) {
             if (user && !user.isAnonymous) {
                 // Logged-in user — record immediately
                 const pageDesc = getPageDescription();
                 recordVisit();
                 logActivity('visit', pageDesc + ' səhifəsinə baxış keçirdi');
-                cleanOldData();
             } else {
                 // Anonymous — get number first, then record
                 getAnonName().then(() => {
@@ -222,7 +180,6 @@
                     const pageDesc = getPageDescription();
                     recordVisit();
                     logActivity('visit', pageDesc + ' səhifəsinə baxış keçirdi');
-                    cleanOldData();
                 });
             }
         }

@@ -1,0 +1,280 @@
+{
+  "rules": {
+    "articleSeo": {
+      ".read": true,
+      ".write": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+    },
+    "articleSlugs": {
+      ".read": true,
+      ".write": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+    },
+    "articleHtml": {
+      ".read": true,
+      ".write": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+    },
+    "announcements": {
+      ".read": true,
+      ".write": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+    },
+    "campaigns": {
+      ".read": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'",
+      ".write": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+    },
+    "reviews": {
+      ".read": true,
+      ".write": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'",
+      ".indexOn": [
+        "timestamp"
+      ],
+      "$reviewId": {
+        ".write": "auth != null && !data.exists() && newData.exists() && $reviewId.matches(/^[A-Za-z0-9_-]+$/) && $reviewId.length <= 40",
+        ".validate": "data.exists() || auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || newData.hasChildren(['name', 'text', 'rating', 'timestamp'])",
+        "name": {
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length <= 100 && newData.val().matches(/^[^<>\"'`]*$/))"
+        },
+        "city": {
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length <= 100 && newData.val().matches(/^[^<>\"'`]*$/))"
+        },
+        "rating": {
+          ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 5"
+        },
+        "text": {
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length > 0 && newData.val().length <= 3000)"
+        },
+        "timestamp": {
+          ".validate": "newData.isNumber()"
+        },
+        "photoURL": {
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length <= 500 && (newData.val() === '' || (newData.val().beginsWith('https://') && newData.val().matches(/^[^<>\"'` ]+$/))))"
+        },
+        "$other": {
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+        }
+      }
+    },
+    "comments": {
+      ".read": true,
+      ".write": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'",
+      "$postId": {
+        ".indexOn": [
+          "timestamp"
+        ],
+        "$commentId": {
+          ".write": "auth != null && !data.exists() && newData.exists() && $postId.matches(/^[A-Za-z0-9_-]+$/) && $postId.length <= 60 && $commentId.matches(/^[A-Za-z0-9_-]+$/) && $commentId.length <= 40",
+          ".validate": "data.exists() || auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || newData.hasChildren(['name', 'text', 'timestamp'])",
+          "name": {
+            ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length <= 100 && newData.val().matches(/^[^<>\"'`]*$/))"
+          },
+          "email": {
+            ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length <= 200 && newData.val().matches(/^[^<>\"'`]*$/))"
+          },
+          "text": {
+            ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length > 0 && newData.val().length <= 5000)"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber()"
+          },
+          "photoURL": {
+            ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length <= 500 && (newData.val() === '' || (newData.val().beginsWith('https://') && newData.val().matches(/^[^<>\"'` ]+$/))))"
+          },
+          "uid": {
+            ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || newData.val() === auth.uid"
+          },
+          "isAuthor": {
+            ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+          },
+          "reply": {
+            ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+          },
+          "replies": {
+            "$replyId": {
+              ".write": "auth != null && !data.exists() && newData.exists() && $postId.matches(/^[A-Za-z0-9_-]+$/) && $commentId.matches(/^[A-Za-z0-9_-]+$/) && $replyId.matches(/^[A-Za-z0-9_-]+$/) && $replyId.length <= 40",
+              ".validate": "data.exists() || auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || newData.hasChildren(['name', 'text', 'timestamp'])",
+              "name": {
+                ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length <= 100 && newData.val().matches(/^[^<>\"'`]*$/))"
+              },
+              "replyTo": {
+                ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length <= 100 && newData.val().matches(/^[^<>\"'`]*$/))"
+              },
+              "text": {
+                ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length > 0 && newData.val().length <= 5000)"
+              },
+              "timestamp": {
+                ".validate": "newData.isNumber()"
+              },
+              "photoURL": {
+                ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length <= 500 && (newData.val() === '' || (newData.val().beginsWith('https://') && newData.val().matches(/^[^<>\"'` ]+$/))))"
+              },
+              "uid": {
+                ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || newData.val() === auth.uid"
+              },
+              "isAuthor": {
+                ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+              },
+              "$other": {
+                ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+              }
+            }
+          },
+          "$other": {
+            ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+          }
+        }
+      }
+    },
+    "postStats": {
+      ".read": true,
+      ".write": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'",
+      "$postId": {
+        "views": {
+          ".write": "auth != null",
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isNumber() && ((!data.exists() && newData.val() === 1) || (data.exists() && newData.val() === data.val() + 1)))"
+        },
+        "likes": {
+          ".write": "auth != null",
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isNumber() && newData.val() >= 0 && ((!data.exists() && newData.val() <= 1) || (data.exists() && (newData.val() === data.val() + 1 || newData.val() === data.val() - 1))))"
+        },
+        "dislikes": {
+          ".write": "auth != null",
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isNumber() && newData.val() >= 0 && ((!data.exists() && newData.val() <= 1) || (data.exists() && (newData.val() === data.val() + 1 || newData.val() === data.val() - 1))))"
+        },
+        "$other": {
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+        }
+      }
+    },
+    "users": {
+      ".read": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'",
+      ".write": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'",
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid && !data.exists() && newData.exists()",
+        ".validate": "data.exists() || auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || newData.hasChildren(['name', 'email'])",
+        "name": {
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length <= 100 && newData.val().matches(/^[^<>\"'`]*$/))"
+        },
+        "surname": {
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length <= 100 && newData.val().matches(/^[^<>\"'`]*$/))"
+        },
+        "email": {
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length <= 200 && newData.val().matches(/^[^<>\"'`]*$/))"
+        },
+        "photoURL": {
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isString() && newData.val().length <= 500 && (newData.val() === '' || (newData.val().beginsWith('https://') && newData.val().matches(/^[^<>\"'` ]+$/))))"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "warningList": {
+          ".write": "auth != null && auth.uid === $uid && data.exists() && newData.exists()"
+        },
+        "$other": {
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+        }
+      }
+    },
+    "siteTraffic": {
+      ".read": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'",
+      ".write": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'",
+      "visits": {
+        "$date": {
+          "$sessionId": {
+            ".write": "auth != null && !data.exists() && newData.exists() && $date.matches(/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/) && $sessionId.matches(/^sess_[0-9]+_[a-z0-9]+$/)",
+            ".validate": "data.exists() || auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || newData.hasChildren(['page', 'enteredAt'])",
+            "page": {
+              ".validate": "newData.isString() && newData.val().length <= 300"
+            },
+            "enteredAt": {
+              ".validate": "newData.isNumber()"
+            },
+            "userAgent": {
+              ".validate": "newData.isString() && newData.val().length <= 200"
+            },
+            "referrer": {
+              ".validate": "newData.isString() && newData.val().length <= 1000"
+            },
+            "userName": {
+              ".validate": "newData.isString() && newData.val().length <= 200"
+            },
+            "uid": {
+              ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || newData.val() === auth.uid"
+            },
+            "duration": {
+              ".write": "auth != null && $date.matches(/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/) && $sessionId.matches(/^sess_[0-9]+_[a-z0-9]+$/)",
+              ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+            }
+          }
+        }
+      },
+      "uniqueVisitors": {
+        "$date": {
+          "$visitorKey": {
+            ".read": "auth != null",
+            ".write": "auth != null && !data.exists() && $date.matches(/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/) && $visitorKey.matches(/^[A-Za-z0-9_-]+$/)",
+            ".validate": "newData.val() === true"
+          }
+        }
+      },
+      "dailyCounts": {
+        "$date": {
+          ".read": "auth != null",
+          ".write": "auth != null && $date.matches(/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/)",
+          ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isNumber() && ((!data.exists() && newData.val() === 1) || (data.exists() && newData.val() === data.val() + 1)))"
+        }
+      },
+      "anonCounter": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || (newData.isNumber() && ((!data.exists() && newData.val() === 1) || (data.exists() && newData.val() === data.val() + 1)))"
+      },
+      "anonVisitors": {
+        "$ipKey": {
+          ".read": "auth != null",
+          ".write": "auth != null && !data.exists() && $ipKey.matches(/^[A-Za-z0-9_-]+$/)",
+          ".validate": "newData.isNumber()"
+        }
+      },
+      "activities": {
+        ".indexOn": [
+          "timestamp"
+        ],
+        "$activityId": {
+          ".write": "auth != null && !data.exists() && newData.exists() && $activityId.matches(/^[A-Za-z0-9_-]+$/)",
+          ".validate": "data.exists() || auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || newData.hasChildren(['action', 'timestamp'])",
+          "action": {
+            ".validate": "newData.isString() && newData.val().length <= 50"
+          },
+          "details": {
+            ".validate": "newData.isString() && newData.val().length <= 500"
+          },
+          "userName": {
+            ".validate": "newData.isString() && newData.val().length <= 200"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber()"
+          },
+          "uid": {
+            ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1' || newData.val() === auth.uid"
+          },
+          "$other": {
+            ".validate": "auth != null && auth.uid === 'waajwt79aggDJHelvrWpmqTPx6f1'"
+          }
+        }
+      },
+      "clickStats": {
+        "$page": {
+          "$element": {
+            "$ipKey": {
+              ".read": "auth != null",
+              ".write": "auth != null && !data.exists() && $page.matches(/^[A-Za-z0-9_-]+$/) && $element.matches(/^[A-Za-z0-9_-]+$/) && $ipKey.matches(/^[A-Za-z0-9_-]+$/)",
+              ".validate": "newData.val() === true"
+            }
+          }
+        }
+      }
+    }
+  }
+}

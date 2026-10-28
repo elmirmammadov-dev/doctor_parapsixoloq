@@ -1,6 +1,19 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Admin auth check
-    if (sessionStorage.getItem("adminAuth") !== "true") {
+document.addEventListener("DOMContentLoaded", async function() {
+    // Admin auth check: this tab must hold the admin's Firebase session
+    // (created by logging in as Novokuzneck on the site). The database
+    // rules enforce the same check on every read and write.
+    const ADMIN_UID = 'waajwt79aggDJHelvrWpmqTPx6f1';
+    const adminUser = await new Promise(function(resolve) {
+        let done = false;
+        const unsub = firebase.auth().onAuthStateChanged(function(u) {
+            if (done) return;
+            done = true;
+            resolve(u);
+            setTimeout(function() { if (unsub) unsub(); }, 0);
+        });
+    });
+    if (!adminUser || adminUser.uid !== ADMIN_UID) {
+        sessionStorage.removeItem("adminAuth");
         window.location.href = "/";
         return;
     }
@@ -11,6 +24,49 @@ document.addEventListener("DOMContentLoaded", function() {
     const CONTENTFUL_TOKEN = 'uyQ8WH4Rhs40Y1OBAoXI9nzQGunrNUAtEU4lizTZL-o';
     const FIREBASE_REST = 'https://hekim-sayti-comments-default-rtdb.firebaseio.com';
     const SITE_URL = 'https://www.sahseddinimanli.com';
+
+    // REST reads carry the admin's ID token so the database rules can check it
+    async function fbFetch(path) {
+        const user = firebase.auth().currentUser;
+        const token = user ? await user.getIdToken() : '';
+        const sep = path.indexOf('?') === -1 ? '?' : '&';
+        return fetch(FIREBASE_REST + path + (token ? sep + 'auth=' + encodeURIComponent(token) : ''));
+    }
+
+    // Visitor statistics housekeeping. This used to run in every visitor's
+    // browser; visitors can no longer read these lists, so the admin panel
+    // does it (at most once a day): keep 100 newest sessions per day and
+    // 100 newest activities, drop days older than 30 days.
+    async function autoCleanTraffic() {
+        try {
+            const last = parseInt(localStorage.getItem('adminLastTrafficClean') || '0', 10);
+            if (Date.now() - last < 86400000) return;
+            const getKeys = async function(path) {
+                const res = await fbFetch(path + '.json?shallow=true');
+                const data = await res.json();
+                return (data && typeof data === 'object' && !data.error) ? Object.keys(data).sort() : [];
+            };
+            const cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - 30);
+            const cutoffKey = cutoff.getFullYear() + '-' + String(cutoff.getMonth() + 1).padStart(2, '0') + '-' + String(cutoff.getDate()).padStart(2, '0');
+            const updates = {};
+
+            const visitDays = await getKeys('/siteTraffic/visits');
+            for (const day of visitDays) {
+                if (day <= cutoffKey) { updates['visits/' + day] = null; continue; }
+                const sessions = await getKeys('/siteTraffic/visits/' + day);
+                sessions.slice(0, Math.max(0, sessions.length - 100)).forEach(function(s) { updates['visits/' + day + '/' + s] = null; });
+            }
+            (await getKeys('/siteTraffic/dailyCounts')).forEach(function(day) { if (day <= cutoffKey) updates['dailyCounts/' + day] = null; });
+            (await getKeys('/siteTraffic/uniqueVisitors')).forEach(function(day) { if (day <= cutoffKey) updates['uniqueVisitors/' + day] = null; });
+            const acts = await getKeys('/siteTraffic/activities');
+            acts.slice(0, Math.max(0, acts.length - 100)).forEach(function(k) { updates['activities/' + k] = null; });
+
+            if (Object.keys(updates).length) await adminDb.ref('siteTraffic').update(updates);
+            localStorage.setItem('adminLastTrafficClean', String(Date.now()));
+        } catch (e) { /* try again next time */ }
+    }
+    autoCleanTraffic();
 
     // Fire-and-forget Google Indexing API submission — never blocks the UI
     async function submitIndexing(urls) {
@@ -81,9 +137,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Use REST API instead of SDK to avoid WebSocket hang
         Promise.all([
-            fetch(FIREBASE_REST + '/comments.json').then(r => r.json()).then(d => estimateSize(d)),
-            fetch(FIREBASE_REST + '/siteTraffic.json').then(r => r.json()).then(d => estimateSize(d)),
-            fetch(FIREBASE_REST + '/users.json').then(r => r.json()).then(d => estimateSize(d))
+            fbFetch('/comments.json').then(r => r.json()).then(d => estimateSize(d)),
+            fbFetch('/siteTraffic.json').then(r => r.json()).then(d => estimateSize(d)),
+            fbFetch('/users.json').then(r => r.json()).then(d => estimateSize(d))
         ]).then(sizes => {
             const totalBytes = sizes[0] + sizes[1] + sizes[2];
             const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
@@ -470,7 +526,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (descEl) descEl.textContent = t.desc;
         list.innerHTML = `<p style="text-align:center;color:#999;padding:20px 0;">${t.loading}</p>`;
 
-        fetch(FIREBASE_REST + '/reviews.json').then(function(r) { return r.json(); }).then(function(data) {
+        fbFetch('/reviews.json').then(function(r) { return r.json(); }).then(function(data) {
             const snapshot = { forEach: function(cb) { if(data) Object.keys(data).forEach(k => cb({ val: () => data[k], key: k })); } };
             const reviews = [];
             snapshot.forEach(child => {
@@ -516,18 +572,18 @@ document.addEventListener("DOMContentLoaded", function() {
                         <div style="flex:1;min-width:0;">
                             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
                                 <div>
-                                    <strong style="font-size:0.95rem;">${r.name}</strong>
-                                    ${r.city ? `<span style="color:#999;font-size:0.82rem;margin-left:8px;"><i class="fas fa-map-marker-alt"></i> ${r.city}</span>` : ''}
+                                    <strong style="font-size:0.95rem;">${escapeAdminHtml(r.name || '')}</strong>
+                                    ${r.city ? `<span style="color:#999;font-size:0.82rem;margin-left:8px;"><i class="fas fa-map-marker-alt"></i> ${escapeAdminHtml(r.city)}</span>` : ''}
                                     <div style="margin-top:4px;">${starsHtml}</div>
                                 </div>
                                 <span style="font-size:0.75rem;color:#999;">${dateStr}</span>
                             </div>
-                            <p class="admin-review-text" id="reviewText_${r._key}" style="font-size:0.9rem;color:#333;line-height:1.6;margin:8px 0;word-break:break-word;overflow-wrap:break-word;">${r.text}</p>
+                            <p class="admin-review-text" id="reviewText_${r._key}" style="font-size:0.9rem;color:#333;line-height:1.6;margin:8px 0;word-break:break-word;overflow-wrap:break-word;">${escapeAdminHtml(r.text || '')}</p>
                             <div id="reviewBtns_${r._key}" style="display:flex;gap:8px;margin-top:10px;">
                                 <button onclick="editAdminReview('${r._key}')" style="padding:6px 14px;border:1px solid var(--gold);background:#fff;color:var(--gold);border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;transition:all 0.3s;">
                                     <i class="fas fa-edit"></i> ${t.edit}
                                 </button>
-                                <button onclick="deleteAdminReview('${r._key}','${r.name.replace(/'/g, "\\'")}')" style="padding:6px 14px;border:1px solid #e74c3c;background:#fff;color:#e74c3c;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;transition:all 0.3s;">
+                                <button onclick="deleteAdminReview('${r._key}','${escapeAdminHtml(String(r.name || '')).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}')" style="padding:6px 14px;border:1px solid #e74c3c;background:#fff;color:#e74c3c;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;transition:all 0.3s;">
                                     <i class="fas fa-trash"></i> ${t.del}
                                 </button>
                             </div>
@@ -590,7 +646,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Replace text with textarea
         textEl.outerHTML = `
-            <textarea id="reviewEditArea_${key}" style="width:100%;padding:10px;border:1.5px solid var(--gold);border-radius:8px;font-size:0.9rem;font-family:inherit;min-height:80px;box-sizing:border-box;resize:vertical;">${currentText}</textarea>
+            <textarea id="reviewEditArea_${key}" style="width:100%;padding:10px;border:1.5px solid var(--gold);border-radius:8px;font-size:0.9rem;font-family:inherit;min-height:80px;box-sizing:border-box;resize:vertical;">${escapeAdminHtml(currentText)}</textarea>
         `;
 
         // Replace buttons
@@ -1130,7 +1186,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         adminPostDataCache = postData;
 
-        fetch(FIREBASE_REST + '/comments.json').then(function(r) { return r.json(); }).then(function(data) {
+        fbFetch('/comments.json').then(function(r) { return r.json(); }).then(function(data) {
             const allPosts = data || {};
             // Convert REST data to flat comments array directly
             const allCommentsRaw = [];
@@ -2216,7 +2272,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Load raw HTML from Firebase (preserves images and formatting)
             let firebaseHtml = null;
             try {
-                const htmlRes = await fetch(FIREBASE_REST + '/articleHtml/' + entryId + '.json');
+                const htmlRes = await fbFetch('/articleHtml/' + entryId + '.json');
                 firebaseHtml = await htmlRes.json();
             } catch(e) {}
 
@@ -2604,7 +2660,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         listEl.innerHTML = '<p style="text-align:center;color:#999;padding:20px 0;"><i class="fas fa-spinner fa-spin"></i> ' + adminT('loading') + '</p>';
 
-        fetch(FIREBASE_REST + '/users.json').then(function(r) { return r.json(); }).then(function(data) {
+        fbFetch('/users.json').then(function(r) { return r.json(); }).then(function(data) {
             const snapshot = { forEach: function(cb) { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } };
             const users = [];
             snapshot.forEach(userSnap => {
@@ -2801,10 +2857,10 @@ document.addEventListener("DOMContentLoaded", function() {
         const monthDisplay = formatDate(monthStartDate) + ' — ' + formatDate(monthEndDate);
 
         Promise.all([
-            fetch(FIREBASE_REST + '/siteTraffic/dailyCounts.json').then(r => r.json()),
-            fetch(FIREBASE_REST + '/siteTraffic/visits/' + todayKey + '.json').then(r => r.json()),
-            fetch(FIREBASE_REST + '/siteTraffic/activities.json?orderBy="timestamp"&limitToLast=30').then(r => r.json()).catch(() => null),
-            fetch(FIREBASE_REST + '/siteTraffic/clickStats.json').then(r => r.json())
+            fbFetch('/siteTraffic/dailyCounts.json').then(r => r.json()),
+            fbFetch('/siteTraffic/visits/' + todayKey + '.json').then(r => r.json()),
+            fbFetch('/siteTraffic/activities.json?orderBy="timestamp"&limitToLast=30').then(r => r.json()).catch(() => null),
+            fbFetch('/siteTraffic/clickStats.json').then(r => r.json())
         ]).then(([dailyCounts_raw, todayVisits_raw, activities_raw, clickStats_raw]) => {
             const dailyCounts = dailyCounts_raw || {};
 
